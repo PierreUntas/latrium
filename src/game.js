@@ -372,6 +372,26 @@ function drawCards(g, x, y, k){
   drawSparkle(g, 0, -6, .3);
   g.restore();
 }
+function drawSalle(g, t){
+  const s = persp(salle.y), x = salle.x, y = salle.y;
+  g.save(); g.translate(x, y); g.scale(s, s);
+  g.fillStyle = hexA(C.ink, .12); g.beginPath(); g.ellipse(0, 0, 70, 10, 0, 0, TAU); g.fill();
+  if (salle.glow > 0){ g.fillStyle = hexA(C.cyan, salle.glow * .6); g.beginPath(); g.arc(0, -80, 90, 0, TAU); g.fill(); }
+  // murs
+  g.beginPath(); g.moveTo(-58, 0); g.lineTo(-58, -110); g.arc(0, -110, 58, Math.PI, 0); g.lineTo(58, 0); g.closePath(); fs(g, C.lav);
+  g.beginPath(); g.moveTo(-40, 0); g.lineTo(-40, -106); g.arc(0, -106, 40, Math.PI, 0); g.lineTo(40, 0); g.closePath(); fs(g, C.mist);
+  // rideau
+  g.strokeStyle = C.ink2; g.lineWidth = 1.2; g.beginPath();
+  for (let i = -30; i <= 30; i += 10){ const sw = reduce ? 0 : Math.sin(t * 1.2 + i) * 2; g.moveTo(i, -140); g.quadraticCurveTo(i + sw, -70, i + sw * 1.5, -2); }
+  g.stroke();
+  g.beginPath(); g.moveTo(-40, -110); g.quadraticCurveTo(-20, -96, 0, -110); g.quadraticCurveTo(20, -96, 40, -110); fs(g, C.cyan, C.ink, 1.6);
+  // enseigne
+  g.beginPath(); g.rect(-26, -186, 52, 16); fs(g, C.paper, C.ink, 1.6);
+  for (let i = 0; i < 4; i++) drawGem(g, -15 + i * 10, -178, .35, i % 2 ? C.cyan : C.violet);
+  // petites fenêtres et gens à l'intérieur
+  [[-49, -60], [49, -60]].forEach(([wx, wy]) => { g.beginPath(); g.arc(wx, wy, 5, 0, TAU); fs(g, C.cyan, C.ink, 1.2); });
+  g.restore();
+}
 function drawCat(g, c, t){
   const s = persp(c.y) * .95;
   g.save(); g.translate(c.x, c.y);
@@ -466,7 +486,8 @@ const OBST = [[430,740,128,40],[800,608,150,30],[1200,645,34,13],[1150,815,104,3
 let phase = 'title', lock = true, meetTriggered = false, time = 0, sparkleUntil = -1, camFocus = null;
 const inventory = { key:false, items:[] }, ledger = [];
 let tableTalk = 0, tessTalk = 0, busy = false, chapterDone = 0;
-const ch2 = {}, ch3 = {}, ch4 = {}, ch5 = {}, ch6 = {}, ch7 = {}, ch8 = {};
+const ch2 = {}, ch3 = {}, ch4 = {}, ch5 = {}, ch6 = {}, ch7 = {}, ch8 = {}, ch9 = {};
+const salle = { x:1318, y:770, vis:false, glow:0 };
 const fx = [], tweens = [], waiters = [];
 
 function resetWorld(){
@@ -484,6 +505,8 @@ function resetWorld(){
   Object.assign(ch6, { called:false, supply:100, mint:false, free:true, storage:null, pick:null });
   Object.assign(ch7, { called:false, proposal:null, rehearsals:0, outcome:null, base:null });
   Object.assign(ch8, { talked:false, asked:false, design:null, stake:false, tests:0, oracle:null, bridge:null, lent:false });
+  Object.assign(ch9, { called:false, trades:0, caught:null, wrongClicks:0, fast:false, lent:false });
+  salle.vis = false;
   chapterDone = 0;
   walkers.length = 0;
   walkers.push({ x:620, y:580, face:1, walk:0, moving:true, shirt:C.lav, pants:C.peri, hair:C.peach, style:'long', skin:C.skin, min:628, max:700, sp:18 });
@@ -496,7 +519,7 @@ function resetWorld(){
 
 /* ---------- movement ---------- */
 function collide(e){
-  for (const [cx, cy, rx, ry] of OBST){
+  for (const [cx, cy, rx, ry] of (salle.vis ? OBST.concat([[salle.x, salle.y, 58, 18]]) : OBST)){
     let dx = (e.x - cx) / rx, dy = (e.y - cy) / ry, d = dx*dx + dy*dy;
     if (d < 1){ if (d < 1e-4){ dx = 0; dy = 1; d = 1; } const k = 1 / Math.sqrt(d); e.x = cx + dx * k * rx; e.y = cy + dy * k * ry; }
   }
@@ -655,7 +678,7 @@ function readSave(){ try { const d = JSON.parse(localStorage.getItem(SAVE_KEY));
   if (d.chapterDone >= 6 && !d.ch6) d.chapterDone = 5;
   return d; } catch (e) { return null; } }
 function writeSave(){
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, ch4:{ slashed:ch4.slashed }, ch5:{ mev:ch5.mev }, ch6:chapterDone >= 6 ? { mint:ch6.mint, pick:ch6.pick } : undefined, ch7:chapterDone >= 7 ? { proposal:ch7.proposal, outcome:ch7.outcome } : undefined, ch8:chapterDone >= 8 ? { oracle:ch8.oracle, bridge:ch8.bridge } : undefined, savedAt:Date.now() })); return true; }
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, ch4:{ slashed:ch4.slashed }, ch5:{ mev:ch5.mev }, ch6:chapterDone >= 6 ? { mint:ch6.mint, pick:ch6.pick } : undefined, ch7:chapterDone >= 7 ? { proposal:ch7.proposal, outcome:ch7.outcome } : undefined, ch8:chapterDone >= 8 ? { oracle:ch8.oracle, bridge:ch8.bridge } : undefined, ch9:chapterDone >= 9 ? { caught:ch9.caught } : undefined, savedAt:Date.now() })); return true; }
   catch (e) { return false; }
 }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
@@ -666,6 +689,7 @@ function restore(d){
   Object.assign(cat, { x:1262, y:668, face:-1, wp:CAT_WP.length - 1 });
   Object.assign(planter, { grow:d.chapterDone >= 7 && ch7.proposal === 'palmier' && ch7.outcome !== 'stolen' ? 1.6 : 1, planted:true });
   if (d.chapterDone >= 3) Object.assign(machine, { vis:true, version:d.machineVersion || 1 });
+  salle.vis = d.chapterDone >= 9;
   $('chestBtn').hidden = false; renderPanel();
 }
 async function resumeFree(){
@@ -1754,7 +1778,166 @@ async function debrief8(){
     ch8.bridge === 'grand' ? 'Tu as pris le grand pont : ton cristal a traversé, même quand le pont rapide a été vidé.' : 'Tu as pris le pont rapide : Célestin a vidé son coffre, et ton cristal avec.',
     'Un messager fiable, plusieurs voix plutôt qu’une, et des ponts qui ne valent que leurs gardiens.'],
     teaser:"<b>Chapitre 9.</b> Quand l'Atrium déborde : les petites salles d'à côté.", saved:saved8,
-    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 8', chapter8], ['Recommencer au début', chapter]] });
+    buttons:[['Continuer : chapitre 9', chapter9, true], ["Rester dans l'Atrium", stay], ['Rejouer le chapitre 8', chapter8]] });
+}
+
+/* chapter 9 : les petites salles d'à côté (layer 2) */
+const fmt = n => n.toLocaleString('fr-FR', { maximumFractionDigits:1 });
+function showSalle(){
+  return new Promise(res => {
+    const partners = ['Mira', 'Oskar'], things = ['une carte bleue', 'une carte dorée', 'une carte à pois', 'une carte trouée', 'une carte brillante', 'une carte ancienne'];
+    const log = [];
+    const draw = () => {
+      const n = ch9.trades;
+      mcard.classList.add('wide');
+      mcard.innerHTML = `<p class="eyebrow">Dans la petite salle de Tess</p><h2>Échanges à volonté</h2>
+        <p>Ici, chaque échange coûte presque rien. Tess les note tous dans son cahier, et n'inscrira qu'un seul résumé dans le grand registre.</p>
+        <div class="counters">
+          <div><span>Échanges</span><b>${n}</b></div>
+          <div class="cheap"><span>Coût dans la salle</span><b>${fmt(n * .1)} <small>miettes</small></b></div>
+          <div class="pricey"><span>Dans l'Atrium, ça aurait coûté</span><b>${fmt(n * 4)} <small>miettes</small></b></div>
+        </div>
+        <ol class="tradelog">${log.slice(-4).map(l => `<li>${l}</li>`).join('')}</ol>
+        <div class="row"><button class="btn primary" id="trade">Échanger une carte</button><button class="btn" id="tradeDone" ${n >= 10 ? '' : 'disabled'}>${n >= 10 ? 'Fermer le cahier' : `Encore ${10 - n} échange${10 - n > 1 ? 's' : ''}`}</button></div>`;
+      modal.hidden = false;
+      $('trade').addEventListener('click', () => {
+        ch9.trades++; sfx('blip'); sfx('select');
+        const who = partners[ch9.trades % 2], a = things[ch9.trades % things.length], b = things[(ch9.trades * 5 + 2) % things.length];
+        log.push(`${who} te donne ${a}, tu lui donnes ${b}.`);
+        draw(); $('trade').focus({ preventScroll:true });
+      });
+      if (n >= 10) $('tradeDone').addEventListener('click', () => { modal.hidden = true; mcard.classList.remove('wide'); res(); });
+    };
+    draw(); $('trade').focus({ preventScroll:true });
+  });
+}
+function showChallenge(){
+  return new Promise(res => {
+    const DUR = 30;
+    const lines = [
+      { t:`Échanges dans la salle : ${ch9.trades}`, bad:false },
+      { t:'Mira : 3 cristaux', bad:false },
+      { t:'Oskar : 3 cristaux', bad:false },
+      { t:'Toi : 0 cristal', bad:true },
+      { t:'Célestin : 1 cristal', bad:true },
+    ];
+    let left = DUR, timer = null, msg = '';
+    const done = r => { clearInterval(timer); modal.hidden = true; mcard.classList.remove('wide'); res(r); };
+    const draw = () => {
+      mcard.classList.add('wide');
+      mcard.innerHTML = `<p class="eyebrow">Résumé publié par Célestin</p><h2>Contester ou laisser passer</h2>
+        <div class="window"><span>Fenêtre de contestation · 7 jours, en accéléré · <b id="winLeft">${Math.ceil(left / DUR * 7)} jours restants</b></span><div class="meter"><div class="fill" id="winFill" style="width:${left / DUR * 100}%"></div></div></div>
+        <div class="cols2">
+          <div><h3 class="tests-title">Le résumé de Célestin</h3><div class="rules">${lines.map((l, i) => `<button class="rule claim" data-l="${i}">${l.t}</button>`).join('')}</div></div>
+          <div><h3 class="tests-title">Ton carnet</h3><ul class="carnet"><li>Tu es entré avec <b>1 cristal</b>.</li><li>Mira et Oskar avaient <b>3 cristaux</b> chacun.</li><li>Vous n'avez échangé que des cartes, ${ch9.trades} fois.</li><li>Célestin n'a <b>jamais</b> mis les pieds dans la salle.</li></ul></div>
+        </div>
+        <p class="hint">Touche une ligne fausse pour la contester. Chacun peut vérifier : l'Atrium rejoue les échanges et tranche.</p>
+        ${msg ? `<p class="warn">${msg}</p>` : ''}
+`;
+      modal.hidden = false;
+      mcard.querySelectorAll('[data-l]').forEach(b => b.addEventListener('click', () => {
+        const l = lines[+b.dataset.l];
+        if (l.bad){ sfx('ledger'); done('toi'); return; }
+        ch9.wrongClicks++; sfx('fail'); msg = `« ${l.t} » : l'Atrium rejoue les échanges… cette ligne est juste. Contester à tort coûte 0,1 miette.`; draw();
+      }));
+    };
+    draw();
+    timer = setInterval(() => {
+      left -= .25;
+      const f = $('winFill'), w = $('winLeft');
+      if (f) f.style.width = Math.max(0, left / DUR * 100) + '%';
+      if (w) w.textContent = `${Math.max(0, Math.ceil(left / DUR * 7))} jour${Math.ceil(left / DUR * 7) > 1 ? 's' : ''} restant${Math.ceil(left / DUR * 7) > 1 ? 's' : ''}`;
+      if (left <= 0) done('oskar');
+    }, 250);
+  });
+}
+function setupChapter9(){
+  Object.assign(planter, { grow:planter.grow > 1 ? planter.grow : 1, planted:true });
+  Object.assign(stranger, { x:-120, y:770, vis:false, target:null, gesture:false });
+  Object.assign(machine, { vis:true, version:Math.max(1, machine.version) });
+  Object.assign(ch9, { called:false, trades:0, caught:null, wrongClicks:0, fast:false, lent:false });
+  salle.vis = true;
+  Object.assign(player, { x:760, y:720, face:1, target:null, moving:false });
+  $('chestBtn').hidden = false; renderPanel();
+}
+async function chapter9(){
+  setupChapter9(); phase = 'ch9-intro'; lock = true; camFocus = { x:1150, y:760 };
+  await wait(300);
+  await say(null, "Depuis l'histoire du pont, l'Atrium est plus bondé que jamais : les pages sont pleines et les pourboires grimpent. Et près du tapis de Tess, quelque chose a poussé pendant la nuit : une petite salle, avec un rideau cyan et une enseigne toute neuve.");
+  closeDialog(); camFocus = null; setObjective('Va voir la petite salle de Tess'); phase = 'ch9-salle'; lock = false;
+
+  await until(() => ch9.called);
+  lock = true; setObjective(null); camFocus = { x:1230, y:780 }; player.face = 1;
+  await say('Tess', "Tu te souviens de la cohue, toutes ces demandes qui se battaient pour dix places ? Ça ne fait qu'empirer. Alors j'ai eu une idée.");
+  await say('Tess', "Dans ma petite salle, on fait autant d'échanges qu'on veut, presque gratuitement. Moi, je note tout dans mon cahier. Et de temps en temps, j'inscris un seul résumé dans le grand registre.");
+  const c = await say('Tess', "Une ligne au lieu de cent. Tu veux essayer ?", ["Et comment on entre ?", "Pourquoi je devrais te croire, pour le résumé ?"]);
+  if (c === 1) await say('Tess', "Tu n'as pas à me croire, c'est tout l'intérêt. Et rassure-toi : sa passerelle n'a rien à voir avec le pont des trois gardiens. Elle ne croit pas des signatures, elle croit le registre. Tu verras.");
+  const hasGem = inventory.items.some(i => /cristaux|cristal(?! de)/.test(i) && !/récompense/.test(i));
+  if (!hasGem){ ch9.lent = true; await say('Tess', "Pour entrer, on dépose un cristal dans la passerelle, ici, dans l'Atrium. Tu n'en as plus ? Tiens, je t'en prête un pour l'essai."); }
+  else await say('Tess', "Pour entrer, on dépose un cristal dans la passerelle, ici, dans l'Atrium. Il y reste bien au chaud, et dans la salle tu le retrouves pour t'en servir.");
+  closeDialog();
+  await flyItem([player.x, player.y - 80 * persp(player.y)], [salle.x, salle.y - 90 * persp(salle.y)], 1, 'gems2');
+  salle.glow = 1; inscribe('toi', 'passerelle de la salle', '1 cristal');
+  await wait(700);
+  await showSalle();
+  salle.glow = 1;
+  await say('Tess', `${ch9.trades} échanges ! Dans l'Atrium, il aurait fallu ${ch9.trades} places sur des pages pleines. Moi, j'inscris juste ça :`);
+  closeDialog();
+  inscribe('Tess', 'registre', `résumé de la salle (${ch9.trades} échanges)`);
+  await wait(900);
+  await say('Tess', "Une seule ligne. Et le résumé attend sept jours avant d'être définitif : pendant ce temps, n'importe qui peut le contester s'il est faux.");
+  closeDialog();
+
+  // Célestin publie un faux résumé
+  stranger.x = -120; stranger.y = 830; stranger.vis = true; camFocus = { x:1100, y:790 };
+  await walkTo(stranger, 1120, 850, 360); stranger.face = 1;
+  await say('Célestin', "Bonjour, bonjour ! Moi aussi, j'ai le droit de publier les résumés de cette salle. J'ai même déposé une caution, tout est en règle.");
+  await say('Célestin', "Voici le mien. Tout à fait exact, vous pouvez vérifier. Enfin… si vous en avez le temps.");
+  closeDialog();
+  ch9.caught = await showChallenge();
+  if (ch9.caught === 'toi'){
+    await say(null, "L'Atrium rejoue les échanges du cahier, un par un. Ta ligne est juste, celle de Célestin est fausse. Son résumé est rejeté.");
+  } else {
+    await say(null, "La fenêtre se referme presque… quand Oskar lève la main depuis la table de cartes. « Faux ! Célestin n'est jamais entré dans la salle ! » L'Atrium rejoue les échanges : Oskar a raison.");
+    await say('Oskar', "Je surveille toujours les résumés. Il suffit qu'une seule personne honnête regarde, et le mensonge ne passe pas.");
+  }
+  inscribe('registre', 'Célestin', 'caution confisquée');
+  await say('Célestin', "Tsss. Personne ne fait confiance à personne, ici.");
+  closeDialog();
+  await walkTo(stranger, -120, 850, 440); stranger.vis = false;
+
+  // sortir son cristal
+  const w = await say('Tess', "Bon. Tu veux ressortir ton cristal de la salle ? Il faut attendre que la fenêtre de contestation soit passée : sept jours.", ["J'attends, je ne suis pas pressé.", "Mira, tu peux me l'avancer tout de suite ?"]);
+  if (w === 1){
+    ch9.fast = true;
+    await say('Mira', "Je te l'avance maintenant, contre 0,1 cristal. Moi, je récupérerai le tien dans sept jours. Je fais ça pour tout le monde, c'est mon petit commerce.");
+    closeDialog();
+    inscribe('Mira', 'toi', '1 cristal (avance, 0,1 de frais)');
+  } else {
+    closeDialog();
+    await say(null, "Sept jours plus tard. Pas de contestation : ton cristal ressort de la passerelle, sans frais.");
+    closeDialog();
+    inscribe('passerelle de la salle', 'toi', '1 cristal');
+  }
+  await flyItem([salle.x, salle.y - 90 * persp(salle.y)], [player.x, player.y - 80 * persp(player.y)], 1, 'gems2');
+  if (ch9.lent){ await say('Tess', "Et tu me rends celui que je t'ai prêté. Merci !"); closeDialog(); inscribe('toi', 'Tess', '1 cristal (prêt rendu)'); }
+  await debrief9();
+}
+async function debrief9(){
+  camFocus = { x:1230, y:780 };
+  await say('Tess', "Retiens trois choses. Un : dans une petite salle, on fait beaucoup d'échanges pour presque rien, et le grand registre ne reçoit qu'un résumé.");
+  await say('Tess', "Deux : on n'a pas à croire celui qui publie le résumé. Pendant la fenêtre, n'importe qui peut le contester, et un seul honnête suffit.");
+  await say('Tess', "Trois : c'est pour ça qu'il faut attendre pour ressortir, ou payer quelqu'un pour avancer. D'autres salles joignent une preuve mathématique à chaque résumé : là, plus besoin d'attendre qu'on conteste.");
+  closeDialog(); camFocus = null; phase = 'free'; chapterDone = 9;
+  track('Chapitre terminé', { chapitre:9, score:ch9.caught === 'toi' ? 1 : 0 });
+  const saved9 = writeSave();
+  showEnd({ eyebrow:'Fin du chapitre 9', title:"Les petites salles d'à côté", recap:[
+    `${ch9.trades} échanges dans la salle pour ${fmt(ch9.trades * .1)} miette${ch9.trades * .1 > 1 ? 's' : ''}, au lieu de ${ch9.trades * 4} dans l'Atrium.`,
+    ch9.caught === 'toi' ? (ch9.wrongClicks ? `Tu as démasqué le faux résumé de Célestin, après ${ch9.wrongClicks} fausse${ch9.wrongClicks > 1 ? 's' : ''} piste${ch9.wrongClicks > 1 ? 's' : ''}.` : 'Tu as démasqué le faux résumé de Célestin du premier coup.') : "C'est Oskar qui a démasqué le faux résumé, à la dernière seconde.",
+    ch9.fast ? 'Mira t\'a avancé ton cristal tout de suite, contre 0,1 cristal.' : 'Tu as attendu la fin de la fenêtre pour ressortir ton cristal, sans frais.',
+    'Un résumé pour cent échanges, une fenêtre pour contester, un seul honnête suffit.'],
+    teaser:"<b>Chapitre 10.</b> Le premier bloc : le mystère de Nonce, et un nouvel arrivant à accueillir.", saved:saved9,
+    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 9', chapter9], ['Recommencer au début', chapter]] });
 }
 
 const talk = {
@@ -1769,6 +1952,8 @@ const talk = {
     if (phase === 'ch4-nonce'){ ch4.called = true; return; }
     if (phase === 'ch5-nonce'){ ch5.called = true; return; }
     if (phase === 'ch7-nonce'){ ch7.called = true; return; }
+    if (phase === 'ch9-salle') return chat([['Nonce', "Tess a construit une drôle de petite salle, là-bas. Va voir, je suis curieux de savoir ce que tu en penses."]]);
+    if (chapterDone >= 9) return chat([['Nonce', "Les petites salles de Tess désengorgent l'Atrium. Et le registre reste le juge : c'est lui qui tranche en cas de doute."]]);
     if (chapterDone >= 7) return chat([['Nonce', ch7.outcome === 'stolen' ? "Le trésor se remplit de nouveau, doucement. Au prochain vote, on relira les règles deux fois." : "Le prochain grand vote aura lieu dans un mois. D'ici là, n'importe qui peut proposer de changer les règles… en votant, bien sûr."]]);
     if (phase === 'ch6-table') return chat([['Nonce', "Mira prépare quelque chose à la table de cartes. Avec elle, c'est toujours une bonne idée ou une catastrophe."]]);
     if (chapterDone >= 5) return chat([['Nonce', ch5.mev ? "Mira ne t'en veut plus. Mais elle regarde maintenant qui propose la page avant d'acheter ses graines." : "La cohue est passée. Les pages coûtent de nouveau presque rien. Si tu as quelque chose à inscrire, c'est le moment."]]);
@@ -1799,6 +1984,7 @@ const talk = {
     if (phase === 'ch2-tess'){ ch2.metTess = true; return; }
     if (phase === 'ch3-tess'){ ch3.asked = true; return; }
     if (phase === 'ch8-tess'){ ch8.asked = true; return; }
+    if (phase === 'ch9-salle'){ ch9.called = true; return; }
     if (chapterDone >= 8) return chat([['Tess', ch8.bridge === 'grand' ? "Le coquillage d'en face est arrivé intact. Le grand pont prend son temps, mais il ne se trompe pas." : "Le pont rapide est fermé pour réparations. On dit que ses gardiens auront désormais dix clés au lieu de trois."]]);
     if (phase === 'ch3-table') return chat([['Tess', "Tu entends ce vacarme à la table de cartes ? Va voir, moi je surveille ma machine."]]);
     if (chapterDone >= 3) return chat([['Tess', "Ma machine tourne toute seule, maintenant. Je ne peux plus rien y changer. C'est un peu comme regarder un enfant partir à l'école."]]);
@@ -1810,6 +1996,10 @@ const talk = {
     return chat(sets[tessTalk++ % sets.length]);
   },
   planter: usePlanter,
+  salle(){
+    if (phase === 'ch9-salle'){ ch9.called = true; return; }
+    return chat([['Tess', "La salle est ouverte à tout le monde. Entre, échange, et n'oublie pas de relire les résumés. Oskar le fait tous les soirs."]]);
+  },
   crystal(){ return chat([[null, "Le grand cristal tourne lentement sur lui-même. Personne ne se souvient de qui l'a posé là. Tout le monde a une théorie."]]); },
 };
 const INTER = [
@@ -1818,6 +2008,7 @@ const INTER = [
   { id:'table', hit:() => [431, 690, 105], appr:() => [566, 776] },
   { id:'tess', hit:() => [1150, 772, 78], appr:() => [1030, 842] },
   { id:'planter', hit:() => [640, 628, 58], appr:() => [724, 664] },
+  { id:'salle', hit:() => salle.vis ? [salle.x, salle.y - 80 * persp(salle.y), 60] : [-999, -999, 0], appr:() => [salle.x - 20, salle.y + 64] },
   { id:'crystal', hit:() => [800, 340, 115], appr:null },
 ];
 function hitTest(x, y){ for (const it of INTER){ const [hx, hy, r] = it.hit(); if (Math.hypot(x - hx, y - hy) < r) return it; } return null; }
@@ -1860,13 +2051,13 @@ window.addEventListener('keydown', ev => {
 window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
-const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitre 4 · Les gardiens du registre', 4:'Chapitre 5 · La place sur la page', 5:"Chapitre 6 · Les jetons de l'Atrium", 6:'Chapitre 7 · Le grand vote', 7:'Chapitre 8 · Le messager du dehors', 8:'Chapitres 1 à 8 terminés' };
+const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitre 4 · Les gardiens du registre', 4:'Chapitre 5 · La place sur la page', 5:"Chapitre 6 · Les jetons de l'Atrium", 6:'Chapitre 7 · Le grand vote', 7:'Chapitre 8 · Le messager du dehors', 8:"Chapitre 9 · Les petites salles d'à côté", 9:'Chapitres 1 à 9 terminés' };
 function setupTitle(){
   const d = readSave(), newBtn = $('newBtn');
   if (!d || !d.chapterDone){ newBtn.hidden = true; return; }
   $('titleEyebrow').textContent = CH_NAMES[d.chapterDone] || 'Partie en cours';
-  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution.", 3:"Nonce a une faveur à te demander. Son serment est en jeu.", 4:"L'Atrium bourdonne, et le tirage au sort est tombé sur le siège de Nonce.", 5:"À la table de cartes, Mira dessine des petits piques sur une feuille.", 6:"Une affiche est apparue au pied du grand cristal.", 7:"Mira et Oskar se disputent sur la météo de la plage d'en face." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
-  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3', 3:'Continuer : chapitre 4', 4:'Continuer : chapitre 5', 5:'Continuer : chapitre 6', 6:'Continuer : chapitre 7', 7:'Continuer : chapitre 8' }[d.chapterDone] || "Retourner dans l'Atrium";
+  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution.", 3:"Nonce a une faveur à te demander. Son serment est en jeu.", 4:"L'Atrium bourdonne, et le tirage au sort est tombé sur le siège de Nonce.", 5:"À la table de cartes, Mira dessine des petits piques sur une feuille.", 6:"Une affiche est apparue au pied du grand cristal.", 7:"Mira et Oskar se disputent sur la météo de la plage d'en face.", 8:"Près du tapis de Tess, une petite salle a poussé pendant la nuit." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
+  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3', 3:'Continuer : chapitre 4', 4:'Continuer : chapitre 5', 5:'Continuer : chapitre 6', 6:'Continuer : chapitre 7', 7:'Continuer : chapitre 8', 8:'Continuer : chapitre 9' }[d.chapterDone] || "Retourner dans l'Atrium";
   newBtn.hidden = false;
 }
 let confirmNew = false;
@@ -1876,7 +2067,7 @@ $('startBtn').addEventListener('click', () => {
   track('Partie lancée', { reprise:!!(d && d.chapterDone), chapitre:d && d.chapterDone ? d.chapterDone + 1 : 1 });
   if (!d || !d.chapterDone) return chapter();
   restore(d);
-  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else if (d.chapterDone === 3) chapter4(); else if (d.chapterDone === 4) chapter5(); else if (d.chapterDone === 5) chapter6(); else if (d.chapterDone === 6) chapter7(); else if (d.chapterDone === 7) chapter8(); else resumeFree();
+  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else if (d.chapterDone === 3) chapter4(); else if (d.chapterDone === 4) chapter5(); else if (d.chapterDone === 5) chapter6(); else if (d.chapterDone === 6) chapter7(); else if (d.chapterDone === 7) chapter8(); else if (d.chapterDone === 8) chapter9(); else resumeFree();
 });
 $('newBtn').addEventListener('click', () => {
   if (!confirmNew){ confirmNew = true; $('newBtn').textContent = 'Confirmer : effacer ma progression'; return; }
@@ -1914,6 +2105,7 @@ function update(dt){
   }
   if (phase === 'ch2-go' && player.x < 920) ch2.met = true;
   moveEntity(stranger, dt);
+  if (salle.glow > 0) salle.glow = Math.max(0, salle.glow - dt * .7);
   if (machine.flash > 0) machine.flash = Math.max(0, machine.flash - dt * .8);
   if (machine.deny > 0) machine.deny = Math.max(0, machine.deny - dt * .6);
   for (let i = tweens.length - 1; i >= 0; i--){ const tw = tweens[i]; tw.t += dt; const u = Math.min(1, tw.t / tw.dur); tw.fn(u); if (u >= 1){ tweens.splice(i, 1); tw.res(); } }
@@ -1933,6 +2125,7 @@ function render(){
     { y:614, d:() => drawPedestal(g) },
     { y:738, d:() => drawCardTable(g) },
     { y:815, d:() => drawTess(g, time) },
+    { y:salle.y, d:() => { if (salle.vis) drawSalle(g, time); } },
     { y:planter.y, d:() => drawPlanter(g, time) },
     { y:702, d:() => drawPot(g, 180, 702, time, false) },
     { y:717, d:() => drawPot(g, 1420, 717, time, true) },
@@ -1952,6 +2145,7 @@ function render(){
   if (phase === 'ch2-go' && !busy) drawMarker(g, 431, 600, time);
   if (phase === 'ch8-table' && !busy) drawMarker(g, 431, 600, time);
   if (phase === 'ch8-tess' && !busy) drawMarker(g, 1150, 815 - 150 * persp(815), time);
+  if (phase === 'ch9-salle' && !busy) drawMarker(g, salle.x, salle.y - 220 * persp(salle.y), time);
   if (phase === 'ch7-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
   if (phase === 'ch6-table' && !busy) drawMarker(g, 431, 600, time);
   if (phase === 'ch5-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
@@ -1970,7 +2164,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 // outil de test : ouvrir index.html#debug expose window.atrium
-if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, ch4:{ ...ch4 }, ch5:{ ...ch5 }, ch6:{ ...ch6 }, ch7:{ ...ch7 }, ch8:{ ...ch8 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
+if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, ch4:{ ...ch4 }, ch5:{ ...ch5 }, ch6:{ ...ch6 }, ch7:{ ...ch7 }, ch8:{ ...ch8 }, ch9:{ ...ch9 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
 resetWorld();
 resize();
 window.addEventListener('resize', resize);
