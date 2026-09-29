@@ -13,11 +13,16 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 | Le registre et ses blocs | La blockchain |
 | Le parchemin de Célestin | Une approbation de token signée à l'aveugle |
 | Révoquer l'autorisation | Révoquer une approbation (revoke) |
+| La machine à promesses | Un smart contract (ici un séquestre) |
+| Le bac à sable | Le testnet |
+| Poser la machine | Déployer : le code devient immuable |
+| « Tess peut tout retirer » | Une clé d'admin, un point de défaillance |
 
 ## État actuel
 
 - **Chapitre 1, « L'arrivée »** : le coffre en verre, les douze mots, la première transaction.
 - **Chapitre 2, « L'inconnu très aimable »** : Tess paie 3 cristaux, puis Célestin tente trois ruses (l'urgence, le cadeau trop beau, la signature à l'aveugle). Si le joueur se fait avoir, le vol est public et irréversible ; avec des mots donnés, Nonce crée un nouveau coffre, avec une signature, on révoque l'autorisation.
+- **Chapitre 3, « La machine à promesses »** : Mira et Oskar veulent échanger sans se faire confiance. Le joueur choisit les règles de la machine de Tess parmi six cartes (dont deux pièges), les teste dans un bac à sable sur quatre scénarios, puis la pose dans le registre. Une machine posée ne se modifie plus : en cas de faille, elle est exploitée et il faut en poser une nouvelle.
 
 ## Stack
 
@@ -59,5 +64,5 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 
 ## Pistes
 
-- Chapitre 3 : la machine à promesses de Tess (smart contracts).
+- Chapitre 4 : les gardiens du registre (validateurs, consensus, staking).
 - Un carnet pour recopier ses mots.

@@ -316,11 +316,43 @@ function drawTess(g, t){
   const k = reduce ? 0 : Math.sin(t * 2.2) * 3;
   limb(g, [[10, -72], [22, -50], [34, -38 + k]], 8, TESS.shirt); hand(g, 34, -38 + k, TESS.skin);
   g.restore();
+  if (machine.vis){ drawMachine(g, t); return; }
   [[-66, 4, C.cyan, 1], [-44, 12, C.lav, .8], [-80, -8, C.violet, .7], [-30, -4, C.cyan, .6]].forEach(([dx, dy, c, k2], i) => {
     const cx = x + dx * s, cy = y + dy * s - 10 * s * k2 - (reduce ? 0 : Math.sin(t * 1.5 + i) * 1.5), r = 11 * s * k2;
     poly(g, [[cx, cy - r * 1.4], [cx - r, cy], [cx, cy + r * .9], [cx + r, cy]]); fs(g, c, C.ink, 1.4);
     g.beginPath(); g.moveTo(cx - r, cy); g.lineTo(cx + r, cy); g.moveTo(cx, cy - r*1.4); g.lineTo(cx, cy + r*.9); g.strokeStyle = C.ink; g.lineWidth = .9; g.stroke();
   });
+}
+const machine = { x:1080, y:808, vis:false, version:0, flash:0, deny:0, held:[] };
+function drawMachine(g, t){
+  const s = persp(machine.y), x = machine.x, y = machine.y;
+  g.save(); g.translate(x, y); g.scale(s, s);
+  if (machine.flash > 0 || machine.deny > 0){
+    g.fillStyle = machine.deny > 0 ? hexA(C.peach, machine.deny * .8) : hexA(C.cyan, machine.flash * .7);
+    g.beginPath(); g.arc(0, -40, 70, 0, TAU); g.fill();
+  }
+  poly(g, [[-34, -8], [-30, -40], [30, -40], [34, -8]]); fs(g, C.lav);
+  g.beginPath(); g.ellipse(0, -6, 34, 8, 0, 0, Math.PI); fs(g, C.lav);
+  // entrées et sortie
+  poly(g, [[-40, -46], [-26, -46], [-30, -34], [-36, -34]]); fs(g, C.peach);
+  poly(g, [[26, -46], [40, -46], [36, -34], [30, -34]]); fs(g, C.peach);
+  g.beginPath(); g.rect(-8, -22, 16, 10); fs(g, C.paper, C.ink, 1.5);
+  // dôme de verre
+  g.beginPath(); g.ellipse(0, -40, 24, 7, 0, 0, TAU); fs(g, C.paper);
+  g.beginPath(); g.moveTo(-22, -41); g.bezierCurveTo(-22, -80, 22, -80, 22, -41); fs(g, hexA(C.cyan, .35));
+  const b = reduce ? 0 : Math.sin(t * 2) * 2.5;
+  drawGem(g, 0, -56 + b, 1.2, machine.deny > 0 ? C.peach : C.violet);
+  machine.held.forEach((k, i) => { const hx = i ? 10 : -10; if (k === 'gems') drawGem(g, hx, -46, .7, C.cyan); else drawCards(g, hx, -47, .6); });
+  g.strokeStyle = C.paper; g.lineWidth = 2; g.beginPath(); g.moveTo(-14, -48); g.quadraticCurveTo(-14, -64, -6, -68); g.stroke();
+  // numéro de version gravé
+  g.fillStyle = C.ink; for (let i = 0; i < machine.version; i++){ g.beginPath(); g.arc(-22 + i * 6, -16, 1.8, 0, TAU); g.fill(); }
+  g.restore();
+}
+function drawCards(g, x, y, k){
+  g.save(); g.translate(x, y); g.scale(k, k);
+  [-.25, 0, .25].forEach((r, i) => { g.save(); g.rotate(r); g.beginPath(); g.rect(-6, -14, 12, 17); fs(g, i === 1 ? C.peach : C.paper, C.ink, 1.5); g.restore(); });
+  drawSparkle(g, 0, -6, .3);
+  g.restore();
 }
 function drawCat(g, c, t){
   const s = persp(c.y) * .95;
@@ -413,7 +445,7 @@ const OBST = [[430,740,128,40],[800,608,150,30],[1200,645,34,13],[1150,815,104,3
 let phase = 'title', lock = true, meetTriggered = false, time = 0, sparkleUntil = -1, camFocus = null;
 const inventory = { key:false, items:[] }, ledger = [];
 let tableTalk = 0, tessTalk = 0, busy = false, chapterDone = 0;
-const ch2 = {};
+const ch2 = {}, ch3 = {};
 const fx = [], tweens = [], waiters = [];
 
 function resetWorld(){
@@ -424,6 +456,8 @@ function resetWorld(){
   Object.assign(planter, { x:640, y:640, grow:0, planted:false });
   Object.assign(stranger, { x:-120, y:770, face:1, walk:0, moving:false, target:null, vis:false, tall:1.1, robe:true, hat:true, hatColor:C.lav, cape:C.peach, shirt:C.lav, pants:C.peri, hair:C.peach, style:'short', skin:C.skin, smile:true, badge:true, gesture:false });
   Object.assign(ch2, { metTess:false, met:false, toldNonce:false, resisted:0, stolen:null });
+  Object.assign(machine, { vis:false, version:0, flash:0, deny:0, held:[] });
+  Object.assign(ch3, { talked:false, asked:false, tests:0, deploys:0, done:false });
   chapterDone = 0;
   walkers.length = 0;
   walkers.push({ x:620, y:580, face:1, walk:0, moving:true, shirt:C.lav, pants:C.peri, hair:C.peach, style:'long', skin:C.skin, min:628, max:700, sp:18 });
@@ -465,6 +499,8 @@ function flyItem(from, to, dur, kind){
     for (let k = 6; k >= 1; k--){ const pk = quad(from, c, to, Math.max(0, e - k * .03)); g.fillStyle = hexA(C.cyan, .5 - k * .06); g.beginPath(); g.arc(pk[0], pk[1], 7 - k * .7, 0, TAU); g.fill(); }
     const p = quad(from, c, to, e);
     if (kind === 'bubble'){ const r = 8 + e * 26; g.globalAlpha = .75; g.beginPath(); g.arc(p[0], p[1], r, 0, TAU); fs(g, C.cyan, C.ink, 1.6); g.globalAlpha = 1; g.strokeStyle = C.paper; g.lineWidth = 2; g.beginPath(); g.arc(p[0], p[1], r * .65, -2.6, -1.8); g.stroke(); }
+    else if (kind === 'cards'){ g.fillStyle = hexA(C.peach, .5); g.beginPath(); g.arc(p[0], p[1], 18, 0, TAU); g.fill(); drawCards(g, p[0], p[1] + 6, 1.1); }
+    else if (kind === 'gems2'){ g.fillStyle = hexA(C.cyan, .5); g.beginPath(); g.arc(p[0], p[1], 18, 0, TAU); g.fill(); drawGem(g, p[0] - 6, p[1] + 2, .9, C.cyan); drawGem(g, p[0] + 6, p[1] + 2, .9, C.lav); }
     else if (kind === 'gems'){ g.fillStyle = hexA(C.cyan, .5); g.beginPath(); g.arc(p[0], p[1], 20, 0, TAU); g.fill(); drawGem(g, p[0] - 9, p[1] + 2, .9, C.cyan); drawGem(g, p[0] + 9, p[1] + 2, .9, C.lav); drawGem(g, p[0], p[1] - 6, 1, C.violet); }
     else { g.fillStyle = hexA(C.cyan, .5); g.beginPath(); g.arc(p[0], p[1], 16, 0, TAU); g.fill(); drawSeed(g, p[0], p[1], 1.3); }
   }}));
@@ -589,7 +625,7 @@ function stay(){ lock = false; phase = 'free'; }
 const SAVE_KEY = 'atrium.save.v1';
 function readSave(){ try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); return d && d.v === 1 ? d : null; } catch (e) { return null; } }
 function writeSave(){
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, savedAt:Date.now() })); return true; }
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, savedAt:Date.now() })); return true; }
   catch (e) { return false; }
 }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
@@ -599,6 +635,7 @@ function restore(d){
   Object.assign(ch2, d.ch2 || {});
   Object.assign(cat, { x:1262, y:668, face:-1, wp:CAT_WP.length - 1 });
   Object.assign(planter, { grow:1, planted:true });
+  if (d.chapterDone >= 3) Object.assign(machine, { vis:true, version:d.machineVersion || 1 });
   $('chestBtn').hidden = false; renderPanel();
 }
 async function resumeFree(){
@@ -817,7 +854,7 @@ async function debrief(){
     ch2.stolen === 'words' ? 'Tu as un nouveau coffre et de nouveaux mots.' : ch2.stolen === 'signature' ? "Tu as révoqué l'autorisation que tu avais signée." : 'Tu as lu les petites lignes avant de signer.',
     "Urgence, cadeau trop beau, signature à l'aveugle : tu connais les trois ruses."],
     teaser:"<b>Chapitre 3.</b> La machine à promesses de Tess : un accord que personne ne peut trahir, pas même elle.", saved:saved2,
-    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 2', chapter2], ['Recommencer au début', chapter]] });
+    buttons:[['Continuer : chapitre 3', chapter3, true], ["Rester dans l'Atrium", stay], ['Rejouer le chapitre 2', chapter2]] });
 }
 async function usePlanter(){
   if (phase !== 'plant'){
@@ -833,6 +870,177 @@ async function usePlanter(){
   await tween(2.4, u => { planter.grow = ease(u); });
   planter.planted = true; busy = false;
 }
+/* chapter 3 : la machine à promesses */
+const RULES = [
+  { id:'A', text:"Garder à l'abri tout ce que Mira et Oskar déposent." },
+  { id:'F', text:"Donner les cristaux à Oskar dès que Mira les dépose." },
+  { id:'C', text:"Si l'échange n'est pas complet à la tombée de la nuit, rendre à chacun ce qu'il a déposé." },
+  { id:'E', text:"Tess peut tout retirer à tout moment, au cas où." },
+  { id:'B', text:"Quand les deux ont déposé, donner les cristaux à Oskar et le jeu doré à Mira." },
+  { id:'D', text:"Seuls Mira et Oskar peuvent déposer ou retirer." },
+];
+function runTests(r){
+  const has = id => r.has(id);
+  return [
+    { name:"L'échange normal : les deux déposent.", ok:has('A') && has('B'),
+      why:!has('A') ? "La machine ne garde rien : les dépôts retombent par terre." : !has('B') ? "Les deux ont déposé… et rien ne se passe. Aucune règle ne dit quoi faire ensuite." : "Mira reçoit le jeu doré, Oskar reçoit ses cristaux." },
+    { name:'Oskar ne dépose jamais son jeu.', ok:has('C') && !has('F'),
+      why:has('F') ? "Oskar reçoit les cristaux tout de suite… et repart sans rien donner." : !has('C') ? "Les cristaux de Mira restent coincés dans la machine, pour toujours." : "À la nuit tombée, Mira récupère ses cristaux." },
+    { name:'Célestin essaie de retirer les dépôts.', ok:has('D'),
+      why:has('D') ? "La machine refuse : il n'est ni Mira ni Oskar." : "Rien ne l'en empêche : il repart avec tout ce qu'il y a dedans." },
+    { name:'Célestin a volé la clé de Tess.', ok:!has('E'),
+      why:has('E') ? "La porte de secours s'ouvre pour lui aussi. Il vide la machine." : "Il n'y a aucune porte de secours : la clé de Tess ne sert à rien ici." },
+  ];
+}
+function showBuilder(sel){
+  return new Promise(res => {
+    let results = null;
+    const draw = () => {
+      mcard.classList.add('wide');
+      mcard.innerHTML = `<p class="eyebrow">Machine à promesses n°${machine.version + 1}</p><h2>Les règles</h2>
+        <p>Mira donne <b>2 cristaux</b>, Oskar donne son <b>jeu de cartes doré</b>. Choisis ce que la machine doit faire. Elle fera exactement ça, ni plus, ni moins.</p>
+        <div class="rules">${RULES.map(r => `<button class="rule" data-r="${r.id}" aria-pressed="${sel.has(r.id)}">${r.text}</button>`).join('')}</div>
+        ${results ? `<h3 class="tests-title">Bac à sable · essai n°${ch3.tests}</h3><ol class="tests">${results.map((t, i) => `<li class="${t.ok ? 'ok' : 'ko'}" style="--i:${i}"><span class="pill">${t.ok ? 'Réussi' : 'Échec'}</span><b>${t.name}</b><br>${t.why}</li>`).join('')}</ol>` : '<p class="hint">Dans le bac à sable, rien n\'est réel : on peut tout essayer sans rien perdre.</p>'}
+        <div class="row"><button class="btn primary" id="bTest">Tester dans le bac à sable</button><button class="btn" id="bDeploy" ${results ? '' : 'disabled'}>Poser la machine dans le registre</button></div>`;
+      modal.hidden = false;
+      mcard.querySelectorAll('.rule').forEach(b => b.addEventListener('click', () => {
+        const id = b.dataset.r; sel.has(id) ? sel.delete(id) : sel.add(id); b.setAttribute('aria-pressed', String(sel.has(id))); sfx('select');
+      }));
+      $('bTest').addEventListener('click', () => {
+        ch3.tests++; results = runTests(sel); sfx(results.every(t => t.ok) ? 'ledger' : 'fail'); draw();
+        const t = mcard.querySelector('.tests'); if (t) t.scrollIntoView({ block:'nearest' });
+        $('bTest').focus({ preventScroll:true });
+      });
+      $('bDeploy').addEventListener('click', () => { modal.hidden = true; mcard.classList.remove('wide'); res(runTests(sel)); });
+    };
+    draw();
+  });
+}
+function seatHead(x){ const y = 736; return [x, y - 124 * persp(y)]; }
+function setupChapter3(){
+  Object.assign(planter, { grow:1, planted:true });
+  Object.assign(stranger, { x:-120, y:770, vis:false, target:null, gesture:false });
+  Object.assign(machine, { vis:false, version:0, flash:0, deny:0, held:[] });
+  Object.assign(ch3, { talked:false, asked:false, tests:0, deploys:0, done:false });
+  Object.assign(player, { x:760, y:720, face:1, target:null, moving:false });
+  $('chestBtn').hidden = false; renderPanel();
+}
+async function chapter3(){
+  setupChapter3(); phase = 'ch3-intro'; lock = true; camFocus = null;
+  await wait(300);
+  await say(null, "Quelques jours plus tard. À la table de cartes, le ton monte. Même Gwei a levé la tête.");
+  closeDialog(); setObjective('Va voir ce qui se passe à la table de cartes'); phase = 'ch3-table'; lock = false;
+
+  await until(() => ch3.talked);
+  lock = true; setObjective(null); camFocus = { x:520, y:720 };
+  await say('Mira', "Je veux son jeu de cartes doré. Je lui offre deux cristaux, c'est un bon prix.");
+  await say('Oskar', "D'accord pour deux cristaux. Mais tu me les donnes d'abord.");
+  await say('Mira', "Certainement pas. Tu me donnes le jeu d'abord.");
+  await say('Oskar', "Jamais de la vie.");
+  const c = await say(null, "Ils se regardent. Personne ne bouge. Ça pourrait durer des jours.", ["Et si quelqu'un gardait les deux pendant l'échange ?", "Nonce pourrait servir d'intermédiaire, non ?"]);
+  if (c === 1){
+    await say('Mira', "Nonce ? Je l'adore. Mais s'il se trompe, s'il oublie, ou s'il part en voyage avec mes cristaux ?");
+    await say('Oskar', "Il faudrait un intermédiaire qui ne peut pas se tromper. Ni tricher. Ni partir.");
+  } else {
+    await say('Oskar', "Quelqu'un ? Alors il faudrait lui faire confiance, à ce quelqu'un. Moi, je ne fais confiance à personne.");
+    await say('Mira', "Il faudrait quelque chose. Pas quelqu'un.");
+  }
+  await say('Mira', "…Attends. La machine de Tess ?");
+  closeDialog(); camFocus = null;
+  setObjective('Demande à Tess de fabriquer un accord'); phase = 'ch3-tess'; lock = false;
+
+  await until(() => ch3.asked);
+  lock = true; setObjective(null); player.face = 1;
+  await say('Tess', "Un échange entre Mira et Oskar, sans que l'un fasse confiance à l'autre ? C'est exactement pour ça que j'ai construit ma machine !");
+  await say('Tess', "Une machine à promesses, c'est un accord écrit sous forme de règles. Une fois posée dans le registre, elle fait exactement ce qui est écrit. Ni plus, ni moins. Et personne ne peut plus la changer, pas même moi.");
+  await say('Tess', "Alors on choisit les règles ensemble, et on la teste d'abord dans le bac à sable, là où rien n'est réel. Choisis bien : certaines règles ont l'air gentilles…");
+  closeDialog();
+
+  const sel = new Set();
+  for (;;){
+    const results = await showBuilder(sel);
+    ch3.deploys++; machine.version++;
+    machine.vis = true; machine.held = []; ring(machine.x, machine.y - 40, .6);
+    inscribe('Tess', 'registre', `machine à promesses n°${machine.version}`);
+    await wait(900);
+    const fail = results.find(t => !t.ok);
+    if (!fail){ await tradeSucceeds(); break; }
+    await tradeFails(results, sel);
+  }
+  await debrief3();
+}
+async function tradeSucceeds(){
+  camFocus = { x:760, y:760 };
+  await say('Tess', "Elle est posée. Mira, Oskar : à vous.");
+  closeDialog();
+  const mh = [1080, 808 - 60 * persp(808)];
+  await flyItem(seatHead(512), mh, 1.1, 'gems2'); machine.held.push('gems'); inscribe('Mira', 'machine', '2 cristaux');
+  await wait(600);
+  await flyItem(seatHead(350), mh, 1.1, 'cards'); machine.held.push('cards'); inscribe('Oskar', 'machine', 'jeu de cartes doré');
+  machine.flash = 1; await wait(900);
+  machine.held = [];
+  flyItem(mh, seatHead(350), 1.1, 'gems2'); await flyItem(mh, seatHead(512), 1.1, 'cards');
+  inscribe('machine', 'Mira et Oskar', 'échange terminé');
+  await wait(700);
+  await say('Mira', "Il est à moi ! Et je n'ai pas eu à te faire confiance une seule seconde, Oskar.");
+  await say('Oskar', "Moi non plus. C'est reposant, en fait.");
+  closeDialog();
+  // Célestin tente sa chance
+  stranger.x = -120; stranger.y = 830; stranger.vis = true; camFocus = { x:900, y:780 };
+  await walkTo(stranger, 990, 835, 340); stranger.face = 1;
+  await say('Célestin', "Tiens, tiens, une machine toute neuve… Je suis de l'Assistance officielle. J'ai juste besoin de retirer son contenu pour une petite vérification.");
+  closeDialog();
+  stranger.gesture = true; machine.deny = 1; sfx('fail'); await wait(500);
+  await say(null, "La machine clignote. Elle ne connaît que deux noms, Mira et Oskar, et « Célestin » n'en fait pas partie. Rien ne sort.");
+  await say('Célestin', "Tsss. Plus moyen de vérifier quoi que ce soit, ici.");
+  closeDialog(); stranger.gesture = false;
+  await walkTo(stranger, -120, 835, 380); stranger.vis = false; camFocus = null;
+}
+async function tradeFails(results, sel){
+  camFocus = { x:760, y:760 };
+  const fail = results.find(t => !t.ok), idx = results.indexOf(fail);
+  const mh = [1080, 808 - 60 * persp(808)];
+  if (idx === 0){
+    await say(null, `La machine est posée. Mira et Oskar s'approchent… ${fail.why}`);
+  } else {
+    await flyItem(seatHead(512), mh, 1.1, 'gems2'); inscribe('Mira', 'machine', '2 cristaux');
+    await wait(500);
+    if (idx === 1){
+      if (sel.has('F')){ machine.held = []; await flyItem(mh, seatHead(350), 1, 'gems2'); inscribe('machine', 'Oskar', '2 cristaux'); }
+      await say('Oskar', "Finalement… je crois que je vais garder mon jeu.");
+      await say(null, fail.why);
+    } else {
+      stranger.x = -120; stranger.y = 830; stranger.vis = true;
+      await walkTo(stranger, 990, 835, 380); stranger.face = 1;
+      await say('Célestin', idx === 3 ? "J'ai trouvé une jolie clé par terre. Elle est à Tess, je crois. Voyons ce qu'elle ouvre…" : "Une machine toute neuve ! Voyons si elle sait dire non…");
+      closeDialog();
+      await flyItem(mh, [stranger.x, stranger.y - 110 * persp(stranger.y)], 1, 'gems2'); inscribe('machine', 'Célestin', '2 cristaux');
+      await say(null, fail.why);
+      closeDialog(); await walkTo(stranger, -120, 835, 460); stranger.vis = false;
+    }
+  }
+  await say('Tess', "Aïe. On ne peut pas la réparer : elle est gravée dans le registre, avec sa faille. Tout ce qu'on peut faire, c'est en poser une nouvelle, et que plus personne n'utilise celle-là.");
+  if (idx > 0) await say('Mira', "Heureusement, il me reste deux cristaux. Mais cette fois, testez-la comme il faut.");
+  closeDialog(); camFocus = null;
+}
+async function debrief3(){
+  camFocus = { x:1060, y:800 };
+  await walkTo(player, 1030, 842, 250); player.face = 1;
+  await say('Tess', "Elle a marché. Et regarde : personne n'a eu à faire confiance à personne. Il suffisait de faire confiance aux règles, et tout le monde peut les lire.");
+  await say('Tess', "Retiens ça. Un : la machine fait ce qui est écrit, pas ce qu'on voulait dire. Chaque règle compte, celles qu'on oublie aussi.");
+  await say('Tess', "Deux : on teste avant de poser. Après, c'est gravé : on ne répare pas, on remplace.");
+  await say('Tess', "Trois : pas de porte de secours. Une clé de secours, c'est aussi une clé pour les voleurs.");
+  closeDialog(); camFocus = null; phase = 'free'; chapterDone = 3;
+  const saved3 = writeSave();
+  showEnd({ eyebrow:'Fin du chapitre 3', title:'La machine à promesses', recap:[
+    `Essais dans le bac à sable : <b>${ch3.tests}</b>. Machines posées : <b>${ch3.deploys}</b>.`,
+    ch3.deploys === 1 ? 'Ta machine était juste du premier coup.' : `Il a fallu ${ch3.deploys} machines : les précédentes restent gravées dans le registre, avec leurs failles.`,
+    "Mira et Oskar ont échangé sans se faire confiance. Célestin n'a rien pu retirer.",
+    'Une machine fait ce qui est écrit, se teste avant d\'être posée, et n\'a pas de porte de secours.'],
+    teaser:"<b>Chapitre 4.</b> Qui écrit vraiment le registre ? Les gardiens, et leur étrange serment.", saved:saved3,
+    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 3', chapter3], ['Recommencer au début', chapter]] });
+}
+
 const talk = {
   nonce(){
     if (phase === 'follow'){ meetTriggered = true; return; }
@@ -840,12 +1048,18 @@ const talk = {
     if (phase === 'ch2-nonce'){ ch2.toldNonce = true; return; }
     if (phase === 'ch2-tess') return chat([['Nonce', "Tess t'appelle depuis tout à l'heure. Elle a l'air de très bonne humeur."]]);
     if (phase === 'ch2-go') return chat([['Nonce', "Des cristaux ? Tess a donc réussi. Va vite les montrer à Oskar."]]);
+    if (phase === 'ch3-table') return chat([['Nonce', "J'entends Mira et Oskar d'ici. Va voir, avant qu'ils ne réveillent Gwei."]]);
+    if (phase === 'ch3-tess') return chat([['Nonce', "Un intermédiaire qui ne peut ni se tromper ni tricher ? Tess a ce qu'il te faut."]]);
+    if (chapterDone >= 3) return chat([['Nonce', "Une machine que personne ne peut arrêter, pas même celle qui l'a construite. Ça me donne un peu le vertige, parfois."]]);
     if (chapterDone >= 2) return chat([['Nonce', "Si Célestin revient, tu sauras quoi lui répondre. Et il reviendra, sous un autre nom, avec un autre chapeau."]]);
     return chat([['Nonce', "Tu reviendras me voir ? Il y a encore beaucoup de gens à rencontrer ici. Certains sont très gentils. D'autres le sont un peu trop."]]);
   },
   cat(){ sfx('meow'); return chat([[null, "Gwei cligne lentement des yeux. Chez les chats, c'est un signe de confiance."]]); },
   table(){
     if (phase === 'ch2-go'){ ch2.met = true; return; }
+    if (phase === 'ch3-table'){ ch3.talked = true; return; }
+    if (phase === 'ch3-tess') return chat([['Mira', "Va voir Tess ! On ne bouge pas d'ici."], ['Oskar', "Surtout pas avant elle."]]);
+    if (chapterDone >= 3) return chat([['Mira', "Regarde mon jeu doré. Il brille, hein ?"], ['Oskar', "Et moi, j'ai deux cristaux. Et aucune rancune. C'est la machine qui a tout fait."]]);
     if (chapterDone >= 2) return chat([['Oskar', "Célestin ? Il a essayé avec moi aussi, l'an dernier. Il m'a proposé cent graines d'or."], ['Mira', "Et tu as failli recopier tes mots. Tout le monde l'a vu."]]);
     const sets = [
       [['Mira', "On joue aux cartes. Personne ne triche : tout le monde voit toutes les mains."], ['Oskar', "Enfin… presque toutes. Reviens quand tu veux, on t'apprendra."]],
@@ -855,6 +1069,9 @@ const talk = {
   },
   tess(){
     if (phase === 'ch2-tess'){ ch2.metTess = true; return; }
+    if (phase === 'ch3-tess'){ ch3.asked = true; return; }
+    if (phase === 'ch3-table') return chat([['Tess', "Tu entends ce vacarme à la table de cartes ? Va voir, moi je surveille ma machine."]]);
+    if (chapterDone >= 3) return chat([['Tess', "Ma machine tourne toute seule, maintenant. Je ne peux plus rien y changer. C'est un peu comme regarder un enfant partir à l'école."]]);
     if (chapterDone >= 2) return chat([['Tess', ch2.stolen ? "Célestin t'a pris mes cristaux ? Il a essayé avec ma machine aussi. Elle ne l'a pas laissé faire." : "Tu as encore mes trois cristaux ? Garde-les bien. Au chapitre suivant, on les met dans la machine."]]);
     const sets = [
       [['Tess', "Je fabrique une petite machine à promesses. Tu mets une graine d'un côté, une fleur sort de l'autre. Sans personne au milieu."], ['Tess', "Enfin, quand elle marchera. Repasse plus tard."]],
@@ -913,13 +1130,13 @@ window.addEventListener('keydown', ev => {
 window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
-const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitres 1 et 2 terminés' };
+const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitres 1 à 3 terminés' };
 function setupTitle(){
   const d = readSave(), newBtn = $('newBtn');
   if (!d || !d.chapterDone){ newBtn.hidden = true; return; }
   $('titleEyebrow').textContent = CH_NAMES[d.chapterDone] || 'Partie en cours';
-  $('titleLede').textContent = d.chapterDone === 1 ? "Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi." : "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
-  $('startBtn').textContent = d.chapterDone === 1 ? 'Continuer : chapitre 2' : "Retourner dans l'Atrium";
+  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
+  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3' }[d.chapterDone] || "Retourner dans l'Atrium";
   newBtn.hidden = false;
 }
 let confirmNew = false;
@@ -928,7 +1145,7 @@ $('startBtn').addEventListener('click', () => {
   const d = readSave();
   if (!d || !d.chapterDone) return chapter();
   restore(d);
-  if (d.chapterDone === 1) chapter2(); else resumeFree();
+  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else resumeFree();
 });
 $('newBtn').addEventListener('click', () => {
   if (!confirmNew){ confirmNew = true; $('newBtn').textContent = 'Confirmer : effacer ma progression'; return; }
@@ -966,6 +1183,8 @@ function update(dt){
   }
   if (phase === 'ch2-go' && player.x < 920) ch2.met = true;
   moveEntity(stranger, dt);
+  if (machine.flash > 0) machine.flash = Math.max(0, machine.flash - dt * .8);
+  if (machine.deny > 0) machine.deny = Math.max(0, machine.deny - dt * .6);
   for (let i = tweens.length - 1; i >= 0; i--){ const tw = tweens[i]; tw.t += dt; const u = Math.min(1, tw.t / tw.dur); tw.fn(u); if (u >= 1){ tweens.splice(i, 1); tw.res(); } }
   for (let i = fx.length - 1; i >= 0; i--){ const f = fx[i]; f.t += dt; if (f.t >= f.dur){ fx.splice(i, 1); f.res(); } }
   for (let i = waiters.length - 1; i >= 0; i--){ if (waiters[i].fn()){ const w = waiters.splice(i, 1)[0]; w.res(); } }
@@ -1000,6 +1219,8 @@ function render(){
   if (phase === 'plant' && !busy) drawMarker(g, planter.x, planter.y - 60, time);
   if (phase === 'ch2-tess' && !busy) drawMarker(g, 1150, 815 - 150 * persp(815), time);
   if (phase === 'ch2-go' && !busy) drawMarker(g, 431, 600, time);
+  if (phase === 'ch3-table' && !busy) drawMarker(g, 431, 600, time);
+  if (phase === 'ch3-tess' && !busy) drawMarker(g, 1150, 815 - 150 * persp(815), time);
   if (phase === 'ch2-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
   if (time < sparkleUntil){ const a = Math.min(1, (sparkleUntil - time) / .6); g.globalAlpha = a; witnesses().forEach(([x, y], i) => drawSparkle(g, x, y - (reduce ? 0 : Math.abs(Math.sin(time * 3 + i)) * 6), .8)); g.globalAlpha = 1; }
   fx.forEach(f => f.draw(g, Math.min(1, f.t / f.dur)));
@@ -1012,7 +1233,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 // outil de test : ouvrir index.html#debug expose window.atrium
-if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
+if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
 resetWorld();
 resize();
 window.addEventListener('resize', resize);
