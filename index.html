@@ -65,18 +65,31 @@
   </div>
 
   <aside class="panel" id="panel" hidden>
-    <header><h2>Ton coffre</h2><button class="x" id="panelClose" aria-label="Fermer">×</button></header>
-    <div class="contents">
-      <svg viewBox="0 0 64 52" aria-hidden="true"><path d="M6 20 L16 10 L58 10 L48 20 Z" fill="#aeefe7" fill-opacity=".6" stroke="#3a3cb2" stroke-width="2" stroke-linejoin="round"/><path d="M48 20 L58 10 L58 40 L48 50 Z" fill="#aeefe7" fill-opacity=".45" stroke="#3a3cb2" stroke-width="2" stroke-linejoin="round"/><ellipse id="panelSeed" cx="30" cy="40" rx="6" ry="4.4" fill="#f7c8a6" stroke="#3a3cb2" stroke-width="1.6"/><rect x="6" y="20" width="42" height="30" fill="#aeefe7" fill-opacity=".3" stroke="#3a3cb2" stroke-width="2"/><rect x="23" y="23" width="8" height="9" fill="#f8f7ff" stroke="#3a3cb2" stroke-width="1.6"/></svg>
-      <p id="contentsText">Vide.</p>
+    <header><h2 id="panelTitle">Ton coffre</h2><button class="x" id="panelClose" aria-label="Fermer">×</button></header>
+    <div class="ptabs" role="tablist" aria-label="Carnet">
+      <button class="ptab" role="tab" data-ptab="coffre" aria-selected="true">Coffre</button>
+      <button class="ptab" role="tab" data-ptab="parcours" aria-selected="false">Parcours</button>
+      <button class="ptab" role="tab" data-ptab="lexique" aria-selected="false">Lexique</button>
+      <button class="ptab" role="tab" data-ptab="registre" aria-selected="false">Registre</button>
     </div>
-    <dl class="facts">
-      <div><dt>Serrure</dt><dd id="lockText">Pas encore de clé</dd></div>
-      <div><dt>Contenu visible par</dt><dd>Tout l'Atrium</dd></div>
-      <div><dt>Peut l'ouvrir</dt><dd>Toi seul</dd></div>
-    </dl>
-    <h3>Registre de l'Atrium</h3>
-    <ol class="ledger" id="ledgerList"><li class="empty">Rien d'inscrit à ton nom pour l'instant.</li></ol>
+    <section class="pview" data-pview="coffre">
+      <div class="contents">
+        <svg viewBox="0 0 64 52" aria-hidden="true"><path d="M6 20 L16 10 L58 10 L48 20 Z" fill="#aeefe7" fill-opacity=".6" stroke="#3a3cb2" stroke-width="2" stroke-linejoin="round"/><path d="M48 20 L58 10 L58 40 L48 50 Z" fill="#aeefe7" fill-opacity=".45" stroke="#3a3cb2" stroke-width="2" stroke-linejoin="round"/><ellipse id="panelSeed" cx="30" cy="40" rx="6" ry="4.4" fill="#f7c8a6" stroke="#3a3cb2" stroke-width="1.6"/><rect x="6" y="20" width="42" height="30" fill="#aeefe7" fill-opacity=".3" stroke="#3a3cb2" stroke-width="2"/><rect x="23" y="23" width="8" height="9" fill="#f8f7ff" stroke="#3a3cb2" stroke-width="1.6"/></svg>
+        <p id="contentsText">Vide.</p>
+      </div>
+      <ul class="items" id="itemList"></ul>
+      <dl class="facts">
+        <div><dt>Serrure</dt><dd id="lockText">Pas encore de clé</dd></div>
+        <div><dt>Contenu visible par</dt><dd>Tout l'Atrium</dd></div>
+        <div><dt>Peut l'ouvrir</dt><dd>Toi seul</dd></div>
+      </dl>
+    </section>
+    <section class="pview" data-pview="parcours" hidden><div id="journey"></div></section>
+    <section class="pview" data-pview="lexique" hidden><div id="lexicon"></div></section>
+    <section class="pview" data-pview="registre" hidden>
+      <h3>Registre de l'Atrium</h3>
+      <ol class="ledger" id="ledgerList"><li class="empty">Rien d'inscrit à ton nom pour l'instant.</li></ol>
+    </section>
   </aside>
 
   <div class="dialog" id="dialog" hidden>

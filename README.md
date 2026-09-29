@@ -62,6 +62,15 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 - **Chapitre 9, « Les petites salles d'à côté »** : Tess ouvre une petite salle. Le joueur y dépose un cristal par la passerelle, enchaîne les échanges pour presque rien, et Tess n'inscrit qu'un résumé dans le registre. Célestin publie un faux résumé : le joueur a une fenêtre de contestation pour le démasquer (sinon Oskar s'en charge). Pour ressortir, il attend la fin de la fenêtre ou paie Mira pour une avance.
 - **Chapitre 10, « Le premier bloc »** (épilogue) : Nonce montre son vieux coffre et la page 0 du registre (« Personne ne possède l'Atrium. Tout le monde le fait tourner. Accueillez le suivant. »). Une nouvelle arrivante, Lou, entre dans l'Atrium : le joueur devient le guide, lui crée son coffre, lui offre une graine de son palmier et répond à ses questions. L'écran de fin récapitule la partie et renvoie vers ethereum.org pour créer un vrai wallet.
 
+## Le carnet
+
+Le bouton « Coffre » (ou les touches I / C) ouvre le carnet du joueur, en quatre onglets :
+
+- **Coffre** : les objets possédés, avec leur icône, la serrure et qui peut voir ou ouvrir le coffre.
+- **Parcours** : les 10 chapitres, ce que le joueur y a fait (d'après ses choix), et 10 hauts faits à débloquer.
+- **Lexique** : les mots de l'Atrium et leur nom dans le vrai Ethereum, débloqués chapitre par chapitre.
+- **Registre** : toutes les pages inscrites au nom du joueur.
+
 ## Stack
 
 - HTML, CSS et JavaScript natifs, sans framework, sans dépendance et sans étape de build.

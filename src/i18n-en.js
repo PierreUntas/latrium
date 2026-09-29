@@ -714,3 +714,38 @@ window.ATRIUM_EN = {
 "· 10 chapitres · Souris ou doigt : touche le sol pour marcher · Clavier : flèches ou ZQSD, Espace pour parler": "· 10 chapters · Mouse or finger: tap the floor to walk · Keyboard: arrows or WASD, Space to talk",
 "Fermer": "Close"
 };
+
+// Carnet (coffre, parcours, lexique)
+Object.assign(window.ATRIUM_EN, {
+"Ton coffre, tes douze mots, et une première graine offerte.": "Your chest, your twelve words, and a first seed given away.",
+"Tu as reconnu le vrai dessin d’Oskar.": "You recognised Oskar’s real drawing.",
+"Tu as acheté la copie de Célestin.": "You bought Célestin’s copy.",
+"La fausse collection t’a eu·e.": "The fake collection fooled you.",
+"Tu as démasqué le faux résumé de Célestin.": "You exposed Célestin’s false summary.",
+"Gardien des douze mots": "Keeper of the twelve words",
+"Incorruptible": "Incorruptible",
+"Bâtisseur": "Builder",
+"Serment tenu": "Pledge kept",
+"Page honnête": "Honest page",
+"Œil de collectionneur": "Collector’s eye",
+"Démocrate prudent": "Careful democrat",
+"Pont solide": "Solid bridge",
+"Vigie": "Lookout",
+"Guide": "Guide",
+"En cours": "In progress",
+"À venir": "Coming up",
+"chapitres": "chapters",
+"pages au registre": "ledger pages",
+"hauts faits": "feats",
+"Chapitres": "Chapters",
+"Hauts faits": "Feats",
+"Chaque chapitre terminé ajoute ici les mots de l’Atrium et leur nom dans le vrai Ethereum.": "Each chapter you finish adds the words of the Atrium here, with their name in the real Ethereum.",
+"Les mots de l’Atrium, et leur nom dans le vrai Ethereum.": "The words of the Atrium, and their name in the real Ethereum.",
+"Ton parcours": "Your journey",
+"Le lexique": "Lexicon",
+"Ta machine à promesses n°{0} tourne toute seule.": "Your promise machine #{0} runs on its own.",
+"Encore {0} notions à découvrir dans les prochains chapitres.": "{0} more ideas to discover in the next chapters.",
+"Parcours": "Journey",
+"Lexique": "Lexicon"
+});
+Object.assign(window.ATRIUM_EN, {"{0} objet{1} dans ton coffre. Tout l’Atrium peut les voir.": "{0} item{1} in your chest. The whole Atrium can see them."});

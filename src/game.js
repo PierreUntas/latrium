@@ -581,14 +581,125 @@ function inscribe(from, to, what){
 }
 function renderPanel(){
   const has = inventory.items.length > 0;
-  $('contentsText').textContent = has ? inventory.items.map(TD).join(', ') + '.' : (ledger.length ? T('Vide. Mais le registre se souvient de tout ce qui y est passé.') : T('Vide.'));
+  $('contentsText').textContent = has ? T`${inventory.items.length} objet${inventory.items.length > 1 ? 's' : ''} dans ton coffre. Tout l’Atrium peut les voir.` : (ledger.length ? T('Vide. Mais le registre se souvient de tout ce qui y est passé.') : T('Vide.'));
   $('panelSeed').style.display = has ? '' : 'none';
   $('hudSeed').style.display = has ? '' : 'none';
   $('lockText').textContent = inventory.key ? T('Ta phrase de 12 mots') : T('Pas encore de clé');
+  renderItems();
+  if (!$('panel').hidden && ptab === 'parcours') renderJourney();
+  if (!$('panel').hidden && ptab === 'lexique') renderLexicon();
   const ol = $('ledgerList'); ol.innerHTML = '';
   if (!ledger.length){ const li = document.createElement('li'); li.className = 'empty'; li.textContent = T("Rien d'inscrit à ton nom pour l'instant."); ol.appendChild(li); }
   ledger.forEach(e => { const li = document.createElement('li'); li.innerHTML = `<span>${T('bloc')} ${e.bloc.toLocaleString(LOCALE)}</span><br>`; li.appendChild(document.createTextNode(`${TD(e.from)} → ${TD(e.to)} · ${TD(e.what)}`)); ol.appendChild(li); });
 }
+/* ---------- carnet : coffre, parcours, lexique, registre ---------- */
+let ptab = 'coffre';
+const esc = v => String(v).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+const ICONS = {
+  cristal:'<svg viewBox="0 0 24 24"><path d="M12 2 L4 12 L12 22 L20 12 Z" fill="#aeefe7" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 12 H20 M12 2 V22" stroke="#3a3cb2" stroke-width="1"/></svg>',
+  graine:'<svg viewBox="0 0 24 24"><ellipse cx="12" cy="13" rx="8" ry="6" transform="rotate(-25 12 13)" fill="#f7c8a6" stroke="#3a3cb2" stroke-width="1.6"/><path d="M8 12 q4 -3 8 -1" fill="none" stroke="#3a3cb2" stroke-width="1.2"/></svg>',
+  pique:'<svg viewBox="0 0 24 24"><path d="M12 3 C8 8 4 10 4 14 a4 4 0 0 0 7 2.5 L10 21 H14 L13 16.5 A4 4 0 0 0 20 14 C20 10 16 8 12 3 Z" fill="#a596ea" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+  dessin:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1" fill="#fdf1e7" stroke="#3a3cb2" stroke-width="1.6"/><ellipse cx="11" cy="14" rx="5" ry="2.5" fill="#f8f7ff" stroke="#3a3cb2" stroke-width="1.2"/><circle cx="16" cy="12" r="2.2" fill="#f8f7ff" stroke="#3a3cb2" stroke-width="1.2"/></svg>',
+  autre:'<svg viewBox="0 0 24 24"><path d="M12 3 q1.5 7.5 9 9 q-7.5 1.5 -9 9 q-1.5 -7.5 -9 -9 q7.5 -1.5 9 -9 Z" fill="#aeefe7" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+  cle:'<svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="5" fill="#e2e8fb" stroke="#3a3cb2" stroke-width="1.6"/><path d="M13 12 H21 V15 M18 12 V15" fill="none" stroke="#3a3cb2" stroke-width="1.8" stroke-linecap="round"/></svg>',
+};
+function itemIcon(s){ return /cristal/i.test(s) ? ICONS.cristal : /graine/i.test(s) ? ICONS.graine : /pique/i.test(s) ? ICONS.pique : /dessin/i.test(s) ? ICONS.dessin : ICONS.autre; }
+function chapterTitle(i){ const t = i === 1 ? T("Chapitre 1 · L'arrivée") : CH_NAMES[i - 1]; return t.replace(/^[^·]*·\s*/, ''); }
+const noPrefix = s => { const t = s.replace(/^(Chapitre|Chapter) \d+\s*:\s*/, ''); return t.charAt(0).toUpperCase() + t.slice(1); };
+function chapterNote(i){
+  switch (i){
+    case 1: return T('Ton coffre, tes douze mots, et une première graine offerte.');
+    case 2: return noPrefix(ch2.stolen ? T('Chapitre 2 : Célestin t’a eu une fois. Plus jamais.') : T`Chapitre 2 : tu as déjoué ${ch2.resisted || 3} ruse${(ch2.resisted || 3) > 1 ? 's' : ''} de Célestin.`);
+    case 3: return T`Ta machine à promesses n°${machine.version || 1} tourne toute seule.`;
+    case 4: return noPrefix(ch4.slashed ? T('Chapitre 4 : tu as signé deux pages contradictoires. Nonce ne t’en veut pas.') : T('Chapitre 4 : tu as gardé le registre sans jamais trahir ton serment.'));
+    case 5: return noPrefix(ch5.mev ? T('Chapitre 5 : tu as placé Célestin devant Mira. Elle s’en souvient.') : T('Chapitre 5 : tu as proposé une page honnête.'));
+    case 6: return ch6.pick === 'real' ? T('Tu as reconnu le vrai dessin d’Oskar.') : ch6.pick === 'copy' ? T('Tu as acheté la copie de Célestin.') : T('La fausse collection t’a eu·e.');
+    case 7: return noPrefix(ch7.outcome === 'stolen' ? T('Chapitre 7 : le trésor commun est parti chez Célestin.') : T('Chapitre 7 : tes règles de vote ont protégé le trésor commun.'));
+    case 8: return ch8.bridge === 'grand' ? T('Tu as pris le grand pont : ton cristal a traversé, même quand le pont rapide a été vidé.') : T('Tu as pris le pont rapide : Célestin a vidé son coffre, et ton cristal avec.');
+    case 9: return ch9.caught === 'oskar' ? T("C'est Oskar qui a démasqué le faux résumé, à la dernière seconde.") : T('Tu as démasqué le faux résumé de Célestin.');
+    case 10: return noPrefix(T`Chapitre 10 : ${ch10.good} bonne${ch10.good > 1 ? 's' : ''} réponse${ch10.good > 1 ? 's' : ''} sur 5 aux questions de Lou.`);
+  }
+  return '';
+}
+function badges(){
+  return [
+    [T('Gardien des douze mots'), inventory.key],
+    [T('Incorruptible'), chapterDone >= 2 && !ch2.stolen],
+    [T('Bâtisseur'), chapterDone >= 3],
+    [T('Serment tenu'), chapterDone >= 4 && !ch4.slashed],
+    [T('Page honnête'), chapterDone >= 5 && !ch5.mev],
+    [T('Œil de collectionneur'), chapterDone >= 6 && ch6.pick === 'real'],
+    [T('Démocrate prudent'), chapterDone >= 7 && ch7.outcome !== 'stolen'],
+    [T('Pont solide'), chapterDone >= 8 && ch8.bridge === 'grand'],
+    [T('Vigie'), chapterDone >= 9 && ch9.caught === 'toi'],
+    [T('Guide'), chapterDone >= 10 && ch10.good === 5],
+  ];
+}
+const LEX = [
+  [1, ['Le coffre en verre', 'Le wallet : tout le monde voit dedans, toi seul l’ouvres'], ['The glass chest', 'The wallet: everyone can see inside, only you can open it']],
+  [1, ['Les douze mots', 'La seed phrase, la clé de ton wallet'], ['The twelve words', 'The seed phrase, the key to your wallet']],
+  [1, ['Donner la graine', 'Une transaction : publique et irréversible'], ['Giving the seed', 'A transaction: public and irreversible']],
+  [1, ['Le registre et ses pages', 'La blockchain et ses blocs'], ['The ledger and its pages', 'The blockchain and its blocks']],
+  [2, ['L’inconnu très aimable', 'Le phishing'], ['The very friendly stranger', 'Phishing']],
+  [2, ['Le parchemin signé sans lire', 'Une approbation de token signée à l’aveugle'], ['The parchment signed without reading', 'A token approval signed blindly']],
+  [2, ['Révoquer l’autorisation', 'Révoquer une approbation (revoke)'], ['Revoking the permission', 'Revoking an approval']],
+  [3, ['La machine à promesses', 'Un smart contract'], ['The promise machine', 'A smart contract']],
+  [3, ['Le bac à sable', 'Le testnet'], ['The sandbox', 'The testnet']],
+  [3, ['Poser la machine', 'Déployer : le code devient immuable'], ['Setting up the machine', 'Deploying: the code becomes immutable']],
+  [4, ['Les gardiens et leur serment', 'Les validateurs et le staking'], ['The keepers and their pledge', 'Validators and staking']],
+  [4, ['Page scellée aux deux tiers', 'La finalité'], ['A page sealed by two thirds', 'Finality']],
+  [4, ['Le serment brûlé', 'Le slashing'], ['The burned pledge', 'Slashing']],
+  [5, ['La salle d’attente', 'Le mempool'], ['The waiting room', 'The mempool']],
+  [5, ['Les places d’une page', 'La limite de gas d’un bloc'], ['The slots on a page', 'The block gas limit']],
+  [5, ['Prix de base et pourboire', 'Base fee et priority fee'], ['Base price and tip', 'Base fee and priority fee']],
+  [5, ['Célestin juste devant Mira', 'Le front-running, le MEV'], ['Célestin right before Mira', 'Front-running, MEV']],
+  [6, ['Les piques de Mira', 'Un token fongible (ERC-20)'], ['Mira’s spades', 'A fungible token (ERC-20)']],
+  [6, ['Le dessin unique d’Oskar', 'Un NFT (ERC-721)'], ['Oskar’s unique drawing', 'An NFT (ERC-721)']],
+  [6, ['« Oskar_officiel »', 'Une collection contrefaite'], ['“Oskar_officiel”', 'A counterfeit collection']],
+  [7, ['Le trésor et la machine du vote', 'Une DAO'], ['The treasury and the voting machine', 'A DAO']],
+  [7, ['Les piques empruntés le temps du vote', 'L’attaque par flash loan'], ['Spades borrowed for the vote', 'A flash loan attack']],
+  [7, ['Les inconnus masqués', 'L’attaque Sybil'], ['The masked strangers', 'A Sybil attack']],
+  [7, ['Soldes de la veille, quorum, délai', 'Snapshot, quorum, timelock'], ['Yesterday’s balances, quorum, delay', 'Snapshot, quorum, timelock']],
+  [8, ['Le messager du dehors', 'Un oracle'], ['The messenger from outside', 'An oracle']],
+  [8, ['Le pont des trois gardiens', 'Un bridge multisig'], ['The three-keeper bridge', 'A multisig bridge']],
+  [8, ['Le cristal imprimé en face', 'Un token « wrappé »'], ['The crystal printed across the water', 'A wrapped token']],
+  [9, ['La petite salle de Tess', 'Un layer 2 (rollup)'], ['Tess’s little room', 'A layer 2 (rollup)']],
+  [9, ['Le résumé inscrit au registre', 'Le batch publié sur le layer 1'], ['The summary written into the ledger', 'The batch posted to layer 1']],
+  [9, ['La fenêtre de contestation', 'La preuve de fraude (7 jours)'], ['The challenge window', 'The fraud proof (7 days)']],
+  [10, ['La page 0', 'Le bloc genesis'], ['Page 0', 'The genesis block']],
+  [10, ['Accueillir le suivant', 'Aider les nouveaux venus : c’est ça, la communauté'], ['Welcome the next one', 'Helping newcomers: that is what community means']],
+];
+function renderJourney(){
+  const got = badges(), earned = got.filter(b => b[1]).length;
+  const ch = []; for (let i = 1; i <= 10; i++){ const st = i <= chapterDone ? 'done' : i === chapterDone + 1 ? 'now' : 'locked';
+    ch.push(`<li class="${st}"><i>${st === 'done' ? '✓' : i}</i><div><b>${esc(chapterTitle(i))}</b><span>${st === 'done' ? esc(chapterNote(i)) : st === 'now' ? esc(T('En cours')) : esc(T('À venir'))}</span></div></li>`); }
+  $('journey').innerHTML = `<div class="jstats"><div><b>${chapterDone}/10</b><span>${esc(T('chapitres'))}</span></div><div><b>${ledger.length}</b><span>${esc(T('pages au registre'))}</span></div><div><b>${earned}/${got.length}</b><span>${esc(T('hauts faits'))}</span></div></div>
+    <h3>${esc(T('Chapitres'))}</h3><ol class="chapters">${ch.join('')}</ol>
+    <h3>${esc(T('Hauts faits'))}</h3><div class="badges">${got.map(([n, ok]) => `<div class="badge${ok ? ' got' : ''}">${ok ? ICONS.cristal : ICONS.cle}${ok ? esc(n) : '?'}</div>`).join('')}</div>`;
+}
+function renderLexicon(){
+  const open = LEX.filter(e => e[0] <= Math.max(chapterDone, 0)), rest = LEX.length - open.length;
+  if (!open.length){ $('lexicon').innerHTML = `<p class="muted">${esc(T('Chaque chapitre terminé ajoute ici les mots de l’Atrium et leur nom dans le vrai Ethereum.'))}</p>`; return; }
+  let html = '', last = 0;
+  for (const [c, fr, en] of open){ const [a, b] = LANG === 'en' ? en : fr; if (c !== last){ html += `${last ? '</ul>' : ''}<h4>${esc(chapterTitle(c))}</h4><ul class="lex">`; last = c; } html += `<li><b>${esc(a)}</b><span>${esc(b)}</span></li>`; }
+  html += '</ul>';
+  $('lexicon').innerHTML = `<p class="muted">${esc(T('Les mots de l’Atrium, et leur nom dans le vrai Ethereum.'))}</p>${html}${rest ? `<p class="muted">${esc(T`Encore ${rest} notions à découvrir dans les prochains chapitres.`)}</p>` : ''}`;
+}
+function renderItems(){
+  const ul = $('itemList'); ul.innerHTML = '';
+  inventory.items.forEach(s => { const li = document.createElement('li'); li.innerHTML = itemIcon(s); li.append(TD(s)); ul.appendChild(li); });
+}
+const PTITLES = { coffre:() => T('Ton coffre'), parcours:() => T('Ton parcours'), lexique:() => T('Le lexique'), registre:() => T("Registre de l'Atrium") };
+function showTab(t){
+  ptab = t;
+  document.querySelectorAll('.ptab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.ptab === t)));
+  document.querySelectorAll('.pview').forEach(v => { v.hidden = v.dataset.pview !== t; });
+  $('panelTitle').textContent = PTITLES[t]();
+  if (t === 'parcours') renderJourney();
+  if (t === 'lexique') renderLexicon();
+}
+document.querySelectorAll('.ptab').forEach(b => b.addEventListener('click', () => { sfx('select'); showTab(b.dataset.ptab); }));
+
 function setObjective(txt){ $('objective').hidden = !txt; if (txt) $('objText').textContent = txt; }
 
 /* ---------- dialogue ---------- */
@@ -2163,6 +2274,8 @@ const keys = new Set();
 const MOVE = { arrowup:[0,-1], z:[0,-1], w:[0,-1], arrowdown:[0,1], s:[0,1], arrowleft:[-1,0], q:[-1,0], a:[-1,0], arrowright:[1,0], d:[1,0] };
 window.addEventListener('keydown', ev => {
   const k = ev.key.toLowerCase();
+  if (k === 'escape' && !$('panel').hidden){ $('panel').hidden = true; return; }
+  if ((k === 'i' || k === 'c') && !$('chestBtn').hidden && phase !== 'title' && !advanceFn){ ev.preventDefault(); togglePanel(); return; }
   if (ev.target.tagName === 'BUTTON' && (k === 'enter' || k === ' ')) return;
   if (k === ' ' || k === 'enter' || k === 'e'){
     if (advanceFn){ ev.preventDefault(); advanceFn(); return; }
@@ -2204,7 +2317,8 @@ setupTitle();
 const soundBtn = $('soundBtn');
 function renderSound(m){ soundBtn.setAttribute('aria-pressed', String(!m)); soundBtn.setAttribute('aria-label', m ? T('Activer le son') : T('Couper le son')); soundBtn.classList.toggle('off', m); }
 if (window.Sound){ renderSound(window.Sound.muted); window.Sound.onChange(renderSound); soundBtn.addEventListener('click', () => { window.Sound.start(); window.Sound.toggle(); }); } else soundBtn.hidden = true;
-$('chestBtn').addEventListener('click', () => { $('panel').hidden = !$('panel').hidden; });
+function togglePanel(){ const p = $('panel'); p.hidden = !p.hidden; if (!p.hidden) showTab(ptab); }
+$('chestBtn').addEventListener('click', togglePanel);
 $('panelClose').addEventListener('click', () => { $('panel').hidden = true; });
 
 /* ---------- loop ---------- */
