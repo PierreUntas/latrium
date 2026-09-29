@@ -37,6 +37,11 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 | Les piques empruntés le temps du vote | L'attaque par flash loan sur la gouvernance |
 | Les inconnus masqués | L'attaque Sybil (faux comptes) |
 | Soldes de la veille, quorum, délai | Snapshot, quorum, timelock |
+| Le messager du dehors | Un oracle |
+| Cinq messagers avec caution | Un oracle décentralisé avec staking (type Chainlink) |
+| Le pont des trois gardiens | Un bridge multisig (2 signatures sur 3) |
+| Le grand pont qui vérifie le registre d'en face | Un bridge à vérification native (light client) |
+| Le cristal imprimé en face | Le token « wrappé » (lock and mint) |
 
 ## État actuel
 
@@ -47,6 +52,7 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 - **Chapitre 5, « La place sur la page »** : le joueur propose une page de 10 places en choisissant parmi huit demandes (place prise, pourboire). Le prix de base est brûlé, le pourboire revient au proposeur. Célestin propose d'acheter les graines juste avant Mira pour les lui revendre (MEV). Puis le joueur envoie sa propre demande en pleine cohue et choisit son pourboire : payer pour passer tout de suite, ou attendre le calme.
 - **Chapitre 6, « Les jetons de l'Atrium »** : le joueur écrit les règles des piques, les jetons du club de Mira (quantité, création de nouveaux jetons, liberté de les donner), puis Oskar grave un dessin unique. Le joueur choisit où ranger l'image, et aide Mira à reconnaître le vrai dessin parmi deux copies (même image, autre créateur, nom qui imite celui d'Oskar).
 - **Chapitre 7, « Le grand vote »** : le trésor commun (50 cristaux) se décide au vote. Le joueur dépose une proposition, puis écrit les règles du vote face à celle de Célestin : 1 pique = 1 voix ou 1 habitant = 1 voix, et des protections (soldes de la veille, vérification des habitants, quorum, délai de deux jours). Une répétition montre ses trois ruses : piques empruntés, faux votants, vote en pleine nuit.
+- **Chapitre 8, « Le messager du dehors »** : Mira et Oskar parient sur la pluie, mais la machine de Tess ne voit que le registre. Le joueur choisit qui lui apportera la météo (Tess, Célestin, ou cinq messagers à la majorité, avec ou sans caution) et le teste sur quatre situations. Puis il envoie un cristal vers l'Atrium d'en face par un pont rapide à trois gardiens ou par le grand pont qui vérifie le registre d'en face ; Célestin vole deux clés et vide le pont rapide.
 
 ## Stack
 
@@ -106,7 +112,6 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 
 ## Pistes
 
-- Chapitre 8 : le messager du dehors (oracles, ponts).
 - Chapitre 9 : les petites salles d'à côté (layer 2), déjà écrit dans la branche `chapitre-layer2`.
 - Chapitre 10 : le premier bloc (épilogue).
 - Un carnet pour recopier ses mots.

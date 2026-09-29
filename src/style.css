@@ -200,3 +200,4 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
 .o-row b{color:var(--ink)}
 @media (max-width:560px){ .offers{grid-template-columns:1fr} .offer svg{max-width:160px} }
 .compact .offer{font-size:12px;padding:6px} .compact .offer svg{max-height:70px}
+.rule.radio::before{border-radius:50%}
