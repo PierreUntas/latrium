@@ -152,3 +152,37 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
 .rule.shady[aria-pressed="true"]{background:var(--peach)}
 .warn{margin:0;font-size:14px;background:var(--parchment);border-radius:6px;padding:6px 10px}
 .tips{grid-template-columns:repeat(3,1fr)}
+
+/* mobile à l'horizontale : écran bas, on compacte l'interface */
+.compact body{padding-block:8px;padding-inline:max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px))}
+.compact .caption{display:none}
+.compact .stage{border-radius:10px;box-shadow:4px 4px 0 var(--lav)}
+.compact .dialog{bottom:8px;padding:14px 14px 10px;width:min(640px, calc(100% - 24px));box-shadow:3px 3px 0 var(--lav)}
+.compact .speaker{top:-13px;font-size:12px;padding:1px 10px}
+.compact .line{font-size:14px;line-height:1.45;min-height:0}
+.compact .more{bottom:4px}
+.compact .choices{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px;margin-top:8px}
+.compact .choice{font-size:13px;padding:7px 10px}
+.compact .objective{top:8px;left:8px;padding:5px 9px;box-shadow:2px 2px 0 var(--lav)}
+.compact .objective strong{font-size:13px}
+.compact .eyebrow{font-size:10px}
+.compact .hud-right{top:8px;right:8px;gap:6px}
+.compact .sound-btn{width:34px;height:34px}
+.compact .sound-btn svg{width:20px;height:20px}
+.compact .chest-btn{padding:3px 8px 3px 6px;font-size:13px}
+.compact .chest-btn svg{width:28px;height:23px}
+.compact .panel{top:50px;max-height:calc(100% - 58px);padding:10px 12px;gap:8px}
+.compact .ledger-toast{top:8px;padding:5px 10px}
+.compact .ledger-toast .row{font-size:12px}
+.compact .ledger-toast .sub{display:none}
+.compact .veil{padding:8px}
+.compact .card{padding:14px 16px;gap:8px;max-width:560px}
+.compact .card.wide{max-width:680px}
+.compact .card h1{font-size:40px}
+.compact .card h2{font-size:22px}
+.compact .card p,.compact .lede{font-size:14px}
+.compact .btn{padding:9px 14px;font-size:14px}
+.compact .seed{grid-template-columns:repeat(4,minmax(0,1fr))}
+.compact .seed li{padding:3px 6px;font-size:14px}
+.compact .rule{padding:7px 10px;font-size:13px}
+.compact .tests li,.compact .verdict,.compact .txs li{font-size:13px;padding:6px 9px}

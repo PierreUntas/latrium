@@ -23,11 +23,18 @@ function fs(g, fill, stroke = C.ink, lw = 2){ if (fill){ g.fillStyle = fill; g.f
 let dpr = 1, scale = 1, viewW = W, viewH = H, cache = null;
 const cam = { x: 0, y: 0 };
 function resize(){
-  const w = stage.clientWidth;
-  const avail = window.innerHeight - 32 - 40;
-  let h = w * 9 / 16;
-  if (w < 900) h = Math.max(h, Math.min(avail * 0.92, 660));
-  h = clamp(h, 340, Math.max(340, avail));
+  const w = stage.clientWidth, vh = window.innerHeight;
+  // mobile à l'horizontale : pas de légende, la scène prend toute la hauteur
+  const compact = vh < 520 && window.innerWidth > vh;
+  document.documentElement.classList.toggle('compact', compact);
+  let h;
+  if (compact) h = Math.max(220, vh - 16);
+  else {
+    const avail = vh - 32 - 40;
+    h = w * 9 / 16;
+    if (w < 900) h = Math.max(h, Math.min(avail * 0.92, 660));
+    h = clamp(h, 340, Math.max(340, avail));
+  }
   stage.style.height = Math.round(h) + 'px';
   dpr = Math.min(window.devicePixelRatio || 1, 2);
   cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
@@ -1514,6 +1521,7 @@ if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.
 resetWorld();
 resize();
 window.addEventListener('resize', resize);
+if (window.visualViewport) window.visualViewport.addEventListener('resize', resize);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {});
 requestAnimationFrame(frame);
 })();
