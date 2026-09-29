@@ -55,6 +55,18 @@ src/game.js     rendu du décor, personnages, déplacements, dialogues, histoire
 
 La progression est enregistrée dans le navigateur (`localStorage`, clé `atrium.save.v1`) à la fin de chaque chapitre. L'écran titre propose alors de continuer, ou de repartir de zéro avec une confirmation.
 
+## Statistiques
+
+Le site utilise Vercel Web Analytics (visites, pays, appareils), sans cookie. Le jeu envoie aussi quelques événements de progression :
+
+| Événement | Données |
+| --- | --- |
+| `Partie lancée` | `reprise` (true/false), `chapitre` commencé |
+| `Nouvelle partie` | aucune |
+| `Chapitre terminé` | `chapitre` (1 à 5), `score` : ruses déjouées (ch. 2), machines posées (ch. 3), bonnes décisions ou -1 si slashing (ch. 4), pourboires ou -1 si MEV (ch. 5) |
+
+Les événements personnalisés ne s'affichent que sur les offres Pro et Enterprise de Vercel ; sur l'offre gratuite, seules les visites sont comptées. Rien n'est envoyé en local ni avec `#debug`.
+
 ## Lancer en local
 
 Ouvre `index.html` dans un navigateur. Pour un serveur local :

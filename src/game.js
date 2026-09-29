@@ -8,6 +8,8 @@ const C = { ink:K('ink'), ink2:K('ink-2'), paper:K('paper'), mist:K('mist'), flo
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = id => document.getElementById(id);
 const sfx = name => window.Sound && window.Sound.sfx(name);
+// événements Vercel Web Analytics (ignorés en local et hors Vercel)
+const track = (name, data) => { try { if (window.va && location.hash !== '#debug') window.va('event', data ? { name, data } : { name }); } catch (e) { /* ignore */ } };
 const stage = $('stage'), cv = $('cv'), ctx = cv.getContext('2d');
 
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
@@ -732,6 +734,7 @@ async function chapter(){
   await say(null, "Une pousse sort de terre. Au loin, Nonce lève la main pour te saluer. À la table de cartes, quelqu'un murmure : « Bloc 1 049. »");
   closeDialog();
   phase = 'free'; lock = true; chapterDone = 1;
+  track('Chapitre terminé', { chapitre:1 });
   const saved1 = writeSave();
   await wait(500);
   showEnd({ eyebrow:'Fin du chapitre 1', title:"L'arrivée", recap:[
@@ -855,6 +858,7 @@ async function debrief(){
   await say('Nonce', "Deux : le cadeau trop beau. Personne n'a besoin de tes mots pour te donner quelque chose.");
   await say('Nonce', "Trois : la signature à l'aveugle. Ce que tu signes compte autant que tes mots. Lis toujours les petites lignes.");
   closeDialog(); camFocus = null; phase = 'free'; chapterDone = 2;
+  track('Chapitre terminé', { chapitre:2, score:ch2.resisted });
   const saved2 = writeSave();
   const n = ch2.resisted;
   showEnd({ eyebrow:'Fin du chapitre 2', title:"L'inconnu très aimable", recap:[
@@ -1040,6 +1044,7 @@ async function debrief3(){
   await say('Tess', "Deux : on teste avant de poser. Après, c'est gravé : on ne répare pas, on remplace.");
   await say('Tess', "Trois : pas de porte de secours. Une clé de secours, c'est aussi une clé pour les voleurs.");
   closeDialog(); camFocus = null; phase = 'free'; chapterDone = 3;
+  track('Chapitre terminé', { chapitre:3, score:ch3.deploys });
   const saved3 = writeSave();
   showEnd({ eyebrow:'Fin du chapitre 3', title:'La machine à promesses', recap:[
     `Essais dans le bac à sable : <b>${ch3.tests}</b>. Machines posées : <b>${ch3.deploys}</b>.`,
@@ -1189,6 +1194,7 @@ async function debrief4(){
   await say('Nonce', "Deux : un gardien ne croit personne sur parole. Il vérifie lui-même les soldes, les signatures, les doubles dépenses.");
   await say('Nonce', "Trois : le serment garantit l'honnêteté. Signer deux pages qui se contredisent, c'est perdre une partie de son serment, automatiquement.");
   closeDialog(); camFocus = null; phase = 'free'; chapterDone = 4;
+  track('Chapitre terminé', { chapitre:4, score:ch4.slashed ? -1 : ch4.right });
   const saved4 = writeSave();
   showEnd({ eyebrow:'Fin du chapitre 4', title:'Les gardiens du registre', recap:[
     ch4.slashed ? `Pages vérifiées avant l'exclusion : <b>${ch4.right + ch4.wrong}</b>, dont ${ch4.right} justes.` : `Bonnes décisions : <b>${ch4.right} sur ${PAGES.length}</b>.`,
@@ -1308,6 +1314,7 @@ async function debrief5(){
   await say('Nonce', "Deux : le prix de base monte quand les pages sont pleines et descend quand c'est calme, et il est brûlé. Le pourboire sert à passer devant.");
   await say('Nonce', "Trois : celui qui propose une page choisit l'ordre des demandes, et cet ordre vaut de l'argent. Quand c'est pressé, on paie plus. Quand ça ne l'est pas, on attend le calme.");
   closeDialog(); camFocus = null; phase = 'free'; chapterDone = 5;
+  track('Chapitre terminé', { chapitre:5, score:ch5.mev ? -1 : ch5.tips });
   const saved5 = writeSave();
   showEnd({ eyebrow:'Fin du chapitre 5', title:'La place sur la page', recap:[
     `Pourboires gagnés sur ta page : <b>${ch5.tips} miettes</b>.`,
@@ -1425,13 +1432,14 @@ let confirmNew = false;
 $('startBtn').addEventListener('click', () => {
   window.Sound && window.Sound.start(); $('title').hidden = true;
   const d = readSave();
+  track('Partie lancée', { reprise:!!(d && d.chapterDone), chapitre:d && d.chapterDone ? d.chapterDone + 1 : 1 });
   if (!d || !d.chapterDone) return chapter();
   restore(d);
   if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else if (d.chapterDone === 3) chapter4(); else if (d.chapterDone === 4) chapter5(); else resumeFree();
 });
 $('newBtn').addEventListener('click', () => {
   if (!confirmNew){ confirmNew = true; $('newBtn').textContent = 'Confirmer : effacer ma progression'; return; }
-  clearSave(); window.Sound && window.Sound.start(); $('title').hidden = true; chapter();
+  clearSave(); track('Nouvelle partie'); window.Sound && window.Sound.start(); $('title').hidden = true; chapter();
 });
 setupTitle();
 const soundBtn = $('soundBtn');
