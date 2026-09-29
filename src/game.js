@@ -428,16 +428,19 @@ function drawChest(g, c){
 function drawPlanter(g, t){
   const x = planter.x, y = planter.y, s = persp(y);
   g.save(); g.translate(x, y); g.scale(s, s);
-  if (planter.grow > 0){
-    const gr = planter.grow, h = 70 * gr, sway = reduce ? 0 : Math.sin(t * 1.3) * 2;
-    g.beginPath(); g.moveTo(0, -22); g.quadraticCurveTo(-4, -22 - h * .5, sway, -22 - h); fs(g, null, C.ink, 3);
+  // grow de 0 à 1 : la première pousse ; au-delà de 1 : un deuxième palmier pousse à côté (chapitre 7)
+  const sprout = (ox, gr, ph) => {
+    const h = 70 * gr, sway = (reduce ? 0 : Math.sin(t * 1.3 + ph) * 2) + ox;
+    g.beginPath(); g.moveTo(ox, -22); g.quadraticCurveTo(ox - 4, -22 - h * .5, sway, -22 - h); fs(g, null, C.ink, 3);
     for (let i = 0; i < 5; i++){ const a = -2.7 + i * .6, l = 36 * gr;
       g.beginPath(); g.moveTo(sway, -22 - h); g.quadraticCurveTo(sway + Math.cos(a)*l*.6, -22 - h + Math.sin(a)*l*.6, sway + Math.cos(a)*l, -22 - h + Math.sin(a)*l*.5 + l*.35);
       g.strokeStyle = C.ink; g.lineWidth = 2; g.stroke();
       for (let j = 1; j < 6; j++){ const u = j / 6, p = quad([sway, -22-h], [sway + Math.cos(a)*l*.6, -22-h + Math.sin(a)*l*.6], [sway + Math.cos(a)*l, -22-h + Math.sin(a)*l*.5 + l*.35], u);
         g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(p[0] + 4*gr, p[1] + 7*gr); g.moveTo(p[0], p[1]); g.lineTo(p[0] - 4*gr, p[1] + 7*gr); g.lineWidth = 1.2; g.stroke(); }
     }
-  }
+  };
+  if (planter.grow > 1) sprout(18, (planter.grow - 1) / .6 * .8, 1.7);
+  if (planter.grow > 0) sprout(planter.grow > 1 ? -10 : 0, Math.min(1, planter.grow), 0);
   g.beginPath(); g.moveTo(-46, -22); g.lineTo(-46, -4); g.ellipse(0, -4, 46, 13, 0, Math.PI, 0, true); g.lineTo(46, -22); g.ellipse(0, -22, 46, 13, 0, 0, Math.PI, false); g.closePath(); fs(g, C.lav);
   g.beginPath(); g.ellipse(0, -22, 46, 13, 0, 0, TAU); fs(g, C.paper);
   g.beginPath(); g.ellipse(0, -22, 37, 9, 0, 0, TAU); fs(g, C.violet, C.ink, 1.4);
@@ -463,7 +466,7 @@ const OBST = [[430,740,128,40],[800,608,150,30],[1200,645,34,13],[1150,815,104,3
 let phase = 'title', lock = true, meetTriggered = false, time = 0, sparkleUntil = -1, camFocus = null;
 const inventory = { key:false, items:[] }, ledger = [];
 let tableTalk = 0, tessTalk = 0, busy = false, chapterDone = 0;
-const ch2 = {}, ch3 = {}, ch4 = {}, ch5 = {}, ch6 = {};
+const ch2 = {}, ch3 = {}, ch4 = {}, ch5 = {}, ch6 = {}, ch7 = {};
 const fx = [], tweens = [], waiters = [];
 
 function resetWorld(){
@@ -479,6 +482,7 @@ function resetWorld(){
   Object.assign(ch4, { called:false, right:0, wrong:0, slashed:false, bribed:false });
   Object.assign(ch5, { called:false, tips:0, mev:false, full:false, myTip:null, waited:0 });
   Object.assign(ch6, { called:false, supply:100, mint:false, free:true, storage:null, pick:null });
+  Object.assign(ch7, { called:false, proposal:null, rehearsals:0, outcome:null, base:null });
   chapterDone = 0;
   walkers.length = 0;
   walkers.push({ x:620, y:580, face:1, walk:0, moving:true, shirt:C.lav, pants:C.peri, hair:C.peach, style:'long', skin:C.skin, min:628, max:700, sp:18 });
@@ -649,16 +653,16 @@ function readSave(){ try { const d = JSON.parse(localStorage.getItem(SAVE_KEY));
   if (d.chapterDone >= 6 && !d.ch6) d.chapterDone = 5;
   return d; } catch (e) { return null; } }
 function writeSave(){
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, ch4:{ slashed:ch4.slashed }, ch5:{ mev:ch5.mev }, ch6:chapterDone >= 6 ? { mint:ch6.mint, pick:ch6.pick } : undefined, savedAt:Date.now() })); return true; }
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, ch4:{ slashed:ch4.slashed }, ch5:{ mev:ch5.mev }, ch6:chapterDone >= 6 ? { mint:ch6.mint, pick:ch6.pick } : undefined, ch7:chapterDone >= 7 ? { proposal:ch7.proposal, outcome:ch7.outcome } : undefined, savedAt:Date.now() })); return true; }
   catch (e) { return false; }
 }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
 function restore(d){
   resetWorld();
   chapterDone = d.chapterDone; ledger.push(...d.ledger); inventory.items = d.items || []; inventory.key = !!d.key;
-  Object.assign(ch2, d.ch2 || {}); Object.assign(ch4, d.ch4 || {}); Object.assign(ch5, d.ch5 || {}); Object.assign(ch6, d.ch6 || {});
+  Object.assign(ch2, d.ch2 || {}); Object.assign(ch4, d.ch4 || {}); Object.assign(ch5, d.ch5 || {}); Object.assign(ch6, d.ch6 || {}); Object.assign(ch7, d.ch7 || {});
   Object.assign(cat, { x:1262, y:668, face:-1, wp:CAT_WP.length - 1 });
-  Object.assign(planter, { grow:1, planted:true });
+  Object.assign(planter, { grow:d.chapterDone >= 7 && ch7.proposal === 'palmier' && ch7.outcome !== 'stolen' ? 1.6 : 1, planted:true });
   if (d.chapterDone >= 3) Object.assign(machine, { vis:true, version:d.machineVersion || 1 });
   $('chestBtn').hidden = false; renderPanel();
 }
@@ -1460,7 +1464,140 @@ async function debrief6(){
     ch6.storage === 'tess' ? "L'image du dessin est rangée sur une seule étagère : fragile." : ch6.storage === 'many' ? "L'image du dessin est rangée sur plusieurs étagères : elle survivra." : "L'image du dessin est gravée dans le registre : solide, mais cher.",
     'Un jeton vaut ce que valent ses règles ; une pièce unique vaut son historique.'],
     teaser:"<b>Chapitre 7.</b> Le grand vote : les habitants décident ensemble de l'avenir de la jardinière.", saved:saved6,
-    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 6', chapter6], ['Recommencer au début', chapter]] });
+    buttons:[['Continuer : chapitre 7', chapter7, true], ["Rester dans l'Atrium", stay], ['Rejouer le chapitre 6', chapter6]] });
+}
+
+/* chapter 7 : le grand vote */
+const PROPOSALS = { fontaine:'Construire une fontaine près de la jardinière', palmier:'Planter un deuxième palmier dans la jardinière', graines:'Offrir une graine à chaque nouvel arrivant' };
+const PROTS = [
+  { id:'snapshot', text:'Compter les piques de la veille, pas ceux du jour du vote.' },
+  { id:'identity', text:'Vérifier que chaque votant est un habitant connu de l’Atrium.' },
+  { id:'quorum', text:'Il faut qu’au moins la moitié des habitants vote.' },
+  { id:'timelock', text:'Attendre deux jours avant d’appliquer une décision.' },
+];
+function runGov(base, prot){
+  const has = id => prot.has(id), tl = has('timelock');
+  const r = (ok, okWhy, koWhy) => ok ? { st:'ok', why:okWhy } : tl ? { st:'saved', why:koWhy + ' Mais le délai de deux jours laisse aux habitants le temps de l’annuler.' } : { st:'ko', why:koWhy };
+  return [
+    Object.assign({ name:'Célestin emprunte 5 000 piques le temps du vote.' }, r(base === 'people' || has('snapshot'),
+      base === 'people' ? 'Ici, les piques ne comptent pas : une personne, une voix.' : 'La veille, il n’avait aucun pique. Ses 5 000 piques empruntés ne comptent pas.',
+      'Avec 5 000 piques, il a plus de voix que tout l’Atrium réuni. Sa proposition passe, puis il rend les piques.')),
+    Object.assign({ name:'Célestin fait voter vingt inconnus masqués.' }, r(base === 'tokens' || has('identity'),
+      base === 'tokens' ? 'Ils n’ont pas de piques : leurs voix ne pèsent rien.' : 'Aucun d’eux n’est un habitant connu : leurs voix sont refusées.',
+      'Vingt voix de plus, sorties de nulle part. Sa proposition passe.')),
+    Object.assign({ name:'Célestin fait voter sa proposition à 3 h du matin.' }, r(has('quorum'),
+      'Seuls Célestin et deux amis ont voté : le quorum n’est pas atteint, rien ne passe.',
+      'Tout le monde dort. Il est presque seul à voter, et sa proposition passe.')),
+  ];
+}
+function showGovBuilder(base, prot){
+  return new Promise(res => {
+    let results = null;
+    const draw = () => {
+      mcard.classList.add('wide');
+      const weight = base.v === 'tokens' ? 'Avec 1 pique = 1 voix, Mira, qui a 60 % des piques, décide presque seule.' : base.v === 'people' ? 'Avec 1 habitant = 1 voix, chacun pèse autant, riche ou pas.' : '';
+      mcard.innerHTML = `<p class="eyebrow">Le trésor commun · 50 cristaux</p><h2>Les règles du vote</h2>
+        <p>Deux propositions s'affrontent : la tienne, « ${PROPOSALS[ch7.proposal]} », et celle de Célestin, « Confier tout le trésor à Célestin, pour son entretien ».</p>
+        <h3 class="tests-title">Comment compter les voix ?</h3>
+        <div class="quiz"><button class="btn${base.v === 'tokens' ? ' primary' : ''}" data-b="tokens">1 pique = 1 voix</button><button class="btn${base.v === 'people' ? ' primary' : ''}" data-b="people">1 habitant = 1 voix</button></div>
+        ${weight ? `<p class="hint">${weight}</p>` : ''}
+        <h3 class="tests-title">Quelles protections ?</h3>
+        <div class="rules">${PROTS.map(r => `<button class="rule" data-p="${r.id}" aria-pressed="${prot.has(r.id)}">${r.text}</button>`).join('')}</div>
+        ${results ? `<h3 class="tests-title">Répétition n°${ch7.rehearsals}</h3><ol class="tests">${results.map((t, i) => `<li class="${t.st === 'ok' ? 'ok' : 'ko'}" style="--i:${i}"><span class="pill">${t.st === 'ok' ? 'Bloqué' : t.st === 'saved' ? 'Rattrapé' : 'Réussi'}</span><b>${t.name}</b><br>${t.why}</li>`).join('')}</ol>` : '<p class="hint">Fais d’abord une répétition : Célestin y essaie ses trois ruses, sans rien risquer.</p>'}
+        <div class="row"><button class="btn primary" id="gvTest" ${base.v ? '' : 'disabled'}>Répéter le vote</button><button class="btn" id="gvGo" ${results ? '' : 'disabled'}>Lancer le vrai vote</button></div>`;
+      modal.hidden = false;
+      mcard.querySelectorAll('[data-b]').forEach(b => b.addEventListener('click', () => { base.v = b.dataset.b; results = null; sfx('select'); draw(); }));
+      mcard.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => { const id = b.dataset.p; prot.has(id) ? prot.delete(id) : prot.add(id); b.setAttribute('aria-pressed', String(prot.has(id))); results = null; sfx('select'); }));
+      $('gvTest').addEventListener('click', () => { ch7.rehearsals++; results = runGov(base.v, prot); sfx(results.every(t => t.st === 'ok') ? 'ledger' : 'fail'); draw(); const t = mcard.querySelector('.tests'); if (t) t.scrollIntoView({ block:'nearest' }); });
+      $('gvGo').addEventListener('click', () => { modal.hidden = true; mcard.classList.remove('wide'); res(runGov(base.v, prot)); });
+    };
+    draw();
+  });
+}
+function setupChapter7(){
+  Object.assign(planter, { grow:1, planted:true });
+  Object.assign(stranger, { x:-120, y:770, vis:false, target:null, gesture:false });
+  Object.assign(machine, { vis:true, version:Math.max(1, machine.version) });
+  Object.assign(ch7, { called:false, proposal:null, rehearsals:0, outcome:null, base:null });
+  Object.assign(player, { x:760, y:720, face:1, target:null, moving:false });
+  $('chestBtn').hidden = false; renderPanel();
+}
+async function chapter7(){
+  setupChapter7(); phase = 'ch7-intro'; lock = true; camFocus = { x:800, y:640 };
+  await wait(300);
+  await say(null, "Un matin, une affiche est apparue au pied du grand cristal : « Trésor commun : 50 cristaux. Que doit-on en faire ? Réponse au grand vote. »");
+  closeDialog(); camFocus = null; setObjective('Demande à Nonce ce que c’est'); phase = 'ch7-nonce'; lock = false;
+
+  await until(() => ch7.called);
+  lock = true; setObjective(null); camFocus = { x:1100, y:660 };
+  await walkTo(player, 1082, 674, 250); player.face = 1; nonce.face = -1;
+  await say('Nonce', "Le trésor commun ! Chaque habitant y a mis un peu, au fil des pages. Il n'appartient à personne en particulier, alors on décide ensemble de ce qu'on en fait.");
+  await say('Nonce', "Et ici, décider ensemble, c'est encore une machine : un trésor, et des règles de vote. Tout le monde peut les lire, et une fois le vote fini, la machine applique le résultat toute seule.");
+  const c = await say('Nonce', "Tu veux proposer quelque chose ?", [PROPOSALS.fontaine, PROPOSALS.palmier, PROPOSALS.graines]);
+  ch7.proposal = ['fontaine', 'palmier', 'graines'][c];
+  inscribe('toi', 'machine du vote', `proposition : ${PROPOSALS[ch7.proposal].toLowerCase()}`);
+  await wait(700);
+  await say('Nonce', "Belle idée. Mais regarde qui vient de déposer la sienne.");
+  closeDialog();
+  stranger.x = -120; stranger.y = 700; stranger.vis = true; camFocus = { x:1040, y:680 };
+  await walkTo(stranger, 960, 700, 360); stranger.face = 1;
+  await say('Célestin', "Ma proposition est très simple : confier tout le trésor à Célestin, pour son entretien. Quelqu'un doit bien s'en occuper, non ?");
+  closeDialog();
+  inscribe('Célestin', 'machine du vote', 'proposition : confier le trésor à Célestin');
+  await walkTo(stranger, -120, 700, 420); stranger.vis = false;
+  await say('Nonce', "Ne ris pas. Si les règles du vote sont mal écrites, il peut gagner. Et la machine lui enverra le trésor sans poser de question. Ces règles, c'est toi qui vas les écrire.");
+  closeDialog();
+
+  const base = { v:null }, prot = new Set();
+  const res = await showGovBuilder(base, prot);
+  ch7.base = base.v;
+  const fail = res.find(t => t.st === 'ko'), saved = res.find(t => t.st === 'saved');
+  ch7.outcome = fail ? 'stolen' : saved ? 'saved' : 'clean';
+  camFocus = { x:800, y:680 };
+  await say(null, "Le jour du vote. Les habitants défilent devant la machine, et les voix s'inscrivent une à une dans le registre.");
+  closeDialog();
+  sparkleUntil = time + 3;
+  if (fail){
+    await say(null, `${fail.name.replace('.', '')}… ${fail.why}`);
+    closeDialog();
+    await flyItem([800, 560], [120, 700], 1.2, 'gems2');
+    inscribe('trésor commun', 'Célestin', '50 cristaux');
+    await wait(700);
+    await say('Nonce', "La machine a fait exactement ce que disaient ses règles. Personne ne peut revenir en arrière. Le trésor est parti.");
+    await say('Nonce', `Ta proposition avait plus de vrais soutiens que la sienne. Mais il n'y a plus rien à dépenser.`);
+  } else {
+    if (saved){
+      await say(null, `${saved.name.replace('.', '')}… et sa proposition passe. Mais la machine attend deux jours avant d'appliquer quoi que ce soit.`);
+      await say(null, "Deux jours, c'est assez pour que tout l'Atrium le remarque. Les habitants votent l'annulation, et le trésor ne bouge pas.");
+      inscribe('habitants', 'machine du vote', 'annulation pendant le délai');
+      await wait(700);
+    } else {
+      await say(null, "Célestin tente ses ruses, mais les règles tiennent bon. Sa proposition récolte trois voix. La tienne l'emporte largement.");
+    }
+    inscribe('trésor commun', 'Atrium', `10 cristaux : ${PROPOSALS[ch7.proposal].toLowerCase()}`);
+    await wait(700);
+    if (ch7.proposal === 'palmier'){ sfx('grow'); await tween(2.4, u => { planter.grow = 1 + ease(u) * .6; }); await say(null, "Dans la jardinière, un deuxième palmier pousse à côté du tien."); }
+    else if (ch7.proposal === 'fontaine') await say(null, "Tess et Oskar se mettent au travail. La fontaine sera prête pour le prochain chapitre, promis.");
+    else await say(null, "Désormais, chaque nouvel arrivant recevra une graine dans son coffre. Comme toi, le premier jour.");
+  }
+  if (ch7.base === 'tokens') await say('Mira', "Au fait… avec 1 pique = 1 voix, c'est moi qui ai le plus de piques. J'aurais pu décider toute seule. C'est un peu gênant, non ?");
+  await debrief7();
+}
+async function debrief7(){
+  camFocus = { x:1100, y:660 };
+  await say('Nonce', "Retiens trois choses. Un : ici, une décision collective, c'est un trésor et des règles de vote écrites dans une machine. Tout le monde les lit, et elles s'appliquent toutes seules.");
+  await say('Nonce', "Deux : chaque façon de compter a sa faille. Une voix par jeton, et les plus riches, ou ceux qui empruntent, décident. Une voix par personne, et il faut s'assurer que chaque personne est bien réelle.");
+  await say('Nonce', "Trois : les protections comptent autant que le vote. Compter les soldes de la veille, exiger un quorum, attendre avant d'appliquer une décision.");
+  closeDialog(); camFocus = null; phase = 'free'; chapterDone = 7;
+  track('Chapitre terminé', { chapitre:7, score:ch7.outcome === 'clean' ? 2 : ch7.outcome === 'saved' ? 1 : 0 });
+  const saved7 = writeSave();
+  showEnd({ eyebrow:'Fin du chapitre 7', title:'Le grand vote', recap:[
+    `Ta proposition : ${PROPOSALS[ch7.proposal].toLowerCase()}. Répétitions avant le vrai vote : <b>${ch7.rehearsals}</b>.`,
+    ch7.outcome === 'clean' ? 'Les règles ont bloqué toutes les ruses de Célestin.' : ch7.outcome === 'saved' ? 'Une ruse est passée, mais le délai de deux jours a permis de l’annuler.' : 'Une faille est restée ouverte : Célestin est reparti avec les 50 cristaux du trésor.',
+    ch7.base === 'tokens' ? 'Tu as choisi 1 pique = 1 voix : Mira pesait presque autant que tout l’Atrium.' : 'Tu as choisi 1 habitant = 1 voix : il fallait vérifier que chacun était bien réel.',
+    'Un trésor, des règles lisibles par tous, et des protections : quorum, soldes de la veille, délai.'],
+    teaser:"<b>Chapitre 8.</b> Le messager du dehors : la machine de Tess a besoin de savoir s'il pleut, et le registre ne voit rien du monde extérieur.", saved:saved7,
+    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 7', chapter7], ['Recommencer au début', chapter]] });
 }
 
 const talk = {
@@ -1474,6 +1611,8 @@ const talk = {
     if (phase === 'ch3-tess') return chat([['Nonce', "Un intermédiaire qui ne peut ni se tromper ni tricher ? Tess a ce qu'il te faut."]]);
     if (phase === 'ch4-nonce'){ ch4.called = true; return; }
     if (phase === 'ch5-nonce'){ ch5.called = true; return; }
+    if (phase === 'ch7-nonce'){ ch7.called = true; return; }
+    if (chapterDone >= 7) return chat([['Nonce', ch7.outcome === 'stolen' ? "Le trésor se remplit de nouveau, doucement. Au prochain vote, on relira les règles deux fois." : "Le prochain grand vote aura lieu dans un mois. D'ici là, n'importe qui peut proposer de changer les règles… en votant, bien sûr."]]);
     if (phase === 'ch6-table') return chat([['Nonce', "Mira prépare quelque chose à la table de cartes. Avec elle, c'est toujours une bonne idée ou une catastrophe."]]);
     if (chapterDone >= 5) return chat([['Nonce', ch5.mev ? "Mira ne t'en veut plus. Mais elle regarde maintenant qui propose la page avant d'acheter ses graines." : "La cohue est passée. Les pages coûtent de nouveau presque rien. Si tu as quelque chose à inscrire, c'est le moment."]]);
     if (chapterDone >= 4) return chat([['Nonce', ch4.slashed ? "Mon serment se reconstitue doucement. La prochaine fois que Célestin te propose un marché, fais-moi signe avant." : "Le registre tient parce que des milliers de gardiens vérifient chaque page. Aujourd'hui, tu en faisais partie."]]);
@@ -1560,13 +1699,13 @@ window.addEventListener('keydown', ev => {
 window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
-const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitre 4 · Les gardiens du registre', 4:'Chapitre 5 · La place sur la page', 5:"Chapitre 6 · Les jetons de l'Atrium", 6:'Chapitres 1 à 6 terminés' };
+const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitre 4 · Les gardiens du registre', 4:'Chapitre 5 · La place sur la page', 5:"Chapitre 6 · Les jetons de l'Atrium", 6:'Chapitre 7 · Le grand vote', 7:'Chapitres 1 à 7 terminés' };
 function setupTitle(){
   const d = readSave(), newBtn = $('newBtn');
   if (!d || !d.chapterDone){ newBtn.hidden = true; return; }
   $('titleEyebrow').textContent = CH_NAMES[d.chapterDone] || 'Partie en cours';
-  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution.", 3:"Nonce a une faveur à te demander. Son serment est en jeu.", 4:"L'Atrium bourdonne, et le tirage au sort est tombé sur le siège de Nonce.", 5:"À la table de cartes, Mira dessine des petits piques sur une feuille." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
-  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3', 3:'Continuer : chapitre 4', 4:'Continuer : chapitre 5', 5:'Continuer : chapitre 6' }[d.chapterDone] || "Retourner dans l'Atrium";
+  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution.", 3:"Nonce a une faveur à te demander. Son serment est en jeu.", 4:"L'Atrium bourdonne, et le tirage au sort est tombé sur le siège de Nonce.", 5:"À la table de cartes, Mira dessine des petits piques sur une feuille.", 6:"Une affiche est apparue au pied du grand cristal." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
+  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3', 3:'Continuer : chapitre 4', 4:'Continuer : chapitre 5', 5:'Continuer : chapitre 6', 6:'Continuer : chapitre 7' }[d.chapterDone] || "Retourner dans l'Atrium";
   newBtn.hidden = false;
 }
 let confirmNew = false;
@@ -1576,7 +1715,7 @@ $('startBtn').addEventListener('click', () => {
   track('Partie lancée', { reprise:!!(d && d.chapterDone), chapitre:d && d.chapterDone ? d.chapterDone + 1 : 1 });
   if (!d || !d.chapterDone) return chapter();
   restore(d);
-  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else if (d.chapterDone === 3) chapter4(); else if (d.chapterDone === 4) chapter5(); else if (d.chapterDone === 5) chapter6(); else resumeFree();
+  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else if (d.chapterDone === 3) chapter4(); else if (d.chapterDone === 4) chapter5(); else if (d.chapterDone === 5) chapter6(); else if (d.chapterDone === 6) chapter7(); else resumeFree();
 });
 $('newBtn').addEventListener('click', () => {
   if (!confirmNew){ confirmNew = true; $('newBtn').textContent = 'Confirmer : effacer ma progression'; return; }
@@ -1650,6 +1789,7 @@ function render(){
   if (phase === 'plant' && !busy) drawMarker(g, planter.x, planter.y - 60, time);
   if (phase === 'ch2-tess' && !busy) drawMarker(g, 1150, 815 - 150 * persp(815), time);
   if (phase === 'ch2-go' && !busy) drawMarker(g, 431, 600, time);
+  if (phase === 'ch7-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
   if (phase === 'ch6-table' && !busy) drawMarker(g, 431, 600, time);
   if (phase === 'ch5-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
   if (phase === 'ch4-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
@@ -1667,7 +1807,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 // outil de test : ouvrir index.html#debug expose window.atrium
-if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, ch4:{ ...ch4 }, ch5:{ ...ch5 }, ch6:{ ...ch6 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
+if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, ch4:{ ...ch4 }, ch5:{ ...ch5 }, ch6:{ ...ch6 }, ch7:{ ...ch7 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
 resetWorld();
 resize();
 window.addEventListener('resize', resize);

@@ -32,6 +32,11 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 | Le dessin unique d'Oskar | Un NFT (ERC-721) : numéro, créateur, historique |
 | L'étagère où l'image est rangée | Le stockage des métadonnées (serveur, IPFS, on-chain) |
 | « Oskar_officiel » | Une collection contrefaite, un faux contrat |
+| Le trésor commun et la machine du vote | Une DAO : trésorerie et gouvernance on-chain |
+| 1 pique = 1 voix | Le vote pondéré par les tokens (plutocratie) |
+| Les piques empruntés le temps du vote | L'attaque par flash loan sur la gouvernance |
+| Les inconnus masqués | L'attaque Sybil (faux comptes) |
+| Soldes de la veille, quorum, délai | Snapshot, quorum, timelock |
 
 ## État actuel
 
@@ -41,6 +46,7 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 - **Chapitre 4, « Les gardiens du registre »** : le joueur garde à la place de Nonce. Il vérifie cinq pages proposées (soldes, signatures, doubles dépenses) et les atteste ou les refuse ; une page est scellée avec les deux tiers des gardiens. Célestin lui propose de signer deux versions contradictoires d'une même page : accepter brûle une partie du serment de Nonce.
 - **Chapitre 5, « La place sur la page »** : le joueur propose une page de 10 places en choisissant parmi huit demandes (place prise, pourboire). Le prix de base est brûlé, le pourboire revient au proposeur. Célestin propose d'acheter les graines juste avant Mira pour les lui revendre (MEV). Puis le joueur envoie sa propre demande en pleine cohue et choisit son pourboire : payer pour passer tout de suite, ou attendre le calme.
 - **Chapitre 6, « Les jetons de l'Atrium »** : le joueur écrit les règles des piques, les jetons du club de Mira (quantité, création de nouveaux jetons, liberté de les donner), puis Oskar grave un dessin unique. Le joueur choisit où ranger l'image, et aide Mira à reconnaître le vrai dessin parmi deux copies (même image, autre créateur, nom qui imite celui d'Oskar).
+- **Chapitre 7, « Le grand vote »** : le trésor commun (50 cristaux) se décide au vote. Le joueur dépose une proposition, puis écrit les règles du vote face à celle de Célestin : 1 pique = 1 voix ou 1 habitant = 1 voix, et des protections (soldes de la veille, vérification des habitants, quorum, délai de deux jours). Une répétition montre ses trois ruses : piques empruntés, faux votants, vote en pleine nuit.
 
 ## Stack
 
@@ -100,7 +106,6 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 
 ## Pistes
 
-- Chapitre 7 : le grand vote (DAO, gouvernance).
 - Chapitre 8 : le messager du dehors (oracles, ponts).
 - Chapitre 9 : les petites salles d'à côté (layer 2), déjà écrit dans la branche `chapitre-layer2`.
 - Chapitre 10 : le premier bloc (épilogue).
