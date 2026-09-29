@@ -125,3 +125,16 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
 @keyframes testIn{from{opacity:0;transform:translateY(4px)}}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:3px 3px 0 var(--ink)}
 @media (prefers-reduced-motion: reduce){ .tests li{animation:none} }
+
+/* page check (chapitre 4) */
+.balances{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px}
+.balances li{display:flex;justify-content:space-between;gap:8px;background:var(--mist);border-radius:6px;padding:6px 10px;font-size:14px}
+.balances b{font:600 15px var(--f-mono);font-variant-numeric:tabular-nums}
+.txs{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.txs li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;border:2px solid var(--ink);border-radius:8px;padding:8px 10px;background:var(--paper)}
+.txs li span{font-weight:700}
+.txs li b{font:600 14px var(--f-mono);font-variant-numeric:tabular-nums}
+.txs li em{grid-column:1 / -1;font:12px var(--f-mono);color:var(--ink-2);font-style:normal}
+.verdict{border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.5;background:var(--mist);box-shadow:inset 3px 0 0 var(--teal)}
+.verdict.ko{background:var(--parchment);box-shadow:inset 3px 0 0 var(--peach)}
+.verdict.ok .pill{background:var(--cyan)} .verdict.ko .pill{background:var(--peach)}

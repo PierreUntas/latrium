@@ -17,12 +17,18 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 | Le bac à sable | Le testnet |
 | Poser la machine | Déployer : le code devient immuable |
 | « Tess peut tout retirer » | Une clé d'admin, un point de défaillance |
+| Les gardiens | Les validateurs |
+| Le serment de 32 cristaux | Le staking (32 ETH) |
+| Attester une page | L'attestation d'un bloc |
+| Page scellée aux deux tiers | La finalité |
+| Serment brûlé pour deux signatures contradictoires | Le slashing |
 
 ## État actuel
 
 - **Chapitre 1, « L'arrivée »** : le coffre en verre, les douze mots, la première transaction.
 - **Chapitre 2, « L'inconnu très aimable »** : Tess paie 3 cristaux, puis Célestin tente trois ruses (l'urgence, le cadeau trop beau, la signature à l'aveugle). Si le joueur se fait avoir, le vol est public et irréversible ; avec des mots donnés, Nonce crée un nouveau coffre, avec une signature, on révoque l'autorisation.
 - **Chapitre 3, « La machine à promesses »** : Mira et Oskar veulent échanger sans se faire confiance. Le joueur choisit les règles de la machine de Tess parmi six cartes (dont deux pièges), les teste dans un bac à sable sur quatre scénarios, puis la pose dans le registre. Une machine posée ne se modifie plus : en cas de faille, elle est exploitée et il faut en poser une nouvelle.
+- **Chapitre 4, « Les gardiens du registre »** : le joueur garde à la place de Nonce. Il vérifie cinq pages proposées (soldes, signatures, doubles dépenses) et les atteste ou les refuse ; une page est scellée avec les deux tiers des gardiens. Célestin lui propose de signer deux versions contradictoires d'une même page : accepter brûle une partie du serment de Nonce.
 
 ## Stack
 
@@ -64,5 +70,5 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 
 ## Pistes
 
-- Chapitre 4 : les gardiens du registre (validateurs, consensus, staking).
+- Chapitre 5 : la place sur une page est limitée (gas, frais, mempool).
 - Un carnet pour recopier ses mots.

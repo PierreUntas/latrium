@@ -445,7 +445,7 @@ const OBST = [[430,740,128,40],[800,608,150,30],[1200,645,34,13],[1150,815,104,3
 let phase = 'title', lock = true, meetTriggered = false, time = 0, sparkleUntil = -1, camFocus = null;
 const inventory = { key:false, items:[] }, ledger = [];
 let tableTalk = 0, tessTalk = 0, busy = false, chapterDone = 0;
-const ch2 = {}, ch3 = {};
+const ch2 = {}, ch3 = {}, ch4 = {};
 const fx = [], tweens = [], waiters = [];
 
 function resetWorld(){
@@ -458,6 +458,7 @@ function resetWorld(){
   Object.assign(ch2, { metTess:false, met:false, toldNonce:false, resisted:0, stolen:null });
   Object.assign(machine, { vis:false, version:0, flash:0, deny:0, held:[] });
   Object.assign(ch3, { talked:false, asked:false, tests:0, deploys:0, done:false });
+  Object.assign(ch4, { called:false, right:0, wrong:0, slashed:false, bribed:false });
   chapterDone = 0;
   walkers.length = 0;
   walkers.push({ x:620, y:580, face:1, walk:0, moving:true, shirt:C.lav, pants:C.peri, hair:C.peach, style:'long', skin:C.skin, min:628, max:700, sp:18 });
@@ -625,14 +626,14 @@ function stay(){ lock = false; phase = 'free'; }
 const SAVE_KEY = 'atrium.save.v1';
 function readSave(){ try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); return d && d.v === 1 ? d : null; } catch (e) { return null; } }
 function writeSave(){
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, savedAt:Date.now() })); return true; }
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, ch4:{ slashed:ch4.slashed }, savedAt:Date.now() })); return true; }
   catch (e) { return false; }
 }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
 function restore(d){
   resetWorld();
   chapterDone = d.chapterDone; ledger.push(...d.ledger); inventory.items = d.items || []; inventory.key = !!d.key;
-  Object.assign(ch2, d.ch2 || {});
+  Object.assign(ch2, d.ch2 || {}); Object.assign(ch4, d.ch4 || {});
   Object.assign(cat, { x:1262, y:668, face:-1, wp:CAT_WP.length - 1 });
   Object.assign(planter, { grow:1, planted:true });
   if (d.chapterDone >= 3) Object.assign(machine, { vis:true, version:d.machineVersion || 1 });
@@ -1038,7 +1039,156 @@ async function debrief3(){
     "Mira et Oskar ont échangé sans se faire confiance. Célestin n'a rien pu retirer.",
     'Une machine fait ce qui est écrit, se teste avant d\'être posée, et n\'a pas de porte de secours.'],
     teaser:"<b>Chapitre 4.</b> Qui écrit vraiment le registre ? Les gardiens, et leur étrange serment.", saved:saved3,
-    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 3', chapter3], ['Recommencer au début', chapter]] });
+    buttons:[['Continuer : chapitre 4', chapter4, true], ["Rester dans l'Atrium", stay], ['Rejouer le chapitre 3', chapter3]] });
+}
+
+/* chapter 4 : les gardiens du registre */
+const PAGES = [
+  { n:1051, by:'Oskar', txs:[{ from:'Oskar', to:'Mira', amt:1, sig:'Oskar' }, { from:'Tess', to:'Oskar', amt:2, sig:'Tess' }] },
+  { n:1052, by:'Tess', txs:[{ from:'Mira', to:'Tess', amt:5, sig:'Mira' }] },
+  { n:1053, by:'un gardien du balcon', txs:[{ from:'Célestin', to:'Tess', amt:3, sig:'Célestin' }, { from:'Célestin', to:'Mira', amt:3, sig:'Célestin' }] },
+  { n:1054, by:'Mira', txs:[{ from:'Tess', to:'Célestin', amt:1, sig:'Célestin' }] },
+  { n:1055, by:'Tess', txs:[{ from:'Mira', to:'Oskar', amt:1, sig:'Mira' }, { from:'Oskar', to:'Tess', amt:1, sig:'Oskar' }] },
+];
+const cr = n => `${n} ${n > 1 ? 'cristaux' : 'cristal'}`;
+function checkPage(page, bal){
+  const spent = {};
+  for (const t of page.txs){
+    if (t.sig !== t.from) return { ok:false, why:`${t.from} n'a jamais signé cette dépense : c'est ${t.sig} qui a signé à sa place. Seul le propriétaire d'un coffre peut en dépenser le contenu.` };
+    spent[t.from] = (spent[t.from] || 0) + t.amt;
+  }
+  for (const [who, amt] of Object.entries(spent)){
+    if (amt > bal[who]){
+      const n = page.txs.filter(t => t.from === who).length;
+      return { ok:false, why:n > 1 ? `${who} essaie de dépenser deux fois ses ${cr(bal[who])} : ${cr(amt)} au total. C'est une double dépense.` : `${who} n'a que ${cr(bal[who])}, pas ${amt}. Solde insuffisant.` };
+    }
+  }
+  return { ok:true, why:'Chaque dépense est signée par son propriétaire, et chacun a de quoi payer.' };
+}
+function applyPage(page, bal){ page.txs.forEach(t => { bal[t.from] -= t.amt; bal[t.to] = (bal[t.to] || 0) + t.amt; }); }
+function showPage(page, bal, idx){
+  return new Promise(res => {
+    const chk = checkPage(page, bal);
+    const others = chk.ok ? 5 : 1, total = 6;
+    const draw = choice => {
+      mcard.classList.add('wide');
+      const sealed = choice && (chk.ok ? true : false);
+      const right = choice && ((choice === 'attest') === chk.ok);
+      mcard.innerHTML = `<p class="eyebrow">Page ${idx + 1} sur ${PAGES.length} · proposée par ${page.by}</p><h2>Page ${page.n.toLocaleString('fr-FR')}</h2>
+        <h3 class="tests-title">Soldes avant cette page</h3>
+        <ul class="balances">${Object.entries(bal).map(([k, v]) => `<li><span>${k}</span><b>${v}</b></li>`).join('')}</ul>
+        <h3 class="tests-title">Transactions proposées</h3>
+        <ol class="txs">${page.txs.map(t => `<li><span>${t.from} → ${t.to}</span><b>${cr(t.amt)}</b><em>signé : ${t.sig}</em></li>`).join('')}</ol>
+        ${choice ? `<div class="verdict ${right ? 'ok' : 'ko'}"><span class="pill">${right ? 'Bien vu' : 'Raté'}</span> ${chk.why}<br>
+            Les autres gardiens : <b>${others + (choice === 'attest' ? 1 : 0)} sur ${total + 1}</b> attestent. ${sealed ? '<b>Page scellée.</b>' : '<b>Page rejetée</b> : elle ne sera jamais écrite.'}
+            ${right ? ' Récompense : 0,1 cristal.' : chk.ok ? ' La page est scellée sans toi : pas de récompense.' : ' Tu as attesté une page fausse : pas de récompense.'}</div>
+            <div class="row"><button class="btn primary" id="pgNext">${idx + 1 < PAGES.length ? 'Page suivante' : 'Terminer'}</button></div>`
+        : `<p class="hint">Vérifie : chacun a-t-il de quoi payer ? Qui a signé ? Quelqu'un dépense-t-il deux fois la même chose ?</p>
+            <div class="row"><button class="btn primary" id="pgYes">Attester</button><button class="btn" id="pgNo">Refuser</button></div>`}`;
+      modal.hidden = false; mcard.querySelector('.row button').focus({ preventScroll:true });
+      if (choice) $('pgNext').addEventListener('click', () => { modal.hidden = true; mcard.classList.remove('wide'); res({ right, ok:chk.ok }); });
+      else { $('pgYes').addEventListener('click', () => pick('attest')); $('pgNo').addEventListener('click', () => pick('refuse')); }
+    };
+    const pick = c => { const right = (c === 'attest') === chk.ok; sfx(right ? 'ledger' : 'fail'); draw(c); };
+    draw(null);
+  });
+}
+function setupChapter4(){
+  Object.assign(planter, { grow:1, planted:true });
+  Object.assign(stranger, { x:-120, y:770, vis:false, target:null, gesture:false });
+  Object.assign(machine, { vis:true, version:Math.max(1, machine.version) });
+  Object.assign(ch4, { called:false, right:0, wrong:0, slashed:false, bribed:false });
+  Object.assign(player, { x:760, y:720, face:1, target:null, moving:false });
+  $('chestBtn').hidden = false; renderPanel();
+}
+async function chapter4(){
+  setupChapter4(); phase = 'ch4-intro'; lock = true; camFocus = null;
+  await wait(300);
+  await say(null, "Un matin tranquille. Nonce te fait signe de loin, avec un air plus sérieux que d'habitude.");
+  closeDialog(); setObjective('Va voir Nonce'); phase = 'ch4-nonce'; lock = false;
+
+  await until(() => ch4.called);
+  lock = true; setObjective(null); camFocus = { x:1100, y:660 };
+  await walkTo(player, 1082, 674, 250); player.face = 1; nonce.face = -1;
+  await say('Nonce', "Tu t'es déjà demandé qui écrit le registre ? Pas moi tout seul. Pas Tess. Personne tout seul.");
+  await say('Nonce', "Ce sont les gardiens. Tu vois les gens aux balcons ? Mira, Oskar, Tess, moi… Chacun garde sa copie du registre. À chaque nouvelle page, l'un de nous la propose, et les autres vérifient tout, eux-mêmes.");
+  sparkleUntil = time + 4;
+  const c = await say('Nonce', "Si au moins les deux tiers des gardiens attestent qu'une page est juste, elle est scellée. Pour toujours.", ["Et qu'est-ce qui empêche un gardien de tricher ?", "Comment on devient gardien ?"]);
+  await say('Nonce', c === 0 ? "Son serment. Pour devenir gardien, on met en jeu une caution : moi, trente-deux cristaux. Un gardien qui triche perd une partie de son serment." : "On met en jeu une caution, un serment : moi, trente-deux cristaux. Tant qu'on garde honnêtement, le serment reste à nous, et on gagne une petite récompense à chaque page vérifiée.");
+  await say('Nonce', "Aujourd'hui, j'ai une faveur à te demander. Garde à ma place. Mon serment est en jeu, alors vérifie bien.");
+  closeDialog();
+
+  const bal = { Mira:2, Oskar:2, Tess:5, Célestin:3 };
+  for (let i = 0; i < PAGES.length; i++){
+    if (i === 3){
+      const out = await bribe();
+      if (out) break;
+    }
+    PAGES[i].n = 1048 + ledger.length; // le prochain bloc du registre
+    const r = await showPage(PAGES[i], bal, i);
+    if (r.right) ch4.right++; else ch4.wrong++;
+    if (r.ok){ applyPage(PAGES[i], bal); inscribe('gardiens', 'registre', `page scellée (${PAGES[i].txs.length} transaction${PAGES[i].txs.length > 1 ? 's' : ''})`); }
+    await wait(400);
+  }
+  await debrief4();
+}
+async function bribe(){
+  stranger.x = -120; stranger.y = 700; stranger.vis = true; camFocus = { x:1040, y:680 };
+  await walkTo(stranger, 960, 700, 360); stranger.face = 1;
+  await say('Célestin', "Psst. Moi aussi, je suis gardien, figure-toi. J'ai un serment tout neuf. Enfin, un petit.");
+  await say('Célestin', "J'ai préparé deux versions de la prochaine page. Dans l'une, trois cristaux vont chez Tess. Dans l'autre, chez moi.");
+  const c = await say('Célestin', "Signe les deux. Quelle que soit celle qui gagne, tu auras voté pour le gagnant, et tu toucheras ta récompense. Malin, non ?", ["Je signe les deux, c'est sans risque.", "Deux versions de la même page ? Non.", "Nonce, tu as entendu ça ?"]);
+  if (c === 0){
+    ch4.slashed = true; ch4.bribed = true;
+    closeDialog();
+    await say(null, "Tu signes la première version. Puis la seconde. Deux signatures, deux pages contradictoires, le même numéro.");
+    closeDialog();
+    nonce.gesture = true; machine.flash = 0;
+    inscribe('registre', 'serment de Nonce', '1 cristal brûlé');
+    await wait(900);
+    await say('Nonce', "Non… Tu as signé deux pages qui se contredisent. Tous les gardiens l'ont vu : les deux signatures sont dans leurs copies.");
+    await say('Nonce', "Le registre punit ça tout seul, sans juge ni procès : une partie de mon serment vient d'être brûlée, et mon siège de gardien est retiré. Pour aujourd'hui, c'est fini.");
+    closeDialog(); nonce.gesture = false;
+    await say('Célestin', "Ah. Oui. Ça, je ne l'avais pas précisé. Bonne journée !");
+    closeDialog();
+    await walkTo(stranger, -120, 700, 460); stranger.vis = false; camFocus = { x:1100, y:660 };
+    return true;
+  }
+  await say('Célestin', c === 1 ? "Quel dommage. Tu aurais fait un gardien très… souple." : "Nonce ? Non, non, pas besoin de le déranger ! J'y vais, j'y vais.");
+  if (c === 2) await say('Nonce', "Deux versions de la même page, signées par le même gardien ? C'est la seule chose que le registre ne pardonne jamais. Bien joué de m'avoir appelé.");
+  closeDialog();
+  await walkTo(stranger, -120, 700, 420); stranger.vis = false; camFocus = { x:1100, y:660 };
+  return false;
+}
+async function debrief4(){
+  camFocus = { x:1100, y:660 };
+  const reward = ch4.right / 10;
+  const rs = reward.toLocaleString('fr-FR');
+  if (!ch4.slashed){
+    await say('Nonce', ch4.wrong === 0 ? "Cinq pages, cinq bonnes décisions. Tu gardes mieux que certains gardiens que je connais depuis le premier bloc." : `Tu as vu juste ${ch4.right} fois sur ${PAGES.length}. Heureusement, les autres gardiens vérifient aussi : c'est pour ça qu'on est nombreux.`);
+  } else {
+    await say('Nonce', "Je ne t'en veux pas. Il fallait bien que quelqu'un t'explique cette règle, et Célestin l'a fait à sa façon.");
+  }
+  if (reward > 0){
+    await say('Nonce', `Tes récompenses : ${rs} cristal. Elles sont à toi.`);
+    closeDialog();
+    await flyItem(nonceHand(), [player.x, player.y - 80 * persp(player.y)], 1, 'gems2');
+    inventory.items = inventory.items.concat([`${rs} cristal de récompense`]);
+    inscribe('Nonce', 'toi', `${rs} cristal (récompenses de gardien)`); pulseChest();
+    await wait(600);
+  }
+  await say('Nonce', "Retiens trois choses. Un : personne ne décide seul. Une page n'est scellée que si les deux tiers des gardiens l'attestent.");
+  await say('Nonce', "Deux : un gardien ne croit personne sur parole. Il vérifie lui-même les soldes, les signatures, les doubles dépenses.");
+  await say('Nonce', "Trois : le serment garantit l'honnêteté. Signer deux pages qui se contredisent, c'est perdre une partie de son serment, automatiquement.");
+  closeDialog(); camFocus = null; phase = 'free'; chapterDone = 4;
+  const saved4 = writeSave();
+  showEnd({ eyebrow:'Fin du chapitre 4', title:'Les gardiens du registre', recap:[
+    ch4.slashed ? `Pages vérifiées avant l'exclusion : <b>${ch4.right + ch4.wrong}</b>, dont ${ch4.right} justes.` : `Bonnes décisions : <b>${ch4.right} sur ${PAGES.length}</b>.`,
+    ch4.slashed ? "Tu as signé deux pages contradictoires : un cristal du serment de Nonce a été brûlé." : "Tu as refusé de signer deux pages contradictoires. Le serment de Nonce est intact.",
+    reward > 0 ? `Récompenses gagnées : ${rs} cristal.` : "Aucune récompense cette fois.",
+    'Deux tiers des gardiens pour sceller une page, chacun vérifie tout, et le serment garantit l\'honnêteté.'],
+    teaser:"<b>Chapitre 5.</b> La place sur une page est limitée. Qui passe en premier, et combien ça coûte ?", saved:saved4,
+    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 4', chapter4], ['Recommencer au début', chapter]] });
 }
 
 const talk = {
@@ -1050,6 +1200,8 @@ const talk = {
     if (phase === 'ch2-go') return chat([['Nonce', "Des cristaux ? Tess a donc réussi. Va vite les montrer à Oskar."]]);
     if (phase === 'ch3-table') return chat([['Nonce', "J'entends Mira et Oskar d'ici. Va voir, avant qu'ils ne réveillent Gwei."]]);
     if (phase === 'ch3-tess') return chat([['Nonce', "Un intermédiaire qui ne peut ni se tromper ni tricher ? Tess a ce qu'il te faut."]]);
+    if (phase === 'ch4-nonce'){ ch4.called = true; return; }
+    if (chapterDone >= 4) return chat([['Nonce', ch4.slashed ? "Mon serment se reconstitue doucement. La prochaine fois que Célestin te propose un marché, fais-moi signe avant." : "Le registre tient parce que des milliers de gardiens vérifient chaque page. Aujourd'hui, tu en faisais partie."]]);
     if (chapterDone >= 3) return chat([['Nonce', "Une machine que personne ne peut arrêter, pas même celle qui l'a construite. Ça me donne un peu le vertige, parfois."]]);
     if (chapterDone >= 2) return chat([['Nonce', "Si Célestin revient, tu sauras quoi lui répondre. Et il reviendra, sous un autre nom, avec un autre chapeau."]]);
     return chat([['Nonce', "Tu reviendras me voir ? Il y a encore beaucoup de gens à rencontrer ici. Certains sont très gentils. D'autres le sont un peu trop."]]);
@@ -1130,13 +1282,13 @@ window.addEventListener('keydown', ev => {
 window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
-const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitres 1 à 3 terminés' };
+const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitre 4 · Les gardiens du registre', 4:'Chapitres 1 à 4 terminés' };
 function setupTitle(){
   const d = readSave(), newBtn = $('newBtn');
   if (!d || !d.chapterDone){ newBtn.hidden = true; return; }
   $('titleEyebrow').textContent = CH_NAMES[d.chapterDone] || 'Partie en cours';
-  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
-  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3' }[d.chapterDone] || "Retourner dans l'Atrium";
+  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution.", 3:"Nonce a une faveur à te demander. Son serment est en jeu." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
+  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3', 3:'Continuer : chapitre 4' }[d.chapterDone] || "Retourner dans l'Atrium";
   newBtn.hidden = false;
 }
 let confirmNew = false;
@@ -1145,7 +1297,7 @@ $('startBtn').addEventListener('click', () => {
   const d = readSave();
   if (!d || !d.chapterDone) return chapter();
   restore(d);
-  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else resumeFree();
+  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else if (d.chapterDone === 3) chapter4(); else resumeFree();
 });
 $('newBtn').addEventListener('click', () => {
   if (!confirmNew){ confirmNew = true; $('newBtn').textContent = 'Confirmer : effacer ma progression'; return; }
@@ -1219,6 +1371,7 @@ function render(){
   if (phase === 'plant' && !busy) drawMarker(g, planter.x, planter.y - 60, time);
   if (phase === 'ch2-tess' && !busy) drawMarker(g, 1150, 815 - 150 * persp(815), time);
   if (phase === 'ch2-go' && !busy) drawMarker(g, 431, 600, time);
+  if (phase === 'ch4-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
   if (phase === 'ch3-table' && !busy) drawMarker(g, 431, 600, time);
   if (phase === 'ch3-tess' && !busy) drawMarker(g, 1150, 815 - 150 * persp(815), time);
   if (phase === 'ch2-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
@@ -1233,7 +1386,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 // outil de test : ouvrir index.html#debug expose window.atrium
-if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
+if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, ch4:{ ...ch4 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
 resetWorld();
 resize();
 window.addEventListener('resize', resize);
