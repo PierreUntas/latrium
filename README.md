@@ -60,6 +60,7 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 - **Chapitre 7, « Le grand vote »** : le trésor commun (50 cristaux) se décide au vote. Le joueur dépose une proposition, puis écrit les règles du vote face à celle de Célestin : 1 pique = 1 voix ou 1 habitant = 1 voix, et des protections (soldes de la veille, vérification des habitants, quorum, délai de deux jours). Une répétition montre ses trois ruses : piques empruntés, faux votants, vote en pleine nuit.
 - **Chapitre 8, « Le messager du dehors »** : Mira et Oskar parient sur la pluie, mais la machine de Tess ne voit que le registre. Le joueur choisit qui lui apportera la météo (Tess, Célestin, ou cinq messagers à la majorité, avec ou sans caution) et le teste sur quatre situations. Puis il envoie un cristal vers l'Atrium d'en face par un pont rapide à trois gardiens ou par le grand pont qui vérifie le registre d'en face ; Célestin vole deux clés et vide le pont rapide.
 - **Chapitre 9, « Les petites salles d'à côté »** : Tess ouvre une petite salle. Le joueur y dépose un cristal par la passerelle, enchaîne les échanges pour presque rien, et Tess n'inscrit qu'un résumé dans le registre. Célestin publie un faux résumé : le joueur a une fenêtre de contestation pour le démasquer (sinon Oskar s'en charge). Pour ressortir, il attend la fin de la fenêtre ou paie Mira pour une avance.
+- **Chapitre 10, « Le premier bloc »** (épilogue) : Nonce montre son vieux coffre et la page 0 du registre (« Personne ne possède l'Atrium. Tout le monde le fait tourner. Accueillez le suivant. »). Une nouvelle arrivante, Lou, entre dans l'Atrium : le joueur devient le guide, lui crée son coffre, lui offre une graine de son palmier et répond à ses questions. L'écran de fin récapitule la partie et renvoie vers ethereum.org pour créer un vrai wallet.
 
 ## Stack
 
@@ -119,5 +120,7 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 
 ## Pistes
 
-- Chapitre 10 : le premier bloc (épilogue).
+- Tester le jeu avec de vrais débutants et ajuster.
+- Une version anglaise.
+
 - Un carnet pour recopier ses mots.
