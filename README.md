@@ -27,6 +27,12 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 | Prix de base brûlé, pourboire | Base fee (EIP-1559) et priority fee |
 | Les miettes | Le gwei |
 | Célestin juste avant Mira | Le front-running, le MEV |
+| La petite salle de Tess | Un layer 2 (rollup optimiste) |
+| La passerelle | Le bridge (dépôt et retrait) |
+| Le résumé inscrit dans le registre | Le batch publié sur le layer 1 |
+| La fenêtre de contestation | La preuve de fraude et son délai (7 jours) |
+| L'avance de Mira | Un bridge rapide, qui avance la liquidité |
+| Les salles avec une preuve mathématique | Les rollups ZK |
 
 ## État actuel
 
@@ -35,6 +41,7 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 - **Chapitre 3, « La machine à promesses »** : Mira et Oskar veulent échanger sans se faire confiance. Le joueur choisit les règles de la machine de Tess parmi six cartes (dont deux pièges), les teste dans un bac à sable sur quatre scénarios, puis la pose dans le registre. Une machine posée ne se modifie plus : en cas de faille, elle est exploitée et il faut en poser une nouvelle.
 - **Chapitre 4, « Les gardiens du registre »** : le joueur garde à la place de Nonce. Il vérifie cinq pages proposées (soldes, signatures, doubles dépenses) et les atteste ou les refuse ; une page est scellée avec les deux tiers des gardiens. Célestin lui propose de signer deux versions contradictoires d'une même page : accepter brûle une partie du serment de Nonce.
 - **Chapitre 5, « La place sur la page »** : le joueur propose une page de 10 places en choisissant parmi huit demandes (place prise, pourboire). Le prix de base est brûlé, le pourboire revient au proposeur. Célestin propose d'acheter les graines juste avant Mira pour les lui revendre (MEV). Puis le joueur envoie sa propre demande en pleine cohue et choisit son pourboire : payer pour passer tout de suite, ou attendre le calme.
+- **Chapitre 6, « Les petites salles d'à côté »** : Tess ouvre une petite salle. Le joueur y dépose un cristal par la passerelle, enchaîne les échanges pour presque rien, et Tess n'inscrit qu'un résumé dans le registre. Célestin publie un faux résumé : le joueur a une fenêtre de contestation pour le démasquer (sinon Oskar s'en charge). Pour ressortir, il attend la fin de la fenêtre ou paie Mira pour une avance.
 
 ## Stack
 
@@ -94,5 +101,5 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 
 ## Pistes
 
-- Chapitre 6 : quand l'Atrium déborde, les petites salles d'à côté (layer 2, rollups).
+- Chapitre 7 : les jetons de l'Atrium (tokens, NFT, provenance).
 - Un carnet pour recopier ses mots.
