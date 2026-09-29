@@ -138,3 +138,17 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
 .verdict{border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.5;background:var(--mist);box-shadow:inset 3px 0 0 var(--teal)}
 .verdict.ko{background:var(--parchment);box-shadow:inset 3px 0 0 var(--peach)}
 .verdict.ok .pill{background:var(--cyan)} .verdict.ko .pill{background:var(--peach)}
+
+/* mempool (chapitre 5) */
+.meter{height:12px;border:2px solid var(--ink);border-radius:999px;background:var(--paper);overflow:hidden}
+.meter .fill{height:100%;background:var(--teal);transition:width .2s}
+.meter .fill.over{background:var(--peach)}
+.meter-legend{display:flex;justify-content:space-between;gap:10px;margin:0;font-size:14px;font-variant-numeric:tabular-nums}
+.mempool .rule{align-items:center}
+.mp-main{flex:1;min-width:0}
+.mp-main small{color:var(--ink-2)}
+.mp-num{flex:none;text-align:right;font:600 13px/1.35 var(--f-mono);font-variant-numeric:tabular-nums}
+.rule.shady{background:var(--parchment)}
+.rule.shady[aria-pressed="true"]{background:var(--peach)}
+.warn{margin:0;font-size:14px;background:var(--parchment);border-radius:6px;padding:6px 10px}
+.tips{grid-template-columns:repeat(3,1fr)}

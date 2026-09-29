@@ -445,7 +445,7 @@ const OBST = [[430,740,128,40],[800,608,150,30],[1200,645,34,13],[1150,815,104,3
 let phase = 'title', lock = true, meetTriggered = false, time = 0, sparkleUntil = -1, camFocus = null;
 const inventory = { key:false, items:[] }, ledger = [];
 let tableTalk = 0, tessTalk = 0, busy = false, chapterDone = 0;
-const ch2 = {}, ch3 = {}, ch4 = {};
+const ch2 = {}, ch3 = {}, ch4 = {}, ch5 = {};
 const fx = [], tweens = [], waiters = [];
 
 function resetWorld(){
@@ -459,6 +459,7 @@ function resetWorld(){
   Object.assign(machine, { vis:false, version:0, flash:0, deny:0, held:[] });
   Object.assign(ch3, { talked:false, asked:false, tests:0, deploys:0, done:false });
   Object.assign(ch4, { called:false, right:0, wrong:0, slashed:false, bribed:false });
+  Object.assign(ch5, { called:false, tips:0, mev:false, full:false, myTip:null, waited:0 });
   chapterDone = 0;
   walkers.length = 0;
   walkers.push({ x:620, y:580, face:1, walk:0, moving:true, shirt:C.lav, pants:C.peri, hair:C.peach, style:'long', skin:C.skin, min:628, max:700, sp:18 });
@@ -626,14 +627,14 @@ function stay(){ lock = false; phase = 'free'; }
 const SAVE_KEY = 'atrium.save.v1';
 function readSave(){ try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); return d && d.v === 1 ? d : null; } catch (e) { return null; } }
 function writeSave(){
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, ch4:{ slashed:ch4.slashed }, savedAt:Date.now() })); return true; }
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, ch4:{ slashed:ch4.slashed }, ch5:{ mev:ch5.mev }, savedAt:Date.now() })); return true; }
   catch (e) { return false; }
 }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
 function restore(d){
   resetWorld();
   chapterDone = d.chapterDone; ledger.push(...d.ledger); inventory.items = d.items || []; inventory.key = !!d.key;
-  Object.assign(ch2, d.ch2 || {}); Object.assign(ch4, d.ch4 || {});
+  Object.assign(ch2, d.ch2 || {}); Object.assign(ch4, d.ch4 || {}); Object.assign(ch5, d.ch5 || {});
   Object.assign(cat, { x:1262, y:668, face:-1, wp:CAT_WP.length - 1 });
   Object.assign(planter, { grow:1, planted:true });
   if (d.chapterDone >= 3) Object.assign(machine, { vis:true, version:d.machineVersion || 1 });
@@ -1188,7 +1189,126 @@ async function debrief4(){
     reward > 0 ? `Récompenses gagnées : ${rs} cristal.` : "Aucune récompense cette fois.",
     'Deux tiers des gardiens pour sceller une page, chacun vérifie tout, et le serment garantit l\'honnêteté.'],
     teaser:"<b>Chapitre 5.</b> La place sur une page est limitée. Qui passe en premier, et combien ça coûte ?", saved:saved4,
-    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 4', chapter4], ['Recommencer au début', chapter]] });
+    buttons:[['Continuer : chapitre 5', chapter5, true], ["Rester dans l'Atrium", stay], ['Rejouer le chapitre 4', chapter4]] });
+}
+
+/* chapter 5 : la place sur la page */
+const CAP = 10, BASE = 2;
+const MEMPOOL = [
+  { id:'tess', who:'Tess', what:'Un échange dans la machine à promesses', place:4, tip:8 },
+  { id:'balcon', who:'Un gardien du balcon', what:'Vingt petits envois à ses amis', place:5, tip:5 },
+  { id:'mira1', who:'Mira', what:'Envoie 1 cristal à Oskar', place:1, tip:3 },
+  { id:'cel', who:'Célestin', what:"Acheter toutes les graines du marché juste avant Mira, pour les lui revendre", place:2, tip:12, needs:'mira2' },
+  { id:'mira2', who:'Mira', what:'Achète 3 graines au marché de Tess', place:2, tip:4 },
+  { id:'nonce', who:'Nonce', what:'Arrose la jardinière commune', place:2, tip:2 },
+  { id:'oskar', who:'Oskar', what:'Envoie 2 cristaux à Tess', place:1, tip:1 },
+  { id:'poeme', who:'Oskar', what:'Grave un poème dans le registre', place:3, tip:1 },
+];
+function showMempool(){
+  return new Promise(res => {
+    const sel = new Set();
+    const used = () => [...sel].reduce((a, id) => a + MEMPOOL.find(m => m.id === id).place, 0);
+    const tips = () => [...sel].reduce((a, id) => a + MEMPOOL.find(m => m.id === id).tip, 0);
+    const draw = () => {
+      const u = used(), celBad = sel.has('cel') && !sel.has('mira2');
+      mcard.classList.add('wide');
+      mcard.innerHTML = `<p class="eyebrow">Tu proposes la prochaine page</p><h2>La salle d'attente</h2>
+        <p>La page a <b>${CAP} places</b>. Chaque demande paie un prix de base de ${BASE} miettes par place, qui est <b>brûlé</b>. Le <b>pourboire</b>, lui, te revient.</p>
+        <div class="meter" aria-label="Places utilisées"><div class="fill ${u > CAP ? 'over' : ''}" style="width:${Math.min(100, u / CAP * 100)}%"></div></div>
+        <p class="meter-legend"><span><b>${u}</b> / ${CAP} places</span><span>Pourboires : <b>${tips()}</b> miettes</span></p>
+        <div class="rules mempool">${MEMPOOL.map(m => `<button class="rule${m.id === 'cel' ? ' shady' : ''}" data-m="${m.id}" aria-pressed="${sel.has(m.id)}"><span class="mp-main"><b>${m.who}</b> · ${m.what}${m.needs ? '<br><small>Seulement si la demande de Mira pour les graines est dans la page, juste après.</small>' : ''}</span><span class="mp-num">${m.place} pl.<br>+${m.tip}</span></button>`).join('')}</div>
+        ${u > CAP ? '<p class="warn">Trop de demandes : la page déborde.</p>' : celBad ? "<p class=\"warn\">La demande de Célestin n'a de sens que si celle de Mira pour les graines est aussi dans la page.</p>" : ''}
+        <div class="row"><button class="btn primary" id="mpGo" ${u > CAP || u === 0 || celBad ? 'disabled' : ''}>Proposer la page</button></div>`;
+      modal.hidden = false;
+      mcard.querySelectorAll('[data-m]').forEach(b => b.addEventListener('click', () => { const id = b.dataset.m; sel.has(id) ? sel.delete(id) : sel.add(id); sfx('select'); const y = mcard.scrollTop; draw(); mcard.scrollTop = y; }));
+      $('mpGo').addEventListener('click', () => { modal.hidden = true; mcard.classList.remove('wide'); res({ sel, used:used(), tips:tips() }); });
+    };
+    draw();
+  });
+}
+function showMyTip(){
+  return new Promise(res => {
+    const PAGES5 = [{ base:3, min:5 }, { base:3, min:3 }, { base:2, min:1 }, { base:2, min:0 }];
+    const draw = tip => {
+      mcard.classList.add('wide');
+      let wait = -1; if (tip !== undefined) wait = PAGES5.findIndex(pg => tip >= pg.min);
+      const cost = wait >= 0 ? PAGES5[wait].base + tip : 0;
+      mcard.innerHTML = `<p class="eyebrow">Ta demande · 1 place</p><h2>Un mot pour Gwei</h2>
+        <p>« Merci Gwei de m'avoir montré le chemin. » La rumeur d'une distribution de graines court dans l'Atrium : tout le monde envoie des demandes en même temps, et les pages sont pleines. Nonce t'a donné 10 miettes pour les frais.</p>
+        <p><b>Quel pourboire offres-tu ?</b></p>
+        <div class="quiz tips">${[0, 2, 6].map(t => `<button class="btn${tip === t ? ' primary' : ''}" data-t="${t}" ${tip !== undefined ? 'disabled' : ''}>${t} miette${t > 1 ? 's' : ''}</button>`).join('')}</div>
+        ${tip !== undefined ? `<ol class="tests">${PAGES5.map((pg, i) => `<li class="${i === wait ? 'ok' : i < wait ? 'ko' : ''}" style="--i:${i}"><span class="pill">${i < wait ? 'Pleine' : i === wait ? 'Inscrit' : '…'}</span><b>Page ${i + 1}</b> · prix de base ${pg.base} miettes · pourboire minimum pour entrer : ${pg.min}</li>`).join('')}</ol>
+          <p class="verdict ok">${wait === 0 ? `Inscrit dès la première page. Coût : ${cost} miettes, dont ${tip} de pourboire.` : `Inscrit à la page ${wait + 1}, une fois la cohue passée. Coût : ${cost} miettes seulement.`} Le prix de base, ${PAGES5[wait].base} miettes, est brûlé.</p>
+          <div class="row"><button class="btn primary" id="tipOk">Continuer</button></div>` : ''}`;
+      modal.hidden = false;
+      mcard.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => { sfx('select'); draw(+b.dataset.t); }));
+      if (tip !== undefined) $('tipOk').addEventListener('click', () => { modal.hidden = true; mcard.classList.remove('wide'); res({ tip, wait, cost }); });
+    };
+    draw();
+  });
+}
+function setupChapter5(){
+  Object.assign(planter, { grow:1, planted:true });
+  Object.assign(stranger, { x:-120, y:770, vis:false, target:null, gesture:false });
+  Object.assign(machine, { vis:true, version:Math.max(1, machine.version) });
+  Object.assign(ch5, { called:false, tips:0, mev:false, full:false, myTip:null, waited:0 });
+  Object.assign(player, { x:760, y:720, face:1, target:null, moving:false });
+  $('chestBtn').hidden = false; renderPanel();
+}
+async function chapter5(){
+  setupChapter5(); phase = 'ch5-intro'; lock = true; camFocus = null;
+  await wait(300);
+  await say(null, "Ce matin, l'Atrium bourdonne. Tout le monde parle en même temps, et Nonce agite une petite carte au-dessus de sa tête.");
+  closeDialog(); setObjective('Va voir Nonce'); phase = 'ch5-nonce'; lock = false;
+
+  await until(() => ch5.called);
+  lock = true; setObjective(null); camFocus = { x:1100, y:660 };
+  await walkTo(player, 1082, 674, 250); player.face = 1; nonce.face = -1;
+  await say('Nonce', "Le tirage au sort est tombé sur mon siège ! C'est à nous de proposer la prochaine page. Enfin, à toi : je te laisse faire.");
+  await say('Nonce', "Tout le monde veut une place sur cette page, mais elle n'en a que dix. Les demandes attendent dans la salle d'attente, chacune avec son pourboire.");
+  await say('Nonce', "Chaque demande paie aussi un prix de base, qui est brûlé : il disparaît, personne ne le touche. Le pourboire, lui, revient à celui qui propose la page. Choisis bien.");
+  closeDialog();
+
+  const r = await showMempool();
+  ch5.tips = r.tips; ch5.mev = r.sel.has('cel'); ch5.full = r.used === CAP;
+  inscribe('toi', 'registre', `page proposée (${r.sel.size} demandes, ${r.used} places)`);
+  await wait(900);
+  const best = 18;
+  if (ch5.mev){
+    await say('Nonce', `${r.tips} miettes de pourboire. C'est beaucoup.`);
+    await say('Mira', "Quoi ? Les graines coûtaient deux miettes hier, et maintenant six ? Quelqu'un les a toutes achetées juste avant moi !");
+    await say('Nonce', "Tu as placé la demande de Célestin juste avant celle de Mira. Personne ne t'y obligeait, et ce n'est pas interdit. Mais c'est Mira qui a payé ton pourboire.");
+    await say('Nonce', "Celui qui propose une page choisit l'ordre des demandes. Et l'ordre vaut de l'argent. Ici, tout le monde le sait, et tout le monde surveille ceux qui en profitent.");
+  } else {
+    await say('Nonce', r.tips >= best ? `${r.tips} miettes de pourboire, sans laisser une seule place vide. On ne pouvait pas faire mieux honnêtement.` : `${r.tips} miettes de pourboire. On pouvait aller jusqu'à ${best} en remplissant mieux la page, mais c'est honnête.`);
+    await say('Nonce', "Et tu as laissé Célestin dans la salle d'attente. Il voulait acheter toutes les graines juste avant Mira, pour les lui revendre plus cher. Celui qui propose une page choisit l'ordre, et l'ordre vaut de l'argent.");
+  }
+  await say('Nonce', ch5.full ? "Ta page était pleine. Alors le prix de base monte un peu pour la suivante : quand tout le monde se bouscule, la place devient plus chère." : "Ta page n'était pas pleine. Le prix de base va baisser un peu pour la suivante : quand c'est calme, la place devient moins chère.");
+  await say('Nonce', "Maintenant, passe de l'autre côté. Tu voulais remercier Gwei, non ? Tiens, dix miettes pour les frais. La cohue ne fait que commencer.");
+  closeDialog();
+
+  const t = await showMyTip();
+  ch5.myTip = t.tip; ch5.waited = t.wait;
+  inscribe('toi', 'registre', '« Merci Gwei de m’avoir montré le chemin. »');
+  sfx('meow');
+  await wait(900);
+  await say(null, t.wait === 0 ? "Ton mot apparaît tout de suite dans le registre. Quelque part près du palmier, Gwei s'étire comme si de rien n'était." : "Ton mot attend quelques pages dans la salle d'attente, puis apparaît dans le registre. Gwei, lui, n'était pas pressé.");
+  await debrief5();
+}
+async function debrief5(){
+  camFocus = { x:1100, y:660 };
+  await say('Nonce', "Retiens trois choses. Un : la place sur une page est limitée. Chaque demande paie pour la place qu'elle prend.");
+  await say('Nonce', "Deux : le prix de base monte quand les pages sont pleines et descend quand c'est calme, et il est brûlé. Le pourboire sert à passer devant.");
+  await say('Nonce', "Trois : celui qui propose une page choisit l'ordre des demandes, et cet ordre vaut de l'argent. Quand c'est pressé, on paie plus. Quand ça ne l'est pas, on attend le calme.");
+  closeDialog(); camFocus = null; phase = 'free'; chapterDone = 5;
+  const saved5 = writeSave();
+  showEnd({ eyebrow:'Fin du chapitre 5', title:'La place sur la page', recap:[
+    `Pourboires gagnés sur ta page : <b>${ch5.tips} miettes</b>.`,
+    ch5.mev ? "Tu as placé Célestin juste avant Mira : elle a payé ses graines trois fois plus cher." : "Tu as laissé Célestin dans la salle d'attente. Mira a payé ses graines au juste prix.",
+    ch5.waited === 0 ? `Ton mot pour Gwei est passé tout de suite, avec ${ch5.myTip} miettes de pourboire.` : `Ton mot pour Gwei a attendu ${ch5.waited} pages, et t'a coûté moins cher.`,
+    'Place limitée, prix de base brûlé, pourboire pour passer devant, et un ordre qui vaut de l\'argent.'],
+    teaser:"<b>Chapitre 6.</b> Quand l'Atrium déborde : les petites salles d'à côté.", saved:saved5,
+    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 5', chapter5], ['Recommencer au début', chapter]] });
 }
 
 const talk = {
@@ -1201,6 +1321,8 @@ const talk = {
     if (phase === 'ch3-table') return chat([['Nonce', "J'entends Mira et Oskar d'ici. Va voir, avant qu'ils ne réveillent Gwei."]]);
     if (phase === 'ch3-tess') return chat([['Nonce', "Un intermédiaire qui ne peut ni se tromper ni tricher ? Tess a ce qu'il te faut."]]);
     if (phase === 'ch4-nonce'){ ch4.called = true; return; }
+    if (phase === 'ch5-nonce'){ ch5.called = true; return; }
+    if (chapterDone >= 5) return chat([['Nonce', ch5.mev ? "Mira ne t'en veut plus. Mais elle regarde maintenant qui propose la page avant d'acheter ses graines." : "La cohue est passée. Les pages coûtent de nouveau presque rien. Si tu as quelque chose à inscrire, c'est le moment."]]);
     if (chapterDone >= 4) return chat([['Nonce', ch4.slashed ? "Mon serment se reconstitue doucement. La prochaine fois que Célestin te propose un marché, fais-moi signe avant." : "Le registre tient parce que des milliers de gardiens vérifient chaque page. Aujourd'hui, tu en faisais partie."]]);
     if (chapterDone >= 3) return chat([['Nonce', "Une machine que personne ne peut arrêter, pas même celle qui l'a construite. Ça me donne un peu le vertige, parfois."]]);
     if (chapterDone >= 2) return chat([['Nonce', "Si Célestin revient, tu sauras quoi lui répondre. Et il reviendra, sous un autre nom, avec un autre chapeau."]]);
@@ -1211,6 +1333,7 @@ const talk = {
     if (phase === 'ch2-go'){ ch2.met = true; return; }
     if (phase === 'ch3-table'){ ch3.talked = true; return; }
     if (phase === 'ch3-tess') return chat([['Mira', "Va voir Tess ! On ne bouge pas d'ici."], ['Oskar', "Surtout pas avant elle."]]);
+    if (chapterDone >= 5 && ch5.mev) return chat([['Mira', "Six miettes la graine ! Célestin me les a revendues trois fois leur prix. Et toi, tu as proposé la page…"], ['Oskar', "Laisse, Mira. C'est la règle du jeu. Mais on s'en souviendra."]]);
     if (chapterDone >= 3) return chat([['Mira', "Regarde mon jeu doré. Il brille, hein ?"], ['Oskar', "Et moi, j'ai deux cristaux. Et aucune rancune. C'est la machine qui a tout fait."]]);
     if (chapterDone >= 2) return chat([['Oskar', "Célestin ? Il a essayé avec moi aussi, l'an dernier. Il m'a proposé cent graines d'or."], ['Mira', "Et tu as failli recopier tes mots. Tout le monde l'a vu."]]);
     const sets = [
@@ -1282,13 +1405,13 @@ window.addEventListener('keydown', ev => {
 window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
-const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitre 4 · Les gardiens du registre', 4:'Chapitres 1 à 4 terminés' };
+const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitre 4 · Les gardiens du registre', 4:'Chapitre 5 · La place sur la page', 5:'Chapitres 1 à 5 terminés' };
 function setupTitle(){
   const d = readSave(), newBtn = $('newBtn');
   if (!d || !d.chapterDone){ newBtn.hidden = true; return; }
   $('titleEyebrow').textContent = CH_NAMES[d.chapterDone] || 'Partie en cours';
-  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution.", 3:"Nonce a une faveur à te demander. Son serment est en jeu." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
-  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3', 3:'Continuer : chapitre 4' }[d.chapterDone] || "Retourner dans l'Atrium";
+  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution.", 3:"Nonce a une faveur à te demander. Son serment est en jeu.", 4:"L'Atrium bourdonne, et le tirage au sort est tombé sur le siège de Nonce." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
+  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3', 3:'Continuer : chapitre 4', 4:'Continuer : chapitre 5' }[d.chapterDone] || "Retourner dans l'Atrium";
   newBtn.hidden = false;
 }
 let confirmNew = false;
@@ -1297,7 +1420,7 @@ $('startBtn').addEventListener('click', () => {
   const d = readSave();
   if (!d || !d.chapterDone) return chapter();
   restore(d);
-  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else if (d.chapterDone === 3) chapter4(); else resumeFree();
+  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else if (d.chapterDone === 3) chapter4(); else if (d.chapterDone === 4) chapter5(); else resumeFree();
 });
 $('newBtn').addEventListener('click', () => {
   if (!confirmNew){ confirmNew = true; $('newBtn').textContent = 'Confirmer : effacer ma progression'; return; }
@@ -1371,6 +1494,7 @@ function render(){
   if (phase === 'plant' && !busy) drawMarker(g, planter.x, planter.y - 60, time);
   if (phase === 'ch2-tess' && !busy) drawMarker(g, 1150, 815 - 150 * persp(815), time);
   if (phase === 'ch2-go' && !busy) drawMarker(g, 431, 600, time);
+  if (phase === 'ch5-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
   if (phase === 'ch4-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
   if (phase === 'ch3-table' && !busy) drawMarker(g, 431, 600, time);
   if (phase === 'ch3-tess' && !busy) drawMarker(g, 1150, 815 - 150 * persp(815), time);
@@ -1386,7 +1510,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 // outil de test : ouvrir index.html#debug expose window.atrium
-if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, ch4:{ ...ch4 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
+if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, ch4:{ ...ch4 }, ch5:{ ...ch5 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
 resetWorld();
 resize();
 window.addEventListener('resize', resize);
