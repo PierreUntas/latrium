@@ -34,6 +34,10 @@ src/audio.js    musique et effets sonores (Web Audio)
 src/game.js     rendu du décor, personnages, déplacements, dialogues, histoire
 ```
 
+## Sauvegarde
+
+La progression est enregistrée dans le navigateur (`localStorage`, clé `atrium.save.v1`) à la fin de chaque chapitre. L'écran titre propose alors de continuer, ou de repartir de zéro avec une confirmation.
+
 ## Lancer en local
 
 Ouvre `index.html` dans un navigateur. Pour un serveur local :
@@ -57,4 +61,3 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 
 - Chapitre 3 : la machine à promesses de Tess (smart contracts).
 - Un carnet pour recopier ses mots.
-- Sauvegarde de la progression.

@@ -577,13 +577,37 @@ function showParchment(){
 }
 function showEnd(o){
   const card = $('endCard');
-  card.innerHTML = `<p class="eyebrow">${o.eyebrow}</p><h2>${o.title}</h2><ul class="recap">${o.recap.map(r => `<li>${r}</li>`).join('')}</ul>${o.teaser ? `<p class="teaser">${o.teaser}</p>` : ''}<div class="row"></div>`;
+  card.innerHTML = `<p class="eyebrow">${o.eyebrow}</p><h2>${o.title}</h2><ul class="recap">${o.recap.map(r => `<li>${r}</li>`).join('')}</ul>${o.teaser ? `<p class="teaser">${o.teaser}</p>` : ''}<div class="row"></div>${o.saved ? '<p class="hint">Progression sauvegardée sur cet appareil.</p>' : ''}`;
   const row = card.querySelector('.row');
   o.buttons.forEach(([label, fn, primary]) => { const b = document.createElement('button'); b.className = 'btn' + (primary ? ' primary' : ''); b.textContent = label;
     b.addEventListener('click', () => { $('end').hidden = true; fn(); }); row.appendChild(b); });
   $('end').hidden = false; row.firstChild.focus({ preventScroll:true }); sfx('end');
 }
 function stay(){ lock = false; phase = 'free'; }
+
+/* ---------- sauvegarde (navigateur, par appareil) ---------- */
+const SAVE_KEY = 'atrium.save.v1';
+function readSave(){ try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); return d && d.v === 1 ? d : null; } catch (e) { return null; } }
+function writeSave(){
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, savedAt:Date.now() })); return true; }
+  catch (e) { return false; }
+}
+function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
+function restore(d){
+  resetWorld();
+  chapterDone = d.chapterDone; ledger.push(...d.ledger); inventory.items = d.items || []; inventory.key = !!d.key;
+  Object.assign(ch2, d.ch2 || {});
+  Object.assign(cat, { x:1262, y:668, face:-1, wp:CAT_WP.length - 1 });
+  Object.assign(planter, { grow:1, planted:true });
+  $('chestBtn').hidden = false; renderPanel();
+}
+async function resumeFree(){
+  phase = 'resume'; lock = true; camFocus = null;
+  Object.assign(player, { x:800, y:950, face:1 });
+  await walkTo(player, 800, 800, 200);
+  await say(null, "Te revoilà dans l'Atrium. Ta pousse de palmier a encore grandi, et Gwei fait semblant de ne pas t'avoir attendu.");
+  closeDialog(); stay();
+}
 
 /* ---------- story ---------- */
 async function learnWords(){
@@ -662,12 +686,13 @@ async function chapter(){
   await say(null, "Une pousse sort de terre. Au loin, Nonce lève la main pour te saluer. À la table de cartes, quelqu'un murmure : « Bloc 1 049. »");
   closeDialog();
   phase = 'free'; lock = true; chapterDone = 1;
+  const saved1 = writeSave();
   await wait(500);
   showEnd({ eyebrow:'Fin du chapitre 1', title:"L'arrivée", recap:[
     'Tu as reçu ton coffre en verre.',
     "Tu connais tes douze mots, et tu sais qu'on ne les donne jamais.",
     'Ta première graine est inscrite dans le registre, pour toujours.'],
-    teaser:'<b>Chapitre 2.</b> Un inconnu très aimable viendra te demander tes douze mots.',
+    teaser:'<b>Chapitre 2.</b> Un inconnu très aimable viendra te demander tes douze mots.', saved:saved1,
     buttons:[['Continuer : chapitre 2', chapter2, true], ["Rester dans l'Atrium", stay]] });
 }
 
@@ -784,13 +809,14 @@ async function debrief(){
   await say('Nonce', "Deux : le cadeau trop beau. Personne n'a besoin de tes mots pour te donner quelque chose.");
   await say('Nonce', "Trois : la signature à l'aveugle. Ce que tu signes compte autant que tes mots. Lis toujours les petites lignes.");
   closeDialog(); camFocus = null; phase = 'free'; chapterDone = 2;
+  const saved2 = writeSave();
   const n = ch2.resisted;
   showEnd({ eyebrow:'Fin du chapitre 2', title:"L'inconnu très aimable", recap:[
     `Ruses déjouées : <b>${n} sur 3</b>.`,
     ch2.stolen ? 'Tes cristaux sont chez Célestin. Tout le monde le sait, personne ne peut les reprendre.' : 'Tes trois cristaux sont toujours dans ton coffre.',
     ch2.stolen === 'words' ? 'Tu as un nouveau coffre et de nouveaux mots.' : ch2.stolen === 'signature' ? "Tu as révoqué l'autorisation que tu avais signée." : 'Tu as lu les petites lignes avant de signer.',
     "Urgence, cadeau trop beau, signature à l'aveugle : tu connais les trois ruses."],
-    teaser:"<b>Chapitre 3.</b> La machine à promesses de Tess : un accord que personne ne peut trahir, pas même elle.",
+    teaser:"<b>Chapitre 3.</b> La machine à promesses de Tess : un accord que personne ne peut trahir, pas même elle.", saved:saved2,
     buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 2', chapter2], ['Recommencer au début', chapter]] });
 }
 async function usePlanter(){
@@ -887,7 +913,28 @@ window.addEventListener('keydown', ev => {
 window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
-$('startBtn').addEventListener('click', () => { window.Sound && window.Sound.start(); $('title').hidden = true; chapter(); });
+const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitres 1 et 2 terminés' };
+function setupTitle(){
+  const d = readSave(), newBtn = $('newBtn');
+  if (!d || !d.chapterDone){ newBtn.hidden = true; return; }
+  $('titleEyebrow').textContent = CH_NAMES[d.chapterDone] || 'Partie en cours';
+  $('titleLede').textContent = d.chapterDone === 1 ? "Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi." : "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
+  $('startBtn').textContent = d.chapterDone === 1 ? 'Continuer : chapitre 2' : "Retourner dans l'Atrium";
+  newBtn.hidden = false;
+}
+let confirmNew = false;
+$('startBtn').addEventListener('click', () => {
+  window.Sound && window.Sound.start(); $('title').hidden = true;
+  const d = readSave();
+  if (!d || !d.chapterDone) return chapter();
+  restore(d);
+  if (d.chapterDone === 1) chapter2(); else resumeFree();
+});
+$('newBtn').addEventListener('click', () => {
+  if (!confirmNew){ confirmNew = true; $('newBtn').textContent = 'Confirmer : effacer ma progression'; return; }
+  clearSave(); window.Sound && window.Sound.start(); $('title').hidden = true; chapter();
+});
+setupTitle();
 const soundBtn = $('soundBtn');
 function renderSound(m){ soundBtn.setAttribute('aria-pressed', String(!m)); soundBtn.setAttribute('aria-label', m ? 'Activer le son' : 'Couper le son'); soundBtn.classList.toggle('off', m); }
 if (window.Sound){ renderSound(window.Sound.muted); window.Sound.onChange(renderSound); soundBtn.addEventListener('click', () => { window.Sound.start(); window.Sound.toggle(); }); } else soundBtn.hidden = true;
