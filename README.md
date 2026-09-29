@@ -67,6 +67,12 @@ Le site utilise Vercel Web Analytics (visites, pays, appareils), sans cookie. Le
 
 Les événements personnalisés ne s'affichent que sur les offres Pro et Enterprise de Vercel ; sur l'offre gratuite, seules les visites sont comptées. Rien n'est envoyé en local ni avec `#debug`.
 
+## Partage
+
+`index.html` contient les balises Open Graph et Twitter : un lien vers le jeu s'affiche avec l'image `og.jpg`, un titre et une description dans WhatsApp, iMessage, Discord, LinkedIn, etc. Les icônes (`icon.svg`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`) et `site.webmanifest` permettent d'ajouter le jeu à l'écran d'accueil d'un téléphone.
+
+L'image et les icônes se régénèrent à partir du jeu avec `tools/make-og.js`.
+
 ## Lancer en local
 
 Ouvre `index.html` dans un navigateur. Pour un serveur local :
