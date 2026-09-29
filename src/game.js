@@ -1394,13 +1394,14 @@ function showChallenge(){
     const draw = () => {
       mcard.classList.add('wide');
       mcard.innerHTML = `<p class="eyebrow">Résumé publié par Célestin</p><h2>Contester ou laisser passer</h2>
+        <div class="window"><span>Fenêtre de contestation · 7 jours, en accéléré · <b id="winLeft">${Math.ceil(left / DUR * 7)} jours restants</b></span><div class="meter"><div class="fill" id="winFill" style="width:${left / DUR * 100}%"></div></div></div>
         <div class="cols2">
           <div><h3 class="tests-title">Le résumé de Célestin</h3><div class="rules">${lines.map((l, i) => `<button class="rule claim" data-l="${i}">${l.t}</button>`).join('')}</div></div>
           <div><h3 class="tests-title">Ton carnet</h3><ul class="carnet"><li>Tu es entré avec <b>1 cristal</b>.</li><li>Mira et Oskar avaient <b>3 cristaux</b> chacun.</li><li>Vous n'avez échangé que des cartes, ${ch6.trades} fois.</li><li>Célestin n'a <b>jamais</b> mis les pieds dans la salle.</li></ul></div>
         </div>
         <p class="hint">Touche une ligne fausse pour la contester. Chacun peut vérifier : l'Atrium rejoue les échanges et tranche.</p>
         ${msg ? `<p class="warn">${msg}</p>` : ''}
-        <div class="window"><span>Fenêtre de contestation · 7 jours, en accéléré</span><div class="meter"><div class="fill" id="winFill" style="width:${left / DUR * 100}%"></div></div><span id="winLeft">${Math.ceil(left / DUR * 7)} jours restants</span></div>`;
+`;
       modal.hidden = false;
       mcard.querySelectorAll('[data-l]').forEach(b => b.addEventListener('click', () => {
         const l = lines[+b.dataset.l];

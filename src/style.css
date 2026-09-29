@@ -205,3 +205,5 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
 .window{display:grid;gap:4px;font-size:13px;color:var(--ink-2)}
 @media (max-width:560px){ .cols2{grid-template-columns:1fr} .counters b{font-size:17px} }
 .compact .cols2{gap:8px} .compact .counters b{font-size:17px}
+.compact .carnet{font-size:13px;padding:8px 10px 8px 24px}
+.compact .rule.claim{padding:5px 10px}
