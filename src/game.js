@@ -251,7 +251,8 @@ function drawPerson(g, p, t){
   const bob = p.moving ? -Math.abs(Math.cos(p.walk)) * 2.5 : (reduce ? 0 : Math.sin(t * 1.6 + p.x) * .6);
   g.translate(0, bob);
   if (p.robe){ g.beginPath(); g.moveTo(-14, -112); g.quadraticCurveTo(-36, -60, -30, -4); g.lineTo(6, -4); g.closePath(); fs(g, p.cape || C.lav); }
-  limb(g, [[-11, -106], [-13 + sw*7, -86], [-11 + sw*10, -68]], 8, p.shirt); hand(g, -11 + sw*10, -68, p.skin);
+  // bras éloigné (côté du regard) : derrière le corps, comme en vue de trois quarts
+  if (!p.gesture){ limb(g, [[11, -106], [13 - sw*7, -86], [12 - sw*10, -68]], 8, p.shirt); hand(g, 12 - sw*10, -68, p.skin); }
   if (!p.robe){
     limb(g, [[-5, -60], [-5 - sw*6, -31], [-5 - sw*12, -3]], 10, p.pants);
     limb(g, [[5, -60], [5 + sw*6, -31], [5 + sw*12, -3]], 10, p.pants);
@@ -267,8 +268,9 @@ function drawPerson(g, p, t){
     g.beginPath(); g.moveTo(-15, -64); g.lineTo(15, -64); g.strokeStyle = C.ink; g.lineWidth = 1.2; g.stroke();
   }
   head(g, -136, p);
+  // bras proche : devant le corps ; le bras qui fait un geste passe devant aussi
+  limb(g, [[-11, -106], [-13 + sw*7, -86], [-11 + sw*10, -68]], 8, p.shirt); hand(g, -11 + sw*10, -68, p.skin);
   if (p.gesture){ limb(g, [[11, -106], [25, -108], [31, -130]], 8, p.shirt); hand(g, 31, -131, p.skin); }
-  else { limb(g, [[11, -106], [13 - sw*7, -86], [12 - sw*10, -68]], 8, p.shirt); hand(g, 12 - sw*10, -68, p.skin); }
   g.restore();
 }
 function nonceHand(){ const s = persp(nonce.y) * nonce.tall; return [nonce.x + nonce.face * 31 * s, nonce.y - 131 * s]; }
