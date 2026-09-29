@@ -227,3 +227,8 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
 .pagezero{font:400 24px/1.35 var(--f-display);text-align:center;padding:14px 8px;border-top:1.5px solid var(--peach);border-bottom:1.5px solid var(--peach)}
 .teaser a{color:var(--ink);font-weight:700}
 .compact .pagezero{font-size:18px;padding:8px 4px}
+
+/* choix de langue (écran titre) */
+#title .card{position:relative}
+.lang-btn{position:absolute;top:12px;right:14px;font:inherit;font-size:13px;color:var(--ink-2);background:none;border:1px solid currentColor;border-radius:999px;padding:3px 10px;cursor:pointer;opacity:.8}
+.lang-btn:hover,.lang-btn:focus-visible{opacity:1}

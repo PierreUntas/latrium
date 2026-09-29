@@ -73,9 +73,25 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 ```
 index.html      structure de la page et des overlays
 src/style.css   palette (variables CSS), interface
+src/i18n.js     choix de la langue, traduction (T, TD), textes fixes de la page
+src/i18n-en.js  dictionnaire anglais, indexé par le texte français
 src/audio.js    musique et effets sonores (Web Audio)
 src/game.js     rendu du décor, personnages, déplacements, dialogues, histoire
 ```
+
+## Langues
+
+Le jeu existe en français et en anglais. La langue se choisit dans cet ordre :
+
+1. le paramètre d'URL `?lang=fr` ou `?lang=en` (ex. https://latrium.vercel.app/?lang=en) ;
+2. le dernier choix, gardé dans `localStorage` (`atrium.lang`) ;
+3. la langue du navigateur : français si elle commence par `fr`, anglais sinon.
+
+Un bouton « English / Français » sur l'écran titre change de langue et recharge la page. La sauvegarde est commune aux deux langues.
+
+Le texte français reste la source : dans `game.js`, chaque texte affiché passe par `T('…')` ou ``T`… ${x}` ``, et sert de clé dans `src/i18n-en.js` (les valeurs deviennent `{0}`, `{1}`…). Un texte absent du dictionnaire s'affiche en français. Les entrées du registre et le contenu du coffre restent en français dans la sauvegarde et sont traduits à l'affichage par `TD()`.
+
+Pour modifier un texte : changer la phrase française dans `game.js`, puis la clé correspondante dans `i18n-en.js`.
 
 ## Sauvegarde
 
@@ -87,7 +103,7 @@ Le site utilise Vercel Web Analytics (visites, pays, appareils), sans cookie. Le
 
 | Événement | Données |
 | --- | --- |
-| `Partie lancée` | `reprise` (true/false), `chapitre` commencé |
+| `Partie lancée` | `reprise` (true/false), `chapitre` commencé, `langue` (fr/en) |
 | `Nouvelle partie` | aucune |
 | `Chapitre terminé` | `chapitre` (1 à 5), `score` : ruses déjouées (ch. 2), machines posées (ch. 3), bonnes décisions ou -1 si slashing (ch. 4), pourboires ou -1 si MEV (ch. 5) |
 
@@ -121,6 +137,5 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 ## Pistes
 
 - Tester le jeu avec de vrais débutants et ajuster.
-- Une version anglaise.
 
 - Un carnet pour recopier ses mots.
