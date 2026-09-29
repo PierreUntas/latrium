@@ -253,12 +253,19 @@ function drawPerson(g, p, t){
   if (p.robe){ g.beginPath(); g.moveTo(-14, -112); g.quadraticCurveTo(-36, -60, -30, -4); g.lineTo(6, -4); g.closePath(); fs(g, p.cape || C.lav); }
   // bras éloigné (côté du regard) : derrière le corps, comme en vue de trois quarts
   if (!p.gesture){ limb(g, [[11, -106], [13 - sw*7, -86], [12 - sw*10, -68]], 8, p.shirt); hand(g, 12 - sw*10, -68, p.skin); }
-  if (!p.robe){
-    limb(g, [[-5, -60], [-5 - sw*6, -31], [-5 - sw*12, -3]], 10, p.pants);
-    limb(g, [[5, -60], [5 + sw*6, -31], [5 + sw*12, -3]], 10, p.pants);
-  }
-  const fy = -1;
-  g.fillStyle = C.ink; g.beginPath(); g.ellipse(-2 - sw*12, fy, 7, 3.6, 0, 0, TAU); g.fill(); g.beginPath(); g.ellipse(8 + sw*12, fy, 7, 3.6, 0, 0, TAU); g.fill();
+  // jambes : vue de profil, les deux hanches presque au même point, genou qui plie quand la jambe revient
+  const spread = p.moving ? 1.5 : 5;
+  const leg = (hx, ph) => {
+    const a = p.moving ? Math.sin(p.walk + ph) * .42 : 0;
+    const lift = p.moving ? Math.max(0, Math.cos(p.walk + ph)) : 0;
+    const knee = [hx + Math.sin(a) * 30, -60 + Math.cos(a) * 30];
+    const b = a - lift * .75;
+    const foot = [knee[0] + Math.sin(b) * 29, Math.min(-3, knee[1] + Math.cos(b) * 29 - lift * 3)];
+    if (!p.robe) limb(g, [[hx, -60], knee, foot], 10, p.pants);
+    g.fillStyle = C.ink; g.beginPath(); g.ellipse(foot[0] + 3, foot[1] + 2, 7, 3.6, 0, 0, TAU); g.fill();
+  };
+  leg(spread, Math.PI);   // jambe éloignée, dessinée d'abord
+  leg(-spread, 0);        // jambe proche, par-dessus
   if (p.robe){ g.beginPath(); g.moveTo(-22, -4); g.lineTo(-17, -104); g.quadraticCurveTo(-16, -117, -3, -118); g.lineTo(4, -118); g.quadraticCurveTo(17, -117, 17, -104); g.lineTo(22, -4); g.quadraticCurveTo(0, 0, -22, -4); fs(g, p.shirt);
     g.strokeStyle = C.ink; g.lineWidth = 1.2; g.beginPath(); g.moveTo(-18, -40); g.quadraticCurveTo(0, -36, 19, -40); g.stroke();
     poly(g, [[3, -100], [-5, -87], [3, -74], [11, -87]]); fs(g, C.violet, C.ink, 1.6);
