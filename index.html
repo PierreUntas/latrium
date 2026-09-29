@@ -16,10 +16,15 @@
 
   <div class="objective" id="objective" hidden><span class="eyebrow">Objectif</span><strong id="objText"></strong></div>
 
-  <button class="chest-btn" id="chestBtn" hidden aria-label="Ouvrir ton coffre">
-    <svg viewBox="0 0 34 28" aria-hidden="true"><path d="M3 11 L9 5 L31 5 L25 11 Z" fill="#aeefe7" fill-opacity=".6" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><path d="M25 11 L31 5 L31 21 L25 27 Z" fill="#aeefe7" fill-opacity=".45" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><rect x="3" y="11" width="22" height="16" fill="#aeefe7" fill-opacity=".35" stroke="#3a3cb2" stroke-width="1.6"/><rect x="11.5" y="13" width="5" height="5" fill="#f8f7ff" stroke="#3a3cb2" stroke-width="1.3"/><ellipse id="hudSeed" cx="16" cy="22.5" rx="3.6" ry="2.6" fill="#f7c8a6" stroke="#3a3cb2" stroke-width="1.2"/></svg>
-    <span>Coffre</span>
-  </button>
+  <div class="hud-right">
+    <button class="sound-btn" id="soundBtn" aria-pressed="true" aria-label="Couper le son">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#aeefe7" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><path class="wave" d="M16 9.5c1.2 1.3 1.2 3.7 0 5M18.5 7c2.6 2.8 2.6 7.2 0 10" fill="none" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/><path class="cross" d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <button class="chest-btn" id="chestBtn" hidden aria-label="Ouvrir ton coffre">
+      <svg viewBox="0 0 34 28" aria-hidden="true"><path d="M3 11 L9 5 L31 5 L25 11 Z" fill="#aeefe7" fill-opacity=".6" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><path d="M25 11 L31 5 L31 21 L25 27 Z" fill="#aeefe7" fill-opacity=".45" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><rect x="3" y="11" width="22" height="16" fill="#aeefe7" fill-opacity=".35" stroke="#3a3cb2" stroke-width="1.6"/><rect x="11.5" y="13" width="5" height="5" fill="#f8f7ff" stroke="#3a3cb2" stroke-width="1.3"/><ellipse id="hudSeed" cx="16" cy="22.5" rx="3.6" ry="2.6" fill="#f7c8a6" stroke="#3a3cb2" stroke-width="1.2"/></svg>
+      <span>Coffre</span>
+    </button>
+  </div>
 
   <div class="ledger-toast" id="toast" role="status" aria-live="polite">
     <div class="eyebrow" id="toastHead">Registre</div>
@@ -65,6 +70,7 @@
 </div>
 <p class="caption"><b>L'Atrium</b> · prototype, chapitres 1 et 2 · Souris ou doigt : touche le sol pour marcher · Clavier : flèches ou ZQSD, Espace pour parler</p>
 
+<script src="src/audio.js"></script>
 <script src="src/game.js"></script>
 </body>
 </html>

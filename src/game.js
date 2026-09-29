@@ -7,6 +7,7 @@ const C = { ink:K('ink'), ink2:K('ink-2'), paper:K('paper'), mist:K('mist'), flo
   peri:K('peri'), cyan:K('cyan'), teal:K('teal'), peach:K('peach'), skin:K('skin') };
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = id => document.getElementById(id);
+const sfx = name => window.Sound && window.Sound.sfx(name);
 const stage = $('stage'), cv = $('cv'), ctx = cv.getContext('2d');
 
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
@@ -458,6 +459,7 @@ function tween(dur, fn){ return new Promise(res => tweens.push({ t:0, dur, fn, r
 
 /* ---------- effects ---------- */
 function flyItem(from, to, dur, kind){
+  sfx(kind === 'bubble' ? 'bubble' : 'gift');
   return new Promise(res => fx.push({ t:0, dur, res, draw(g, u){
     const e = ease(u), c = [(from[0] + to[0]) / 2, Math.min(from[1], to[1]) - 110];
     for (let k = 6; k >= 1; k--){ const pk = quad(from, c, to, Math.max(0, e - k * .03)); g.fillStyle = hexA(C.cyan, .5 - k * .06); g.beginPath(); g.arc(pk[0], pk[1], 7 - k * .7, 0, TAU); g.fill(); }
@@ -468,6 +470,7 @@ function flyItem(from, to, dur, kind){
   }}));
 }
 function ring(x, y, dur){
+  sfx('pop');
   return new Promise(res => fx.push({ t:0, dur, res, draw(g, u){ g.globalAlpha = 1 - u; g.beginPath(); g.arc(x, y, 20 + u * 60, 0, TAU); fs(g, null, C.ink, 2); for (let i = 0; i < 8; i++){ const a = i * TAU / 8; drawSparkle(g, x + Math.cos(a) * (30 + u * 50), y + Math.sin(a) * (30 + u * 50), .5); } g.globalAlpha = 1; } }));
 }
 function witnesses(){
@@ -484,6 +487,7 @@ function inscribe(from, to, what){
   $('toast').classList.add('show'); clearTimeout(toastTimer);
   toastTimer = setTimeout(() => $('toast').classList.remove('show'), 5200);
   sparkleUntil = time + 4.5;
+  sfx(to === 'Célestin' ? 'theft' : 'ledger');
   renderPanel();
 }
 function renderPanel(){
@@ -513,12 +517,12 @@ function say(who, text, choices){
       if (choices){
         advanceFn = null;
         choices.forEach((c, idx) => { const b = document.createElement('button'); b.className = 'choice'; b.textContent = c;
-          b.addEventListener('click', ev => { ev.stopPropagation(); choicesEl.innerHTML = ''; res(idx); }); choicesEl.appendChild(b); });
+          b.addEventListener('click', ev => { ev.stopPropagation(); sfx('select'); choicesEl.innerHTML = ''; res(idx); }); choicesEl.appendChild(b); });
         choicesEl.firstChild.focus({ preventScroll:true });
       } else moreEl.hidden = false;
     };
     advanceFn = () => { if (!done) finish(); else if (!choices){ advanceFn = null; res(0); } };
-    if (reduce) finish(); else timer = setInterval(() => { i += 1; lineEl.textContent = text.slice(0, i); if (i >= text.length) finish(); }, 20);
+    if (reduce) finish(); else timer = setInterval(() => { i += 1; lineEl.textContent = text.slice(0, i); if (i % 4 === 0 && text[i] !== ' ') sfx('blip'); if (i >= text.length) finish(); }, 20);
   });
 }
 function closeDialog(){ dlg.hidden = true; advanceFn = null; nonce.gesture = false; stranger.gesture = false; }
@@ -577,7 +581,7 @@ function showEnd(o){
   const row = card.querySelector('.row');
   o.buttons.forEach(([label, fn, primary]) => { const b = document.createElement('button'); b.className = 'btn' + (primary ? ' primary' : ''); b.textContent = label;
     b.addEventListener('click', () => { $('end').hidden = true; fn(); }); row.appendChild(b); });
-  $('end').hidden = false; row.firstChild.focus({ preventScroll:true });
+  $('end').hidden = false; row.firstChild.focus({ preventScroll:true }); sfx('end');
 }
 function stay(){ lock = false; phase = 'free'; }
 
@@ -586,7 +590,8 @@ async function learnWords(){
   const words = shuffle(POOL.slice()).slice(0, 12);
   for (;;){
     await showSeed(words);
-    if (await showQuiz(words)) break;
+    if (await showQuiz(words)){ sfx('select'); break; }
+    sfx('fail');
     await say('Nonce', "Hmm. Si c'était pour de vrai, ton coffre serait perdu pour toujours. Personne ne pourrait te le rendre, pas même moi. On recommence ?");
     closeDialog();
   }
@@ -798,6 +803,7 @@ async function usePlanter(){
   const s = persp(player.y);
   await flyItem([player.x, player.y - 80 * s], [planter.x, planter.y - 24], .9, 'seed');
   inscribe('toi', 'jardinière commune', '1 graine de palmier');
+  sfx('grow');
   await tween(2.4, u => { planter.grow = ease(u); });
   planter.planted = true; busy = false;
 }
@@ -811,7 +817,7 @@ const talk = {
     if (chapterDone >= 2) return chat([['Nonce', "Si Célestin revient, tu sauras quoi lui répondre. Et il reviendra, sous un autre nom, avec un autre chapeau."]]);
     return chat([['Nonce', "Tu reviendras me voir ? Il y a encore beaucoup de gens à rencontrer ici. Certains sont très gentils. D'autres le sont un peu trop."]]);
   },
-  cat(){ return chat([[null, "Gwei cligne lentement des yeux. Chez les chats, c'est un signe de confiance."]]); },
+  cat(){ sfx('meow'); return chat([[null, "Gwei cligne lentement des yeux. Chez les chats, c'est un signe de confiance."]]); },
   table(){
     if (phase === 'ch2-go'){ ch2.met = true; return; }
     if (chapterDone >= 2) return chat([['Oskar', "Célestin ? Il a essayé avec moi aussi, l'an dernier. Il m'a proposé cent graines d'or."], ['Mira', "Et tu as failli recopier tes mots. Tout le monde l'a vu."]]);
@@ -881,7 +887,10 @@ window.addEventListener('keydown', ev => {
 window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
-$('startBtn').addEventListener('click', () => { $('title').hidden = true; chapter(); });
+$('startBtn').addEventListener('click', () => { window.Sound && window.Sound.start(); $('title').hidden = true; chapter(); });
+const soundBtn = $('soundBtn');
+function renderSound(m){ soundBtn.setAttribute('aria-pressed', String(!m)); soundBtn.setAttribute('aria-label', m ? 'Activer le son' : 'Couper le son'); soundBtn.classList.toggle('off', m); }
+if (window.Sound){ renderSound(window.Sound.muted); window.Sound.onChange(renderSound); soundBtn.addEventListener('click', () => { window.Sound.start(); window.Sound.toggle(); }); } else soundBtn.hidden = true;
 $('chestBtn').addEventListener('click', () => { $('panel').hidden = !$('panel').hidden; });
 $('panelClose').addEventListener('click', () => { $('panel').hidden = true; });
 
@@ -899,6 +908,7 @@ function update(dt){
     if (l){ player.target = null; const sp = 250 * persp(player.y) * dt; player.x += vx / l * sp; player.y += vy / l * sp * .8; collide(player); player.moving = true; player.walk += dt * 10; if (vx) player.face = vx > 0 ? 1 : -1; }
   } else if (!player.target) player.moving = false;
   moveEntity(player, dt); moveEntity(cat, dt); moveEntity(nonce, dt);
+  if (player.moving){ stepT -= dt; if (stepT <= 0){ sfx('step'); stepT = .34; } } else stepT = 0;
   walkers.forEach(w => { w.x += w.face * w.sp * dt; w.walk += dt * 6; if (w.x > w.max) w.face = -1; if (w.x < w.min) w.face = 1; });
   if (phase === 'follow'){
     if (!cat.target && cat.wp < CAT_WP.length - 1 && dist(player, cat) < 230){
@@ -948,7 +958,7 @@ function render(){
   fx.forEach(f => f.draw(g, Math.min(1, f.t / f.dur)));
   drawForeground(g, time);
 }
-let last = performance.now();
+let last = performance.now(), stepT = 0;
 function frame(now){
   const dt = Math.min(.05, (now - last) / 1000); last = now;
   update(dt); render();

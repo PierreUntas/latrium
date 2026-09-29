@@ -24,11 +24,13 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 - HTML, CSS et JavaScript natifs, sans framework, sans dépendance et sans étape de build.
 - Le décor et les personnages sont dessinés en code avec l'API Canvas 2D. Il n'y a aucune image dans le projet.
 - Les dialogues, le HUD et les fenêtres sont en HTML et CSS, par-dessus le canvas.
+- Le son est généré en direct avec la Web Audio API : une nappe en ré lydien, une boîte à musique aléatoire et des effets (pas, bulles, registre, vol…). Aucun fichier audio.
 - Les polices viennent de Google Fonts (Gloock, Atkinson Hyperlegible, JetBrains Mono).
 
 ```
 index.html      structure de la page et des overlays
 src/style.css   palette (variables CSS), interface
+src/audio.js    musique et effets sonores (Web Audio)
 src/game.js     rendu du décor, personnages, déplacements, dialogues, histoire
 ```
 
@@ -54,6 +56,5 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 ## Pistes
 
 - Chapitre 3 : la machine à promesses de Tess (smart contracts).
-- Ambiance sonore.
 - Un carnet pour recopier ses mots.
 - Sauvegarde de la progression.
