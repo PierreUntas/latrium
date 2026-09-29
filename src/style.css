@@ -186,3 +186,17 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
 .compact .seed li{padding:3px 6px;font-size:14px}
 .compact .rule{padding:7px 10px;font-size:13px}
 .compact .tests li,.compact .verdict,.compact .txs li{font-size:13px;padding:6px 9px}
+
+/* jetons et dessins (chapitre 6) */
+.tokencard{display:flex;flex-direction:column;gap:2px;border:2px solid var(--ink);border-radius:10px;padding:10px 12px;background:var(--cyan)}
+.tokencard b{font:400 22px var(--f-display)}
+.tokencard span{font-size:14px}
+.offers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.offer{display:flex;flex-direction:column;gap:4px;text-align:left;font:13px/1.35 var(--f-body);color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:10px;padding:8px;cursor:pointer;min-width:0}
+.offer:hover{background:var(--mist)}
+.offer svg{width:100%;height:auto;border-radius:6px}
+.o-seller{font-size:14px}
+.o-row{color:var(--ink-2)}
+.o-row b{color:var(--ink)}
+@media (max-width:560px){ .offers{grid-template-columns:1fr} .offer svg{max-width:160px} }
+.compact .offer{font-size:12px;padding:6px} .compact .offer svg{max-height:70px}

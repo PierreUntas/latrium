@@ -27,6 +27,11 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 | Prix de base brûlé, pourboire | Base fee (EIP-1559) et priority fee |
 | Les miettes | Le gwei |
 | Célestin juste avant Mira | Le front-running, le MEV |
+| Les piques de Mira | Un token fongible (ERC-20) |
+| Mira peut en créer d'autres | Le mint, l'inflation d'un token |
+| Le dessin unique d'Oskar | Un NFT (ERC-721) : numéro, créateur, historique |
+| L'étagère où l'image est rangée | Le stockage des métadonnées (serveur, IPFS, on-chain) |
+| « Oskar_officiel » | Une collection contrefaite, un faux contrat |
 
 ## État actuel
 
@@ -35,6 +40,7 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 - **Chapitre 3, « La machine à promesses »** : Mira et Oskar veulent échanger sans se faire confiance. Le joueur choisit les règles de la machine de Tess parmi six cartes (dont deux pièges), les teste dans un bac à sable sur quatre scénarios, puis la pose dans le registre. Une machine posée ne se modifie plus : en cas de faille, elle est exploitée et il faut en poser une nouvelle.
 - **Chapitre 4, « Les gardiens du registre »** : le joueur garde à la place de Nonce. Il vérifie cinq pages proposées (soldes, signatures, doubles dépenses) et les atteste ou les refuse ; une page est scellée avec les deux tiers des gardiens. Célestin lui propose de signer deux versions contradictoires d'une même page : accepter brûle une partie du serment de Nonce.
 - **Chapitre 5, « La place sur la page »** : le joueur propose une page de 10 places en choisissant parmi huit demandes (place prise, pourboire). Le prix de base est brûlé, le pourboire revient au proposeur. Célestin propose d'acheter les graines juste avant Mira pour les lui revendre (MEV). Puis le joueur envoie sa propre demande en pleine cohue et choisit son pourboire : payer pour passer tout de suite, ou attendre le calme.
+- **Chapitre 6, « Les jetons de l'Atrium »** : le joueur écrit les règles des piques, les jetons du club de Mira (quantité, création de nouveaux jetons, liberté de les donner), puis Oskar grave un dessin unique. Le joueur choisit où ranger l'image, et aide Mira à reconnaître le vrai dessin parmi deux copies (même image, autre créateur, nom qui imite celui d'Oskar).
 
 ## Stack
 
@@ -94,5 +100,8 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 
 ## Pistes
 
-- Chapitre 6 : quand l'Atrium déborde, les petites salles d'à côté (layer 2, rollups).
+- Chapitre 7 : le grand vote (DAO, gouvernance).
+- Chapitre 8 : le messager du dehors (oracles, ponts).
+- Chapitre 9 : les petites salles d'à côté (layer 2), déjà écrit dans la branche `chapitre-layer2`.
+- Chapitre 10 : le premier bloc (épilogue).
 - Un carnet pour recopier ses mots.

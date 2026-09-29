@@ -463,7 +463,7 @@ const OBST = [[430,740,128,40],[800,608,150,30],[1200,645,34,13],[1150,815,104,3
 let phase = 'title', lock = true, meetTriggered = false, time = 0, sparkleUntil = -1, camFocus = null;
 const inventory = { key:false, items:[] }, ledger = [];
 let tableTalk = 0, tessTalk = 0, busy = false, chapterDone = 0;
-const ch2 = {}, ch3 = {}, ch4 = {}, ch5 = {};
+const ch2 = {}, ch3 = {}, ch4 = {}, ch5 = {}, ch6 = {};
 const fx = [], tweens = [], waiters = [];
 
 function resetWorld(){
@@ -478,6 +478,7 @@ function resetWorld(){
   Object.assign(ch3, { talked:false, asked:false, tests:0, deploys:0, done:false });
   Object.assign(ch4, { called:false, right:0, wrong:0, slashed:false, bribed:false });
   Object.assign(ch5, { called:false, tips:0, mev:false, full:false, myTip:null, waited:0 });
+  Object.assign(ch6, { called:false, supply:100, mint:false, free:true, storage:null, pick:null });
   chapterDone = 0;
   walkers.length = 0;
   walkers.push({ x:620, y:580, face:1, walk:0, moving:true, shirt:C.lav, pants:C.peri, hair:C.peach, style:'long', skin:C.skin, min:628, max:700, sp:18 });
@@ -643,16 +644,19 @@ function stay(){ lock = false; phase = 'free'; }
 
 /* ---------- sauvegarde (navigateur, par appareil) ---------- */
 const SAVE_KEY = 'atrium.save.v1';
-function readSave(){ try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); return d && d.v === 1 ? d : null; } catch (e) { return null; } }
+function readSave(){ try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); if (!d || d.v !== 1) return null;
+  // l'ancien chapitre 6 (petites salles) a été retiré : ces sauvegardes reprennent au chapitre des jetons
+  if (d.chapterDone >= 6 && !d.ch6) d.chapterDone = 5;
+  return d; } catch (e) { return null; } }
 function writeSave(){
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, ch4:{ slashed:ch4.slashed }, ch5:{ mev:ch5.mev }, savedAt:Date.now() })); return true; }
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, ledger, items:inventory.items, key:inventory.key, ch2:{ resisted:ch2.resisted, stolen:ch2.stolen }, machineVersion:machine.version, ch4:{ slashed:ch4.slashed }, ch5:{ mev:ch5.mev }, ch6:chapterDone >= 6 ? { mint:ch6.mint, pick:ch6.pick } : undefined, savedAt:Date.now() })); return true; }
   catch (e) { return false; }
 }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
 function restore(d){
   resetWorld();
   chapterDone = d.chapterDone; ledger.push(...d.ledger); inventory.items = d.items || []; inventory.key = !!d.key;
-  Object.assign(ch2, d.ch2 || {}); Object.assign(ch4, d.ch4 || {}); Object.assign(ch5, d.ch5 || {});
+  Object.assign(ch2, d.ch2 || {}); Object.assign(ch4, d.ch4 || {}); Object.assign(ch5, d.ch5 || {}); Object.assign(ch6, d.ch6 || {});
   Object.assign(cat, { x:1262, y:668, face:-1, wp:CAT_WP.length - 1 });
   Object.assign(planter, { grow:1, planted:true });
   if (d.chapterDone >= 3) Object.assign(machine, { vis:true, version:d.machineVersion || 1 });
@@ -1331,7 +1335,132 @@ async function debrief5(){
     ch5.waited === 0 ? `Ton mot pour Gwei est passé tout de suite, avec ${ch5.myTip} miettes de pourboire.` : `Ton mot pour Gwei a attendu ${ch5.waited} pages, et t'a coûté moins cher.`,
     'Place limitée, prix de base brûlé, pourboire pour passer devant, et un ordre qui vaut de l\'argent.'],
     teaser:"<b>Chapitre 6.</b> Quand l'Atrium déborde : les petites salles d'à côté.", saved:saved5,
-    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 5', chapter5], ['Recommencer au début', chapter]] });
+    buttons:[['Continuer : chapitre 6', chapter6, true], ["Rester dans l'Atrium", stay], ['Rejouer le chapitre 5', chapter5]] });
+}
+
+/* chapter 6 : les jetons de l'Atrium */
+const CAT_SVG = `<svg viewBox="0 0 120 80" aria-hidden="true"><rect width="120" height="80" rx="6" fill="#edfaf8"/><path d="M22 62 Q20 40 44 36 Q58 22 74 34 Q98 34 100 60 Z" fill="#f8f7ff" stroke="#3a3cb2" stroke-width="2.4" stroke-linejoin="round"/><path d="M44 36 L46 24 L54 32 M62 30 L68 20 L72 32" fill="#f8f7ff" stroke="#3a3cb2" stroke-width="2.4" stroke-linejoin="round"/><path d="M50 42 q4 3 8 0 M64 42 q4 3 8 0" fill="none" stroke="#3a3cb2" stroke-width="2" stroke-linecap="round"/><path d="M100 60 Q112 56 104 44" fill="none" stroke="#3a3cb2" stroke-width="2.4" stroke-linecap="round"/><text x="84" y="22" font-size="12" fill="#6f73d8" font-family="serif">z z</text><path d="M16 64 H106" stroke="#78d5cd" stroke-width="2"/></svg>`;
+function showTokenDesigner(){
+  return new Promise(res => {
+    const st = { supply:100, mint:false, free:true };
+    const opt = (key, val, label) => `<button class="btn${st[key] === val ? ' primary' : ''}" data-k="${key}" data-v="${val}">${label}</button>`;
+    const draw = () => {
+      mcard.classList.add('wide');
+      mcard.innerHTML = `<p class="eyebrow">La machine des piques</p><h2>Les règles du jeton</h2>
+        <p>Un pique vaut un pique : ils sont tous pareils, interchangeables. Ce sont les règles de la machine qui font leur valeur, et tout l'Atrium peut les lire.</p>
+        <h3 class="tests-title">Combien de piques au départ ?</h3><div class="quiz tips">${opt('supply', 10, '10')}${opt('supply', 100, '100')}${opt('supply', 1000, '1 000')}</div>
+        <h3 class="tests-title">Qui peut en créer de nouveaux, plus tard ?</h3><div class="quiz">${opt('mint', false, 'Personne, jamais')}${opt('mint', true, 'Mira, quand elle veut')}</div>
+        <h3 class="tests-title">Qui peut donner ses piques ?</h3><div class="quiz">${opt('free', true, 'Chacun, librement')}${opt('free', false, 'Seulement avec l’accord de Mira')}</div>
+        <div class="tokencard"><b>♠ Pique</b><span>${st.supply.toLocaleString('fr-FR')} au départ · ${st.mint ? 'Mira peut en créer d’autres' : 'aucun autre ne sera jamais créé'} · ${st.free ? 'chacun donne les siens librement' : 'chaque don passe par Mira'}</span></div>
+        <div class="row"><button class="btn primary" id="tokGo">Poser la machine des piques</button></div>`;
+      modal.hidden = false;
+      mcard.querySelectorAll('[data-k]').forEach(b => b.addEventListener('click', () => { const k = b.dataset.k, v = b.dataset.v; st[k] = k === 'supply' ? +v : v === 'true'; sfx('select'); draw(); }));
+      $('tokGo').addEventListener('click', () => { modal.hidden = true; mcard.classList.remove('wide'); res(st); });
+    };
+    draw();
+  });
+}
+function showMarket(){
+  return new Promise(res => {
+    const offers = shuffle([
+      { id:'real', seller:'Tess', piece:'Pièce n°1 de la machine à dessins d’Oskar', creator:'Oskar', hist:'Oskar → Tess', price:'4 cristaux' },
+      { id:'copy', seller:'Célestin', piece:'Pièce n°1 de la machine à dessins de Célestin', creator:'Célestin', hist:'Célestin', price:'2 cristaux' },
+      { id:'fake', seller:'Oskar_officiel', piece:'Pièce n°1 de la machine à dessins d’Oskar_officiel', creator:'Oskar_officiel', hist:'Oskar_officiel', price:'3 cristaux' },
+    ]);
+    mcard.classList.add('wide');
+    mcard.innerHTML = `<p class="eyebrow">Le marché aux dessins</p><h2>« Le chat qui dort »</h2>
+      <p>Mira veut le vrai dessin d'Oskar. Trois vendeurs le proposent, et l'image est exactement la même. Aide-la à choisir.</p>
+      <div class="offers">${offers.map(o => `<button class="offer" data-o="${o.id}">${CAT_SVG}<span class="o-seller">Vendu par <b>${o.seller}</b> · ${o.price}</span><span class="o-row">${o.piece}</span><span class="o-row">Créé par : <b>${o.creator}</b></span><span class="o-row">Historique : ${o.hist}</span></button>`).join('')}</div>`;
+    modal.hidden = false;
+    mcard.querySelectorAll('[data-o]').forEach(b => b.addEventListener('click', () => { sfx('select'); modal.hidden = true; mcard.classList.remove('wide'); res(b.dataset.o); }));
+  });
+}
+function setupChapter6(){
+  Object.assign(planter, { grow:1, planted:true });
+  Object.assign(stranger, { x:-120, y:770, vis:false, target:null, gesture:false });
+  Object.assign(machine, { vis:true, version:Math.max(1, machine.version) });
+  Object.assign(ch6, { called:false, supply:100, mint:false, free:true, storage:null, pick:null });
+  Object.assign(player, { x:760, y:720, face:1, target:null, moving:false });
+  $('chestBtn').hidden = false; renderPanel();
+}
+async function chapter6(){
+  setupChapter6(); phase = 'ch6-intro'; lock = true; camFocus = null;
+  await wait(300);
+  await say(null, "Un après-midi calme. À la table de cartes, Mira dessine des petits piques sur une feuille, l'air très concentrée.");
+  closeDialog(); setObjective('Va voir Mira à la table de cartes'); phase = 'ch6-table'; lock = false;
+
+  await until(() => ch6.called);
+  lock = true; setObjective(null); camFocus = { x:520, y:720 };
+  await say('Mira', "J'ai une idée : notre club de cartes va avoir ses propres jetons. Des piques ! On s'en servira pour les tournois, les paris, les petits services.");
+  await say('Mira', "Tess m'a expliqué : un jeton, c'est juste une machine à promesses de plus. Elle tient une liste de qui a combien de piques. Aide-moi à en écrire les règles.");
+  closeDialog();
+  const tok = await showTokenDesigner();
+  Object.assign(ch6, tok);
+  inscribe('Mira', 'registre', `machine des piques (${tok.supply.toLocaleString('fr-FR')} piques)`);
+  await wait(900);
+  const mine = Math.max(1, Math.round(tok.supply / 10));
+  await say('Mira', `Et voilà ! ${mine} pique${mine > 1 ? 's' : ''} pour toi, pour m'avoir aidée.`);
+  closeDialog();
+  await flyItem(seatHead(512), [player.x, player.y - 80 * persp(player.y)], 1, 'cards');
+  const pq = `${mine} pique${mine > 1 ? 's' : ''}`;
+  inventory.items = inventory.items.concat([pq]); pulseChest();
+  inscribe('machine des piques', 'toi', pq);
+  await wait(700);
+  const q = await say(null, "Tu ouvres ton coffre. Les piques n'y sont pas vraiment : il n'y a qu'une ligne dans la machine des piques, avec ton nom et un nombre.", ["Alors où sont-ils, mes piques ?", "D'accord, ça me va."]);
+  if (q === 0) await say('Mira', "Dans le registre, comme tout le reste. Ton coffre, c'est ta clé : c'est lui qui prouve que cette ligne est à toi, et lui seul peut les donner.");
+  if (!tok.free) await say('Oskar', "Attends… il faut l'accord de Mira pour donner ses propres piques ? Alors ce ne sont pas vraiment les miens, ce sont un peu les siens.");
+
+  // Oskar grave un dessin unique
+  await say('Oskar', "Moi, j'ai une autre idée. Les piques sont tous pareils. Mes dessins, eux, sont uniques. Regarde.");
+  await say('Oskar', "Voici « Le chat qui dort ». Je le grave dans ma machine à dessins : pièce n°1, créée par Oskar. Il n'y en aura jamais d'autre.");
+  inscribe('Oskar', 'registre', 'dessin unique n°1 « Le chat qui dort »');
+  await wait(700);
+  const where = await say('Oskar', "Seulement, un dessin, c'est trop lourd pour tenir dans le registre. On y grave la preuve, et on range l'image ailleurs. Tu la rangerais où ?", ["Sur l'étagère de Tess, c'est pratique.", "Sur plusieurs étagères à la fois, chez plusieurs personnes.", "Directement dans le registre, même si c'est cher."]);
+  ch6.storage = ['tess', 'many', 'chain'][where];
+  await say('Oskar', where === 0 ? "Pratique, oui. Mais si Tess déménage son étagère, le registre gardera la preuve… et un lien vers une étagère vide. Le dessin, lui, aura disparu." : where === 1 ? "Bonne idée. Tant qu'une seule étagère garde l'image, elle reste accessible. Et chaque copie est vérifiable : le registre connaît son empreinte exacte." : "Le plus solide : tant que le registre existe, l'image aussi. Mais chaque page coûte cher, alors on le réserve aux petits dessins.");
+  await say('Oskar', "Je le confie à Tess pour sa collection. Tu vas voir, il va faire des envieux.");
+  closeDialog();
+  inscribe('Oskar', 'Tess', 'dessin n°1 « Le chat qui dort »');
+  await wait(700);
+
+  // le marché
+  await say('Mira', "Ce dessin… C'est Gwei ! Il me le faut. Je vais l'acheter.");
+  await say(null, "Quelques minutes plus tard, trois vendeurs proposent « Le chat qui dort ». Mira hésite.");
+  closeDialog();
+  ch6.pick = await showMarket();
+  if (ch6.pick === 'real'){
+    inscribe('Tess', 'Mira', 'dessin n°1 « Le chat qui dort » (contre 4 cristaux)');
+    await wait(700);
+    await say('Mira', "Créé par Oskar, et on voit tout son parcours : Oskar, puis Tess, puis moi. C'est le vrai.");
+    await say('Oskar', "Et les deux autres ? Les mêmes images, copiées. N'importe qui peut copier une image. Personne ne peut copier l'historique.");
+  } else {
+    inscribe('Mira', ch6.pick === 'copy' ? 'Célestin' : 'Oskar_officiel', ch6.pick === 'copy' ? '2 cristaux' : '3 cristaux');
+    await wait(700);
+    await say('Oskar', ch6.pick === 'copy' ? "Ce n'est pas mon dessin, ça. Regarde qui l'a créé : Célestin. Il a copié l'image et l'a gravée dans sa propre machine." : "« Oskar_officiel » ? Ce n'est pas moi ! Quelqu'un a pris un nom qui ressemble au mien pour graver une copie.");
+    await say('Mira', "Et mes cristaux sont partis… Le registre ne revient jamais en arrière, je sais.");
+    await say('Oskar', "L'image, n'importe qui peut la copier. Le nom, aussi. Ce qu'on ne peut pas copier, c'est la machine d'origine et l'historique. C'est ça qu'il faut vérifier.");
+  }
+  if (tok.mint){
+    await say('Oskar', "Au fait, Mira… tu as créé mille piques de plus hier soir, pour ton anniversaire ? Mes piques ne valent presque plus rien.");
+    await say('Mira', "C'était écrit dans les règles, tout le monde pouvait le lire ! …Bon, d'accord, je n'aurais peut-être pas dû.");
+  }
+  await debrief6();
+}
+async function debrief6(){
+  camFocus = { x:520, y:720 };
+  await say('Oskar', "Retiens trois choses. Un : un jeton, c'est une ligne dans une machine du registre. Ce sont ses règles qui font sa valeur : combien il en existe, qui peut en créer. Et tout le monde peut les lire.");
+  await say('Oskar', "Deux : une pièce unique, c'est un numéro, un créateur et un historique. L'image, tout le monde peut la copier. Vérifie toujours d'où vient la pièce, pas à quoi elle ressemble.");
+  await say('Oskar', "Trois : le registre garde la preuve, pas toujours l'image. Regarde où elle est rangée.");
+  closeDialog(); camFocus = null; phase = 'free'; chapterDone = 6;
+  track('Chapitre terminé', { chapitre:6, score:ch6.pick === 'real' ? 1 : 0 });
+  const saved6 = writeSave();
+  showEnd({ eyebrow:'Fin du chapitre 6', title:"Les jetons de l'Atrium", recap:[
+    `Les piques de Mira : ${ch6.supply.toLocaleString('fr-FR')} au départ, ${ch6.mint ? 'et Mira peut en créer d’autres (elle ne s’en est pas privée)' : 'et pas un de plus, jamais'}.`,
+    ch6.pick === 'real' ? "Tu as aidé Mira à acheter le vrai « Chat qui dort », créé par Oskar." : "Mira a acheté une copie : même image, mauvais créateur. Ses cristaux sont partis.",
+    ch6.storage === 'tess' ? "L'image du dessin est rangée sur une seule étagère : fragile." : ch6.storage === 'many' ? "L'image du dessin est rangée sur plusieurs étagères : elle survivra." : "L'image du dessin est gravée dans le registre : solide, mais cher.",
+    'Un jeton vaut ce que valent ses règles ; une pièce unique vaut son historique.'],
+    teaser:"<b>Chapitre 7.</b> Le grand vote : les habitants décident ensemble de l'avenir de la jardinière.", saved:saved6,
+    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 6', chapter6], ['Recommencer au début', chapter]] });
 }
 
 const talk = {
@@ -1345,6 +1474,7 @@ const talk = {
     if (phase === 'ch3-tess') return chat([['Nonce', "Un intermédiaire qui ne peut ni se tromper ni tricher ? Tess a ce qu'il te faut."]]);
     if (phase === 'ch4-nonce'){ ch4.called = true; return; }
     if (phase === 'ch5-nonce'){ ch5.called = true; return; }
+    if (phase === 'ch6-table') return chat([['Nonce', "Mira prépare quelque chose à la table de cartes. Avec elle, c'est toujours une bonne idée ou une catastrophe."]]);
     if (chapterDone >= 5) return chat([['Nonce', ch5.mev ? "Mira ne t'en veut plus. Mais elle regarde maintenant qui propose la page avant d'acheter ses graines." : "La cohue est passée. Les pages coûtent de nouveau presque rien. Si tu as quelque chose à inscrire, c'est le moment."]]);
     if (chapterDone >= 4) return chat([['Nonce', ch4.slashed ? "Mon serment se reconstitue doucement. La prochaine fois que Célestin te propose un marché, fais-moi signe avant." : "Le registre tient parce que des milliers de gardiens vérifient chaque page. Aujourd'hui, tu en faisais partie."]]);
     if (chapterDone >= 3) return chat([['Nonce', "Une machine que personne ne peut arrêter, pas même celle qui l'a construite. Ça me donne un peu le vertige, parfois."]]);
@@ -1355,6 +1485,8 @@ const talk = {
   table(){
     if (phase === 'ch2-go'){ ch2.met = true; return; }
     if (phase === 'ch3-table'){ ch3.talked = true; return; }
+    if (phase === 'ch6-table'){ ch6.called = true; return; }
+    if (chapterDone >= 6) return chat([['Mira', ch6.pick === 'real' ? "« Le chat qui dort » est accroché au-dessus de mon lit. Enfin, sa preuve est dans le registre, et l'image sur l'étagère." : "J'ai appris ma leçon : maintenant, je regarde le créateur avant l'image."], ['Oskar', "Je grave un nouveau dessin par semaine. Toujours dans la même machine : c'est ma signature."]]);
     if (phase === 'ch3-tess') return chat([['Mira', "Va voir Tess ! On ne bouge pas d'ici."], ['Oskar', "Surtout pas avant elle."]]);
     if (chapterDone >= 5 && ch5.mev) return chat([['Mira', "Six miettes la graine ! Célestin me les a revendues trois fois leur prix. Et toi, tu as proposé la page…"], ['Oskar', "Laisse, Mira. C'est la règle du jeu. Mais on s'en souviendra."]]);
     if (chapterDone >= 3) return chat([['Mira', "Regarde mon jeu doré. Il brille, hein ?"], ['Oskar', "Et moi, j'ai deux cristaux. Et aucune rancune. C'est la machine qui a tout fait."]]);
@@ -1428,13 +1560,13 @@ window.addEventListener('keydown', ev => {
 window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
-const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitre 4 · Les gardiens du registre', 4:'Chapitre 5 · La place sur la page', 5:'Chapitres 1 à 5 terminés' };
+const CH_NAMES = { 1:"Chapitre 2 · L'inconnu très aimable", 2:'Chapitre 3 · La machine à promesses', 3:'Chapitre 4 · Les gardiens du registre', 4:'Chapitre 5 · La place sur la page', 5:"Chapitre 6 · Les jetons de l'Atrium", 6:'Chapitres 1 à 6 terminés' };
 function setupTitle(){
   const d = readSave(), newBtn = $('newBtn');
   if (!d || !d.chapterDone){ newBtn.hidden = true; return; }
   $('titleEyebrow').textContent = CH_NAMES[d.chapterDone] || 'Partie en cours';
-  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution.", 3:"Nonce a une faveur à te demander. Son serment est en jeu.", 4:"L'Atrium bourdonne, et le tirage au sort est tombé sur le siège de Nonce." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
-  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3', 3:'Continuer : chapitre 4', 4:'Continuer : chapitre 5' }[d.chapterDone] || "Retourner dans l'Atrium";
+  $('titleLede').textContent = { 1:"Ta pousse de palmier t'attend, et quelqu'un de très aimable aussi.", 2:"À la table de cartes, le ton monte. Tess a peut-être une solution.", 3:"Nonce a une faveur à te demander. Son serment est en jeu.", 4:"L'Atrium bourdonne, et le tirage au sort est tombé sur le siège de Nonce.", 5:"À la table de cartes, Mira dessine des petits piques sur une feuille." }[d.chapterDone] || "L'Atrium n'a pas bougé. Ton coffre et le registre non plus.";
+  $('startBtn').textContent = { 1:'Continuer : chapitre 2', 2:'Continuer : chapitre 3', 3:'Continuer : chapitre 4', 4:'Continuer : chapitre 5', 5:'Continuer : chapitre 6' }[d.chapterDone] || "Retourner dans l'Atrium";
   newBtn.hidden = false;
 }
 let confirmNew = false;
@@ -1444,7 +1576,7 @@ $('startBtn').addEventListener('click', () => {
   track('Partie lancée', { reprise:!!(d && d.chapterDone), chapitre:d && d.chapterDone ? d.chapterDone + 1 : 1 });
   if (!d || !d.chapterDone) return chapter();
   restore(d);
-  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else if (d.chapterDone === 3) chapter4(); else if (d.chapterDone === 4) chapter5(); else resumeFree();
+  if (d.chapterDone === 1) chapter2(); else if (d.chapterDone === 2) chapter3(); else if (d.chapterDone === 3) chapter4(); else if (d.chapterDone === 4) chapter5(); else if (d.chapterDone === 5) chapter6(); else resumeFree();
 });
 $('newBtn').addEventListener('click', () => {
   if (!confirmNew){ confirmNew = true; $('newBtn').textContent = 'Confirmer : effacer ma progression'; return; }
@@ -1518,6 +1650,7 @@ function render(){
   if (phase === 'plant' && !busy) drawMarker(g, planter.x, planter.y - 60, time);
   if (phase === 'ch2-tess' && !busy) drawMarker(g, 1150, 815 - 150 * persp(815), time);
   if (phase === 'ch2-go' && !busy) drawMarker(g, 431, 600, time);
+  if (phase === 'ch6-table' && !busy) drawMarker(g, 431, 600, time);
   if (phase === 'ch5-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
   if (phase === 'ch4-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
   if (phase === 'ch3-table' && !busy) drawMarker(g, 431, 600, time);
@@ -1534,7 +1667,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 // outil de test : ouvrir index.html#debug expose window.atrium
-if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, ch4:{ ...ch4 }, ch5:{ ...ch5 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
+if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, ch3:{ ...ch3 }, ch4:{ ...ch4 }, ch5:{ ...ch5 }, ch6:{ ...ch6 }, machine:machine.version, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
 resetWorld();
 resize();
 window.addEventListener('resize', resize);
