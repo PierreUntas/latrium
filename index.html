@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>L'Atrium</title>
+<meta name="description" content="Un jeu cozy dans l'univers d'Ethereum. Chapitre 1 : l'arrivée.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas id="cv" aria-label="L'Atrium, une grande salle lumineuse avec des colonnes, des palmiers et un cristal géant"></canvas>
+
+  <div class="objective" id="objective" hidden><span class="eyebrow">Objectif</span><strong id="objText"></strong></div>
+
+  <button class="chest-btn" id="chestBtn" hidden aria-label="Ouvrir ton coffre">
+    <svg viewBox="0 0 34 28" aria-hidden="true"><path d="M3 11 L9 5 L31 5 L25 11 Z" fill="#aeefe7" fill-opacity=".6" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><path d="M25 11 L31 5 L31 21 L25 27 Z" fill="#aeefe7" fill-opacity=".45" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><rect x="3" y="11" width="22" height="16" fill="#aeefe7" fill-opacity=".35" stroke="#3a3cb2" stroke-width="1.6"/><rect x="11.5" y="13" width="5" height="5" fill="#f8f7ff" stroke="#3a3cb2" stroke-width="1.3"/><ellipse id="hudSeed" cx="16" cy="22.5" rx="3.6" ry="2.6" fill="#f7c8a6" stroke="#3a3cb2" stroke-width="1.2"/></svg>
+    <span>Coffre</span>
+  </button>
+
+  <div class="ledger-toast" id="toast" role="status" aria-live="polite">
+    <div class="eyebrow" id="toastHead">Registre</div>
+    <div class="row" id="toastRow"></div>
+    <div class="sub">Tout l'Atrium l'a vu passer.</div>
+  </div>
+
+  <aside class="panel" id="panel" hidden>
+    <header><h2>Ton coffre</h2><button class="x" id="panelClose" aria-label="Fermer">×</button></header>
+    <div class="contents">
+      <svg viewBox="0 0 64 52" aria-hidden="true"><path d="M6 20 L16 10 L58 10 L48 20 Z" fill="#aeefe7" fill-opacity=".6" stroke="#3a3cb2" stroke-width="2" stroke-linejoin="round"/><path d="M48 20 L58 10 L58 40 L48 50 Z" fill="#aeefe7" fill-opacity=".45" stroke="#3a3cb2" stroke-width="2" stroke-linejoin="round"/><ellipse id="panelSeed" cx="30" cy="40" rx="6" ry="4.4" fill="#f7c8a6" stroke="#3a3cb2" stroke-width="1.6"/><rect x="6" y="20" width="42" height="30" fill="#aeefe7" fill-opacity=".3" stroke="#3a3cb2" stroke-width="2"/><rect x="23" y="23" width="8" height="9" fill="#f8f7ff" stroke="#3a3cb2" stroke-width="1.6"/></svg>
+      <p id="contentsText">Vide.</p>
+    </div>
+    <dl class="facts">
+      <div><dt>Serrure</dt><dd id="lockText">Pas encore de clé</dd></div>
+      <div><dt>Contenu visible par</dt><dd>Tout l'Atrium</dd></div>
+      <div><dt>Peut l'ouvrir</dt><dd>Toi seul</dd></div>
+    </dl>
+    <h3>Registre de l'Atrium</h3>
+    <ol class="ledger" id="ledgerList"><li class="empty">Rien d'inscrit à ton nom pour l'instant.</li></ol>
+  </aside>
+
+  <div class="dialog" id="dialog" hidden>
+    <span class="speaker" id="speaker"></span>
+    <p class="line" id="line"></p>
+    <div class="choices" id="choices"></div>
+    <span class="more" id="more" aria-hidden="true">▸</span>
+  </div>
+
+  <div class="veil" id="modal" hidden><div class="card" id="modalCard"></div></div>
+
+  <div class="veil" id="title">
+    <div class="card">
+      <p class="eyebrow">Chapitre 1 · L'arrivée</p>
+      <h1>L'Atrium</h1>
+      <p class="lede">Un lieu que personne ne possède et que tout le monde fait tourner. Tu viens d'y arriver.</p>
+      <div class="row"><button class="btn primary" id="startBtn">Entrer</button></div>
+      <p class="hint">Touche le sol pour marcher. Touche quelqu'un pour lui parler.</p>
+    </div>
+  </div>
+
+  <div class="veil" id="end" hidden>
+    <div class="card">
+      <p class="eyebrow">Fin du chapitre 1</p>
+      <h2>L'arrivée</h2>
+      <ul class="recap">
+        <li>Tu as reçu ton coffre en verre.</li>
+        <li>Tu connais tes douze mots, et tu sais qu'on ne les donne jamais.</li>
+        <li>Ta première graine est inscrite dans le registre, pour toujours.</li>
+      </ul>
+      <p class="teaser"><b>Chapitre 2.</b> Un inconnu très aimable viendra te demander tes douze mots.</p>
+      <div class="row"><button class="btn primary" id="stayBtn">Rester dans l'Atrium</button><button class="btn" id="replayBtn">Recommencer</button></div>
+    </div>
+  </div>
+</div>
+<p class="caption"><b>L'Atrium</b> · prototype, chapitre 1 · Souris ou doigt : touche le sol pour marcher · Clavier : flèches ou ZQSD, Espace pour parler</p>
+
+<script src="src/game.js"></script>
+</body>
+</html>
