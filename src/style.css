@@ -1,7 +1,7 @@
 /* Layout: one framed stage (canvas scene in ligne claire) on a lavender ground; dialogue, HUD and cards are HTML layered over it. Single deliberate light world. */
 :root{
   --ink:#3a3cb2; --ink-2:#6f73d8; --paper:#f8f7ff; --ground:#e7e5fa; --mist:#e2e8fb; --floor:#edfaf8;
-  --lav:#cbc3f5; --violet:#a596ea; --peri:#8d9ef2; --cyan:#aeefe7; --teal:#78d5cd; --peach:#f7c8a6; --skin:#fdf0e8;
+  --lav:#cbc3f5; --violet:#a596ea; --peri:#8d9ef2; --cyan:#aeefe7; --teal:#78d5cd; --peach:#f7c8a6; --skin:#fdf0e8; --parchment:#fdf1e7;
   --f-display:'Gloock', Georgia, 'Times New Roman', serif;
   --f-body:'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --f-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
@@ -33,7 +33,7 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
 @keyframes pulse{50%{background:var(--cyan);transform:scale(1.06)}}
 .ledger-toast{position:absolute;top:12px;left:50%;transform:translate(-50%,-160%);background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:8px 14px;box-shadow:3px 3px 0 var(--cyan);transition:transform .45s cubic-bezier(.2,.9,.3,1.2);text-align:center;max-width:calc(100% - 24px)}
 .ledger-toast.show{transform:translate(-50%,0)}
-.ledger-toast .row{font:600 14px var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ledger-toast .row{display:block;font:600 14px var(--f-mono);font-variant-numeric:tabular-nums}
 .ledger-toast .sub{font-size:12px;color:var(--ink-2)}
 .ledger-toast.has-obj{top:auto;bottom:auto}
 
@@ -60,7 +60,7 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
 .dialog.narration .line{font-style:italic;color:#4b4dbb}
 .more{position:absolute;right:14px;bottom:8px;font-size:14px;animation:blink 1s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
-.choices{display:grid;gap:8px;margin-top:12px}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:12px}
 .choice{text-align:left;font:700 15px/1.3 var(--f-body);color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:10px 12px;cursor:pointer}
 .choice:hover{background:var(--cyan)}
 
@@ -86,3 +86,15 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
   .objective strong{font-size:14px}
 }
 @media (prefers-reduced-motion: reduce){ .more,.chest-btn.pulse{animation:none} .ledger-toast{transition:none} }
+
+/* speakers */
+.speaker[data-who="Célestin"]{background:var(--peach)}
+.speaker[data-who="Tess"]{background:var(--lav)}
+.speaker[data-who="Mira"],.speaker[data-who="Oskar"]{background:var(--mist)}
+
+/* parchment */
+.card.parchment{background:var(--parchment);box-shadow:6px 6px 0 var(--peach)}
+.card.parchment h2{font-size:28px}
+.fine{font-size:9px;line-height:1.3;color:var(--ink-2);letter-spacing:.01em}
+.fine.revealed{font-size:15px;line-height:1.5;color:var(--ink);background:var(--peach);border-radius:6px;padding:8px 10px}
+.sign{font-family:var(--f-mono);font-size:13px;color:var(--ink-2)}

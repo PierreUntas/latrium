@@ -221,7 +221,7 @@ function head(g, hy, p){
   limb(g, [[0, hy + 12], [0, hy + 20]], 6, p.skin);
   g.beginPath(); g.arc(0, hy, 15, 0, TAU); fs(g, p.skin);
   if (p.hat){
-    g.beginPath(); g.moveTo(-15, hy - 6); g.quadraticCurveTo(-20, hy - 40, -1, hy - 44); g.quadraticCurveTo(18, hy - 42, 15, hy - 6); g.quadraticCurveTo(0, hy - 12, -15, hy - 6); fs(g, C.cyan);
+    g.beginPath(); g.moveTo(-15, hy - 6); g.quadraticCurveTo(-20, hy - 40, -1, hy - 44); g.quadraticCurveTo(18, hy - 42, 15, hy - 6); g.quadraticCurveTo(0, hy - 12, -15, hy - 6); fs(g, p.hatColor || C.cyan);
     g.strokeStyle = C.ink; g.lineWidth = 1.3; g.beginPath(); g.moveTo(-17, hy - 18); g.quadraticCurveTo(0, hy - 24, 16, hy - 17); g.moveTo(-17, hy - 29); g.quadraticCurveTo(0, hy - 35, 15, hy - 29); g.stroke();
     poly(g, [[0, hy - 26], [-4, hy - 19], [0, hy - 12], [4, hy - 19]]); fs(g, C.violet, C.ink, 1.3);
   } else {
@@ -230,6 +230,7 @@ function head(g, hy, p){
   }
   g.fillStyle = C.ink; g.beginPath(); g.arc(8, hy + 1, 1.9, 0, TAU); g.fill();
   g.fillStyle = hexA(C.peach, .8); g.beginPath(); g.arc(6, hy + 7, 3, 0, TAU); g.fill();
+  if (p.smile){ g.strokeStyle = C.ink; g.lineWidth = 1.6; g.beginPath(); g.arc(7, hy + 4, 5, .35, 1.9); g.stroke(); }
 }
 function drawPerson(g, p, t){
   const s = persp(p.y) * (p.tall || 1);
@@ -239,7 +240,7 @@ function drawPerson(g, p, t){
   const sw = p.moving ? Math.sin(p.walk) : 0;
   const bob = p.moving ? -Math.abs(Math.cos(p.walk)) * 2.5 : (reduce ? 0 : Math.sin(t * 1.6 + p.x) * .6);
   g.translate(0, bob);
-  if (p.robe){ g.beginPath(); g.moveTo(-14, -112); g.quadraticCurveTo(-36, -60, -30, -4); g.lineTo(6, -4); g.closePath(); fs(g, C.lav); }
+  if (p.robe){ g.beginPath(); g.moveTo(-14, -112); g.quadraticCurveTo(-36, -60, -30, -4); g.lineTo(6, -4); g.closePath(); fs(g, p.cape || C.lav); }
   limb(g, [[-11, -106], [-13 + sw*7, -86], [-11 + sw*10, -68]], 8, p.shirt); hand(g, -11 + sw*10, -68, p.skin);
   if (!p.robe){
     limb(g, [[-5, -60], [-5 - sw*6, -31], [-5 - sw*12, -3]], 10, p.pants);
@@ -250,6 +251,7 @@ function drawPerson(g, p, t){
   if (p.robe){ g.beginPath(); g.moveTo(-22, -4); g.lineTo(-17, -104); g.quadraticCurveTo(-16, -117, -3, -118); g.lineTo(4, -118); g.quadraticCurveTo(17, -117, 17, -104); g.lineTo(22, -4); g.quadraticCurveTo(0, 0, -22, -4); fs(g, p.shirt);
     g.strokeStyle = C.ink; g.lineWidth = 1.2; g.beginPath(); g.moveTo(-18, -40); g.quadraticCurveTo(0, -36, 19, -40); g.stroke();
     poly(g, [[3, -100], [-5, -87], [3, -74], [11, -87]]); fs(g, C.violet, C.ink, 1.6);
+    if (p.badge){ g.beginPath(); g.arc(-8, -100, 6, 0, TAU); fs(g, C.cyan, C.ink, 1.5); drawSparkle(g, -8, -100, .32); }
   } else {
     g.beginPath(); g.moveTo(-15, -60); g.lineTo(-17, -104); g.quadraticCurveTo(-16, -117, -3, -118); g.lineTo(4, -118); g.quadraticCurveTo(17, -117, 17, -104); g.lineTo(15, -60); g.closePath(); fs(g, p.shirt);
     g.beginPath(); g.moveTo(-15, -64); g.lineTo(15, -64); g.strokeStyle = C.ink; g.lineWidth = 1.2; g.stroke();
@@ -350,6 +352,12 @@ function drawSeed(g, x, y, k){
   g.beginPath(); g.moveTo(-3, -1); g.quadraticCurveTo(0, -4, 4, -2); g.strokeStyle = C.ink; g.lineWidth = 1.4; g.stroke();
   g.restore();
 }
+function drawGem(g, x, y, k, col){
+  g.save(); g.translate(x, y); g.scale(k, k);
+  poly(g, [[0, -12], [-8, 0], [0, 8], [8, 0]]); fs(g, col || C.cyan, C.ink, 1.6);
+  g.beginPath(); g.moveTo(-8, 0); g.lineTo(8, 0); g.moveTo(0, -12); g.lineTo(0, 8); g.strokeStyle = C.ink; g.lineWidth = 1; g.stroke();
+  g.restore();
+}
 function drawChest(g, c){
   if (!c.vis || c.alpha <= 0) return;
   const s = persp(c.y) * c.sc;
@@ -397,13 +405,14 @@ function drawSparkle(g, x, y, k){
 }
 
 /* ---------- world state ---------- */
-const player = {}, nonce = {}, cat = {}, chest = {}, planter = {};
+const player = {}, nonce = {}, cat = {}, chest = {}, planter = {}, stranger = {};
 const walkers = [];
 const CAT_WP = [[880,782],[995,722],[1100,700],[1262,668]];
 const OBST = [[430,740,128,40],[800,608,150,30],[1200,645,34,13],[1150,815,104,32],[640,640,52,18],[180,702,46,18],[1420,717,46,18]];
 let phase = 'title', lock = true, meetTriggered = false, time = 0, sparkleUntil = -1, camFocus = null;
 const inventory = { key:false, items:[] }, ledger = [];
-let tableTalk = 0, tessTalk = 0, busy = false;
+let tableTalk = 0, tessTalk = 0, busy = false, chapterDone = 0;
+const ch2 = {};
 const fx = [], tweens = [], waiters = [];
 
 function resetWorld(){
@@ -412,6 +421,9 @@ function resetWorld(){
   Object.assign(cat, { x:712, y:842, face:1, walk:0, moving:false, target:null, wp:-1 });
   Object.assign(chest, { x:1136, y:716, vis:false, sc:0, alpha:1, content:false, flash:0 });
   Object.assign(planter, { x:640, y:640, grow:0, planted:false });
+  Object.assign(stranger, { x:-120, y:770, face:1, walk:0, moving:false, target:null, vis:false, tall:1.1, robe:true, hat:true, hatColor:C.lav, cape:C.peach, shirt:C.lav, pants:C.peri, hair:C.peach, style:'short', skin:C.skin, smile:true, badge:true, gesture:false });
+  Object.assign(ch2, { metTess:false, met:false, toldNonce:false, resisted:0, stolen:null });
+  chapterDone = 0;
   walkers.length = 0;
   walkers.push({ x:620, y:580, face:1, walk:0, moving:true, shirt:C.lav, pants:C.peri, hair:C.peach, style:'long', skin:C.skin, min:628, max:700, sp:18 });
   walkers.push({ x:990, y:590, face:-1, walk:1, moving:true, shirt:C.peach, pants:C.violet, hair:C.ink2, style:'bun', skin:C.skin, min:880, max:1045, sp:20 });
@@ -451,6 +463,7 @@ function flyItem(from, to, dur, kind){
     for (let k = 6; k >= 1; k--){ const pk = quad(from, c, to, Math.max(0, e - k * .03)); g.fillStyle = hexA(C.cyan, .5 - k * .06); g.beginPath(); g.arc(pk[0], pk[1], 7 - k * .7, 0, TAU); g.fill(); }
     const p = quad(from, c, to, e);
     if (kind === 'bubble'){ const r = 8 + e * 26; g.globalAlpha = .75; g.beginPath(); g.arc(p[0], p[1], r, 0, TAU); fs(g, C.cyan, C.ink, 1.6); g.globalAlpha = 1; g.strokeStyle = C.paper; g.lineWidth = 2; g.beginPath(); g.arc(p[0], p[1], r * .65, -2.6, -1.8); g.stroke(); }
+    else if (kind === 'gems'){ g.fillStyle = hexA(C.cyan, .5); g.beginPath(); g.arc(p[0], p[1], 20, 0, TAU); g.fill(); drawGem(g, p[0] - 9, p[1] + 2, .9, C.cyan); drawGem(g, p[0] + 9, p[1] + 2, .9, C.lav); drawGem(g, p[0], p[1] - 6, 1, C.violet); }
     else { g.fillStyle = hexA(C.cyan, .5); g.beginPath(); g.arc(p[0], p[1], 16, 0, TAU); g.fill(); drawSeed(g, p[0], p[1], 1.3); }
   }}));
 }
@@ -491,8 +504,8 @@ let advanceFn = null;
 function say(who, text, choices){
   return new Promise(res => {
     dlg.hidden = false; dlg.classList.toggle('narration', !who);
-    speakerEl.hidden = !who; speakerEl.textContent = who || '';
-    nonce.gesture = who === 'Nonce';
+    speakerEl.hidden = !who; speakerEl.textContent = who || ''; speakerEl.dataset.who = who || '';
+    nonce.gesture = who === 'Nonce'; stranger.gesture = who === 'Célestin';
     lineEl.textContent = ''; choicesEl.innerHTML = ''; moreEl.hidden = true;
     let i = 0, done = false, timer = null;
     const finish = () => {
@@ -508,7 +521,7 @@ function say(who, text, choices){
     if (reduce) finish(); else timer = setInterval(() => { i += 1; lineEl.textContent = text.slice(0, i); if (i >= text.length) finish(); }, 20);
   });
 }
-function closeDialog(){ dlg.hidden = true; advanceFn = null; nonce.gesture = false; }
+function closeDialog(){ dlg.hidden = true; advanceFn = null; nonce.gesture = false; stranger.gesture = false; }
 dlg.addEventListener('click', () => advanceFn && advanceFn());
 async function chat(lines){
   if (busy) return; busy = true; const was = lock; lock = true;
@@ -538,7 +551,60 @@ function showQuiz(words){
   });
 }
 
+function showParchment(){
+  return new Promise(res => {
+    const draw = revealed => {
+      mcard.classList.add('parchment');
+      mcard.innerHTML = `<p class="eyebrow">Assistance officielle de l'Atrium</p><h2>Autorisation de vérification</h2>
+        <p>Je soussigné·e, propriétaire du coffre en verre, confirme la vérification de routine de mon coffre par l'Assistance officielle de l'Atrium.</p>
+        <p class="fine${revealed ? ' revealed' : ''}">…et autorise Célestin, pour une durée illimitée, à retirer tout ou partie du contenu de mon coffre, présent et futur, sans autre accord de ma part.</p>
+        <p class="sign">Signature : ______________________</p>
+        <div class="row">${revealed
+          ? `<button class="btn" id="pSign">Signer quand même</button><button class="btn primary" id="pRefuse">Refuser de signer</button>`
+          : `<button class="btn primary" id="pSign">Signer</button><button class="btn" id="pRead">Lire les petites lignes</button>`}</div>`;
+      modal.hidden = false; mcard.querySelector('button').focus({ preventScroll:true });
+      const done = v => { modal.hidden = true; mcard.classList.remove('parchment'); res(v); };
+      $('pSign').addEventListener('click', () => done(true));
+      if (revealed) $('pRefuse').addEventListener('click', () => done(false));
+      else $('pRead').addEventListener('click', () => draw(true));
+    };
+    draw(false);
+  });
+}
+function showEnd(o){
+  const card = $('endCard');
+  card.innerHTML = `<p class="eyebrow">${o.eyebrow}</p><h2>${o.title}</h2><ul class="recap">${o.recap.map(r => `<li>${r}</li>`).join('')}</ul>${o.teaser ? `<p class="teaser">${o.teaser}</p>` : ''}<div class="row"></div>`;
+  const row = card.querySelector('.row');
+  o.buttons.forEach(([label, fn, primary]) => { const b = document.createElement('button'); b.className = 'btn' + (primary ? ' primary' : ''); b.textContent = label;
+    b.addEventListener('click', () => { $('end').hidden = true; fn(); }); row.appendChild(b); });
+  $('end').hidden = false; row.firstChild.focus({ preventScroll:true });
+}
+function stay(){ lock = false; phase = 'free'; }
+
 /* ---------- story ---------- */
+async function learnWords(){
+  const words = shuffle(POOL.slice()).slice(0, 12);
+  for (;;){
+    await showSeed(words);
+    if (await showQuiz(words)) break;
+    await say('Nonce', "Hmm. Si c'était pour de vrai, ton coffre serait perdu pour toujours. Personne ne pourrait te le rendre, pas même moi. On recommence ?");
+    closeDialog();
+  }
+  inventory.key = true; renderPanel();
+}
+function pulseChest(){ const cb = $('chestBtn'); cb.hidden = false; cb.classList.remove('pulse'); void cb.offsetWidth; if (!reduce) cb.classList.add('pulse'); }
+async function conjureChest(){
+  closeDialog(); nonce.gesture = true;
+  Object.assign(chest, { vis:false, sc:0, alpha:1, content:false, flash:0 });
+  await flyItem(nonceHand(), [chest.x + 6, chest.y - 30], 1.1, 'bubble');
+  chest.vis = true; ring(chest.x + 6, chest.y - 30, .5);
+  await tween(.55, u => { chest.sc = u < .7 ? u / .7 * 1.15 : 1.15 - (u - .7) / .3 * .15; });
+  nonce.gesture = false;
+}
+async function stowChest(){
+  await tween(.6, u => { chest.alpha = 1 - u; chest.sc = 1 - u * .5; });
+  chest.vis = false; pulseChest();
+}
 async function chapter(){
   resetWorld(); phase = 'arrive'; lock = true; camFocus = null;
   await walkTo(player, 800, 836, 200);
@@ -561,23 +627,11 @@ async function chapter(){
   if (c1 === 0) await say('Nonce', "Un lieu que personne ne possède et que tout le monde fait tourner. Chaque personne que tu vois ici garde une copie du grand registre : tout ce qui s'est passé, depuis le début.");
   else await say('Nonce', "Une page du grand registre, là où l'on note tout ce qui se passe ici. On compte le temps en pages. On les appelle des blocs.");
   await say('Nonce', "Mais avant tout, il te faut quelque chose à toi.");
-  closeDialog(); nonce.gesture = true;
-  const h = nonceHand();
-  await flyItem(h, [chest.x + 6, chest.y - 30], 1.1, 'bubble');
-  chest.vis = true; ring(chest.x + 6, chest.y - 30, .5);
-  await tween(.55, u => { chest.sc = u < .7 ? u / .7 * 1.15 : 1.15 - (u - .7) / .3 * .15; });
-  nonce.gesture = false;
+  await conjureChest();
   await say('Nonce', "Voilà ton coffre. Il est en verre : tout le monde peut voir ce qu'il contient. Mais personne ne peut l'ouvrir, sauf toi.");
   await say('Nonce', "Pour l'ouvrir, il faut une clé. Ici, une clé, c'est une phrase : douze mots, tirés au hasard. Écoute bien.");
   closeDialog();
-  const words = shuffle(POOL.slice()).slice(0, 12);
-  for (;;){
-    await showSeed(words);
-    if (await showQuiz(words)) break;
-    await say('Nonce', "Hmm. Si c'était pour de vrai, ton coffre serait perdu pour toujours. Personne ne pourrait te le rendre, pas même moi. On recommence ?");
-    closeDialog();
-  }
-  inventory.key = true; renderPanel();
+  await learnWords();
   await say('Nonce', "Parfait. Garde ces mots pour toi. Une dernière chose, et c'est la plus importante.");
   const c2 = await say('Nonce', "Si un jour quelqu'un te demande ces douze mots, même avec un grand sourire, même s'il dit travailler pour l'Atrium…", ["…je les lui donne, s'il a l'air gentil.", "…je ne les donne jamais."]);
   if (c2 === 0) await say('Nonce', "Non ! Jamais. Celui qui a tes douze mots a ton coffre. Personne ici n'en a besoin pour t'aider, moi compris. Surtout pas ceux qui sourient beaucoup.");
@@ -593,9 +647,7 @@ async function chapter(){
   await say('Nonce', "Tu as vu ? Tout l'Atrium l'a vu passer. C'est écrit dans le registre, bloc 1 048. Ça ne s'effacera jamais.");
   await say('Nonce', "Va la planter. Il y a une jardinière vide à gauche du grand cristal. Moi, je reste ici. Je suis toujours ici.");
   closeDialog();
-  await tween(.6, u => { chest.alpha = 1 - u; chest.sc = 1 - u * .5; });
-  chest.vis = false;
-  const cb = $('chestBtn'); cb.hidden = false; cb.classList.remove('pulse'); void cb.offsetWidth; if (!reduce) cb.classList.add('pulse');
+  await stowChest();
   camFocus = null; setObjective('Plante ta graine à gauche du grand cristal'); phase = 'plant'; lock = false;
 
   await until(() => planter.planted);
@@ -604,9 +656,137 @@ async function chapter(){
   await wait(600);
   await say(null, "Une pousse sort de terre. Au loin, Nonce lève la main pour te saluer. À la table de cartes, quelqu'un murmure : « Bloc 1 049. »");
   closeDialog();
-  phase = 'free'; lock = true;
+  phase = 'free'; lock = true; chapterDone = 1;
   await wait(500);
-  $('end').hidden = false; $('stayBtn').focus({ preventScroll:true });
+  showEnd({ eyebrow:'Fin du chapitre 1', title:"L'arrivée", recap:[
+    'Tu as reçu ton coffre en verre.',
+    "Tu connais tes douze mots, et tu sais qu'on ne les donne jamais.",
+    'Ta première graine est inscrite dans le registre, pour toujours.'],
+    teaser:'<b>Chapitre 2.</b> Un inconnu très aimable viendra te demander tes douze mots.',
+    buttons:[['Continuer : chapitre 2', chapter2, true], ["Rester dans l'Atrium", stay]] });
+}
+
+/* chapter 2 : l'inconnu très aimable */
+function setupChapter2(){
+  if (chapterDone < 1){
+    resetWorld();
+    Object.assign(cat, { x:1262, y:668, face:-1, wp:CAT_WP.length - 1 });
+    ledger.push({ bloc:1048, from:'Nonce', to:'toi', what:'1 graine de palmier' }, { bloc:1049, from:'toi', to:'jardinière commune', what:'1 graine de palmier' });
+    inventory.key = true; chapterDone = 1;
+  }
+  Object.assign(planter, { grow:1, planted:true });
+  Object.assign(stranger, { x:-120, y:770, vis:false, target:null, gesture:false });
+  Object.assign(ch2, { metTess:false, met:false, toldNonce:false, resisted:0, stolen:null });
+  Object.assign(player, { x:760, y:720, face:1, target:null, moving:false });
+  inventory.items = []; $('chestBtn').hidden = false; renderPanel();
+}
+const CEL = 'Célestin';
+async function chapter2(){
+  setupChapter2(); phase = 'ch2-intro'; lock = true; camFocus = null;
+  await wait(300);
+  await say(null, "Le lendemain. Ta pousse de palmier a gagné une feuille. Sur son tapis, Tess te fait de grands signes.");
+  closeDialog(); setObjective('Va voir Tess sur son tapis'); phase = 'ch2-tess'; lock = false;
+
+  await until(() => ch2.metTess);
+  lock = true; setObjective(null); player.face = 1;
+  await say('Tess', "Elle marche ! Ma machine à promesses marche ! Je pose un cristal ici, et il ressort là-bas. Personne ne le touche, personne ne peut tricher.");
+  await say('Tess', "Tu l'as vue en panne hier, alors tu es un peu mon premier témoin. Tiens, ta paie de testeuse… de testeur. Enfin, ta paie.");
+  closeDialog();
+  const ts = persp(815), ps = persp(player.y);
+  await flyItem([1150, 815 - 70 * ts], [player.x, player.y - 80 * ps], 1.1, 'gems');
+  inventory.items = ['3 cristaux']; inscribe('Tess', 'toi', '3 cristaux'); pulseChest();
+  await wait(700);
+  await say('Tess', "Trois cristaux. Va les montrer à Oskar, à la table de cartes. Il m'a juré que ma machine ne marcherait jamais.");
+  closeDialog(); setObjective('Montre tes cristaux à Oskar'); phase = 'ch2-go'; lock = false;
+
+  await until(() => ch2.met);
+  phase = 'ch2-scam'; lock = true; player.target = null; setObjective(null);
+  await walkTo(player, clamp(player.x, 300, 1300), 690, 250, true);
+  const sx = player.x - 130 > 250 ? player.x - 130 : player.x + 130;
+  stranger.x = sx < player.x ? -120 : 1720; stranger.y = player.y; stranger.vis = true;
+  camFocus = { x:(player.x + sx) / 2, y:player.y };
+  await say(null, "Quelqu'un te coupe la route. Un chapeau, une robe, un badge qui brille. Et un très, très grand sourire.");
+  closeDialog();
+  await walkTo(stranger, sx, player.y, 340);
+  stranger.face = sx < player.x ? 1 : -1; player.face = -stranger.face;
+  await scam();
+
+  camFocus = null; setObjective('Raconte tout à Nonce'); phase = 'ch2-nonce'; lock = false;
+  await until(() => ch2.toldNonce);
+  await debrief();
+}
+async function scam(){
+  await say(CEL, "Ah, vous voilà ! Bonjour, bonjour ! Célestin, de l'Assistance officielle de l'Atrium. Vous voyez le badge ?");
+  let c = await say(CEL, "Nous avons détecté une anomalie sur votre coffre. C'est urgent : s'il n'est pas vérifié dans les cinq minutes, il sera gelé. Pour la vérification, il me faut simplement vos douze mots.",
+    ["D'accord, je vous les donne.", "Nonce m'a dit que personne n'en a besoin.", "Qui vous envoie, exactement ?"]);
+  if (c === 0) return steal('words');
+  ch2.resisted++;
+  await say(CEL, c === 2 ? "Qui m'envoie ? Mais… l'Atrium ! Tout le monde ! Enfin, peu importe, oubliez l'anomalie." : "Nonce ? Ah, Nonce… un peu vieux jeu. Bon, oubliez l'anomalie, c'était sûrement une erreur de notre côté.");
+  c = await say(CEL, "J'ai une bien meilleure nouvelle ! Vous faites partie des cent heureux élus de la grande distribution : cent graines d'or, rien que pour vous. Recopiez juste vos douze mots sur ce parchemin, pour prouver que c'est bien vous.",
+    ["Cent graines d'or ? Je recopie tout de suite.", "Pourquoi vous faudrait-il mes mots pour m'offrir quelque chose ?", "Je n'ai rien demandé. Non merci."]);
+  if (c === 0) return steal('words');
+  ch2.resisted++;
+  await say(CEL, c === 1 ? "Pourquoi… ? Mais c'est la procédure ! Tout le monde le fait. Enfin. Très bien." : "Quelle méfiance ! Très bien, très bien.");
+  await say(CEL, "Dernière chose et je vous laisse tranquille. Une simple formalité : pas de mots, promis. Juste une petite signature en bas de ce parchemin.");
+  closeDialog();
+  if (await showParchment()) return steal('signature');
+  ch2.resisted++;
+  await say(CEL, "Tsss. Vous êtes bien trop méfiant pour l'Atrium, vous savez. Allez, bonne journée !");
+  closeDialog();
+  await walkTo(stranger, stranger.face > 0 ? -120 : 1720, stranger.y, 360); stranger.vis = false;
+}
+async function steal(kind){
+  ch2.stolen = kind;
+  await say(CEL, kind === 'words' ? "Merci infiniment ! Voyons voir ce qu'il y a là-dedans… Oh, trois jolis cristaux." : "Parfait, merci pour la signature ! Voyons voir… Oh, trois jolis cristaux.");
+  closeDialog();
+  const ps = persp(player.y), ss = persp(stranger.y);
+  await flyItem([player.x, player.y - 80 * ps], [stranger.x, stranger.y - 110 * ss], 1, 'gems');
+  inventory.items = []; inscribe('toi', 'Célestin', '3 cristaux'); pulseChest();
+  await wait(700);
+  await say(null, "Avant que tu comprennes ce qui se passe, Célestin a déjà filé. Tu ouvres ton coffre : il est vide.");
+  closeDialog();
+  await walkTo(stranger, stranger.face > 0 ? -120 : 1720, stranger.y, 460); stranger.vis = false;
+}
+async function debrief(){
+  lock = true; setObjective(null); camFocus = { x:1150, y:672 };
+  await walkTo(player, 1082, 674, 250); player.face = 1; nonce.face = -1;
+  if (!ch2.stolen){
+    await say('Nonce', "Célestin ? Il n'y a pas d'assistance officielle ici. Personne ne travaille pour l'Atrium : tout le monde le fait tourner.");
+    await say('Nonce', "Et tu ne lui as rien donné ? Ni tes mots, ni ta signature ? Tu apprends plus vite que moi à l'époque.");
+  } else {
+    if (ch2.stolen === 'words'){
+      await say('Nonce', "Tu lui as donné tes douze mots… Alors ton coffre n'est plus vraiment à toi. Celui qui connaît les mots peut l'ouvrir quand il veut : aujourd'hui, demain, dans dix ans.");
+      await say('Nonce', "On ne change pas la serrure d'un coffre. On en fabrique un nouveau, avec de nouveaux mots, et on abandonne l'ancien.");
+      inventory.key = false; renderPanel();
+      await conjureChest();
+      await say('Nonce', "Voilà ton nouveau coffre. Et de nouveaux mots. Ceux-là, personne d'autre que toi ne les entendra.");
+      closeDialog();
+      await learnWords();
+      await stowChest();
+    } else {
+      await say('Nonce', "Tu as signé sans lire ? Ce parchemin lui donnait le droit de se servir dans ton coffre. Il n'avait pas besoin de tes mots : ta signature suffisait.");
+      await say('Nonce', "Tes mots sont toujours à toi, heureusement. Mais l'autorisation existe encore, et il pourra revenir se servir. Il faut la révoquer.");
+      closeDialog();
+      inscribe('toi', 'registre', "révocation de l'autorisation de Célestin");
+      await wait(900);
+      await say('Nonce', "Voilà. C'est inscrit : son autorisation ne vaut plus rien.");
+    }
+    const c = await say('Nonce', "Pour tes cristaux…", ["On peut les récupérer ?", "Tout le monde a vu où ils sont partis, non ?"]);
+    await say('Nonce', c === 0 ? "Non. Le registre ne revient jamais en arrière. Tout l'Atrium a vu tes cristaux partir chez Célestin, on sait exactement où ils sont. Mais personne ne peut les reprendre." : "Oui. Tout l'Atrium sait exactement où ils sont. Mais personne ne peut les reprendre : le registre ne revient jamais en arrière.");
+    await say('Nonce', "C'est ça, l'Atrium : tout est visible, rien n'est réversible.");
+  }
+  await say('Nonce', "Retiens ses trois ruses, elles reviennent toujours. Un : l'urgence. Quand on te presse, c'est pour que tu ne réfléchisses pas.");
+  await say('Nonce', "Deux : le cadeau trop beau. Personne n'a besoin de tes mots pour te donner quelque chose.");
+  await say('Nonce', "Trois : la signature à l'aveugle. Ce que tu signes compte autant que tes mots. Lis toujours les petites lignes.");
+  closeDialog(); camFocus = null; phase = 'free'; chapterDone = 2;
+  const n = ch2.resisted;
+  showEnd({ eyebrow:'Fin du chapitre 2', title:"L'inconnu très aimable", recap:[
+    `Ruses déjouées : <b>${n} sur 3</b>.`,
+    ch2.stolen ? 'Tes cristaux sont chez Célestin. Tout le monde le sait, personne ne peut les reprendre.' : 'Tes trois cristaux sont toujours dans ton coffre.',
+    ch2.stolen === 'words' ? 'Tu as un nouveau coffre et de nouveaux mots.' : ch2.stolen === 'signature' ? "Tu as révoqué l'autorisation que tu avais signée." : 'Tu as lu les petites lignes avant de signer.',
+    "Urgence, cadeau trop beau, signature à l'aveugle : tu connais les trois ruses."],
+    teaser:"<b>Chapitre 3.</b> La machine à promesses de Tess : un accord que personne ne peut trahir, pas même elle.",
+    buttons:[["Rester dans l'Atrium", stay, true], ['Rejouer le chapitre 2', chapter2], ['Recommencer au début', chapter]] });
 }
 async function usePlanter(){
   if (phase !== 'plant'){
@@ -625,10 +805,16 @@ const talk = {
   nonce(){
     if (phase === 'follow'){ meetTriggered = true; return; }
     if (phase === 'plant') return chat([['Nonce', "La jardinière est à gauche du grand cristal. Prends ton temps, l'Atrium ne ferme jamais."]]);
+    if (phase === 'ch2-nonce'){ ch2.toldNonce = true; return; }
+    if (phase === 'ch2-tess') return chat([['Nonce', "Tess t'appelle depuis tout à l'heure. Elle a l'air de très bonne humeur."]]);
+    if (phase === 'ch2-go') return chat([['Nonce', "Des cristaux ? Tess a donc réussi. Va vite les montrer à Oskar."]]);
+    if (chapterDone >= 2) return chat([['Nonce', "Si Célestin revient, tu sauras quoi lui répondre. Et il reviendra, sous un autre nom, avec un autre chapeau."]]);
     return chat([['Nonce', "Tu reviendras me voir ? Il y a encore beaucoup de gens à rencontrer ici. Certains sont très gentils. D'autres le sont un peu trop."]]);
   },
   cat(){ return chat([[null, "Gwei cligne lentement des yeux. Chez les chats, c'est un signe de confiance."]]); },
   table(){
+    if (phase === 'ch2-go'){ ch2.met = true; return; }
+    if (chapterDone >= 2) return chat([['Oskar', "Célestin ? Il a essayé avec moi aussi, l'an dernier. Il m'a proposé cent graines d'or."], ['Mira', "Et tu as failli recopier tes mots. Tout le monde l'a vu."]]);
     const sets = [
       [['Mira', "On joue aux cartes. Personne ne triche : tout le monde voit toutes les mains."], ['Oskar', "Enfin… presque toutes. Reviens quand tu veux, on t'apprendra."]],
       [['Oskar', "Tu sais pourquoi personne ne triche ici ? Parce qu'on ne peut pas réécrire le registre. J'ai essayé, une fois."], ['Mira', "Il a essayé. Tout le monde l'a vu."]],
@@ -636,6 +822,8 @@ const talk = {
     return chat(sets[tableTalk++ % sets.length]);
   },
   tess(){
+    if (phase === 'ch2-tess'){ ch2.metTess = true; return; }
+    if (chapterDone >= 2) return chat([['Tess', ch2.stolen ? "Célestin t'a pris mes cristaux ? Il a essayé avec ma machine aussi. Elle ne l'a pas laissé faire." : "Tu as encore mes trois cristaux ? Garde-les bien. Au chapitre suivant, on les met dans la machine."]]);
     const sets = [
       [['Tess', "Je fabrique une petite machine à promesses. Tu mets une graine d'un côté, une fleur sort de l'autre. Sans personne au milieu."], ['Tess', "Enfin, quand elle marchera. Repasse plus tard."]],
       [['Tess', "Le plus dur, ce n'est pas de la faire marcher. C'est d'être sûre que personne ne puisse la faire marcher de travers."]],
@@ -694,8 +882,6 @@ window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
 $('startBtn').addEventListener('click', () => { $('title').hidden = true; chapter(); });
-$('stayBtn').addEventListener('click', () => { $('end').hidden = true; lock = false; });
-$('replayBtn').addEventListener('click', () => { $('end').hidden = true; chapter(); });
 $('chestBtn').addEventListener('click', () => { $('panel').hidden = !$('panel').hidden; });
 $('panelClose').addEventListener('click', () => { $('panel').hidden = true; });
 
@@ -721,6 +907,8 @@ function update(dt){
     }
     if (Math.hypot(player.x - nonce.x, player.y - nonce.y) < 200) meetTriggered = true;
   }
+  if (phase === 'ch2-go' && player.x < 920) ch2.met = true;
+  moveEntity(stranger, dt);
   for (let i = tweens.length - 1; i >= 0; i--){ const tw = tweens[i]; tw.t += dt; const u = Math.min(1, tw.t / tw.dur); tw.fn(u); if (u >= 1){ tweens.splice(i, 1); tw.res(); } }
   for (let i = fx.length - 1; i >= 0; i--){ const f = fx[i]; f.t += dt; if (f.t >= f.dur){ fx.splice(i, 1); f.res(); } }
   for (let i = waiters.length - 1; i >= 0; i--){ if (waiters[i].fn()){ const w = waiters.splice(i, 1)[0]; w.res(); } }
@@ -745,6 +933,7 @@ function render(){
     { y:cat.y, d:() => drawCat(g, cat, time) },
     { y:chest.y, d:() => drawChest(g, chest) },
   ];
+  if (stranger.vis) list.push({ y:stranger.y, d:() => drawPerson(g, stranger, time) });
   PALMS.forEach(P => list.push({ y:P.base[1], d:() => drawPalm(g, P, time) }));
   walkers.forEach(w => list.push({ y:w.y, d:() => drawPerson(g, w, time) }));
   if (player.y < H + 60) list.push({ y:player.y, d:() => drawPerson(g, player, time) });
@@ -752,6 +941,9 @@ function render(){
   // guidance marker
   if (phase === 'follow'){ const done = cat.wp >= CAT_WP.length - 1 && !cat.target; if (done) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time); else if (!cat.target) drawMarker(g, cat.x, cat.y - 70 * persp(cat.y), time); }
   if (phase === 'plant' && !busy) drawMarker(g, planter.x, planter.y - 60, time);
+  if (phase === 'ch2-tess' && !busy) drawMarker(g, 1150, 815 - 150 * persp(815), time);
+  if (phase === 'ch2-go' && !busy) drawMarker(g, 431, 600, time);
+  if (phase === 'ch2-nonce' && !busy) drawMarker(g, nonce.x, nonce.y - 215 * persp(nonce.y), time);
   if (time < sparkleUntil){ const a = Math.min(1, (sparkleUntil - time) / .6); g.globalAlpha = a; witnesses().forEach(([x, y], i) => drawSparkle(g, x, y - (reduce ? 0 : Math.abs(Math.sin(time * 3 + i)) * 6), .8)); g.globalAlpha = 1; }
   fx.forEach(f => f.draw(g, Math.min(1, f.t / f.dur)));
   drawForeground(g, time);
@@ -762,6 +954,8 @@ function frame(now){
   update(dt); render();
   requestAnimationFrame(frame);
 }
+// outil de test : ouvrir index.html#debug expose window.atrium
+if (location.hash === '#debug') window.atrium = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch2:{ ...ch2 }, items:inventory.items.slice(), key:inventory.key, ledger:ledger.map(e => `${e.bloc} ${e.from}>${e.to} ${e.what}`), player:[Math.round(player.x), Math.round(player.y)] }), goto:(x, y) => walkTo(player, x, y, 400, true) };
 resetWorld();
 resize();
 window.addEventListener('resize', resize);

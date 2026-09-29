@@ -11,10 +11,13 @@ Le jeu apprend les notions d'Ethereum par l'histoire et les gestes, jamais par d
 | « Ne les donne jamais » | La protection contre le phishing |
 | Donner la graine | Une transaction, irréversible et publique |
 | Le registre et ses blocs | La blockchain |
+| Le parchemin de Célestin | Une approbation de token signée à l'aveugle |
+| Révoquer l'autorisation | Révoquer une approbation (revoke) |
 
 ## État actuel
 
-Chapitre 1, « L'arrivée », jouable de bout en bout sur ordinateur et sur mobile.
+- **Chapitre 1, « L'arrivée »** : le coffre en verre, les douze mots, la première transaction.
+- **Chapitre 2, « L'inconnu très aimable »** : Tess paie 3 cristaux, puis Célestin tente trois ruses (l'urgence, le cadeau trop beau, la signature à l'aveugle). Si le joueur se fait avoir, le vol est public et irréversible ; avec des mots donnés, Nonce crée un nouveau coffre, avec une signature, on révoque l'autorisation.
 
 ## Stack
 
@@ -44,9 +47,13 @@ python3 -m http.server 8000
 - Souris ou doigt : touche le sol pour marcher, touche quelqu'un pour lui parler.
 - Clavier : flèches ou ZQSD pour marcher, Espace ou Entrée pour parler et avancer dans les dialogues.
 
+## Tester
+
+Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `interact('nonce')`, `goto(x, y)`.
+
 ## Pistes
 
-- Chapitre 2 : un inconnu très aimable demande tes douze mots.
+- Chapitre 3 : la machine à promesses de Tess (smart contracts).
 - Ambiance sonore.
 - Un carnet pour recopier ses mots.
 - Sauvegarde de la progression.
