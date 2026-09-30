@@ -1,0 +1,67 @@
+/* L'Atrium · histoire vraie : ajouts au style de L'Atrium (terminal, frise, fondu, écran titre). */
+.h1sub{display:block;font-size:.5em;color:var(--ink-2);margin-top:4px}
+.eras{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:6px}
+.eras li{display:flex;flex-direction:column;border:2px dashed var(--lav);border-radius:8px;padding:5px 8px;font-size:12px;font-weight:700;line-height:1.25;color:var(--ink-2)}
+.eras li b{font:600 12px var(--f-mono)}
+.eras li.now{border:2px solid var(--ink);background:var(--cyan);color:var(--ink)}
+.eras li.done{border:2px solid var(--ink);background:var(--floor);color:var(--ink)}
+#title .card{max-width:520px}
+#title .lang-btn{text-decoration:none}
+
+/* terminal */
+.card.term{max-width:640px}
+.screen{background:var(--ink);color:var(--cyan);font:13px/1.55 var(--f-mono);border-radius:8px;padding:12px 14px;min-height:190px;max-height:330px;overflow:auto;display:flex;flex-direction:column;gap:3px}
+.tl{white-space:pre-wrap;overflow-wrap:anywhere}
+.tl.cmd{color:var(--paper)}
+.tl.cmd::before{content:"$ ";color:var(--teal)}
+.tl.dim{color:var(--lav)}
+.tl.big{font-size:16px;color:var(--paper);font-variant-numeric:tabular-nums}
+.tl.hash{color:var(--peach)}
+.tl.hash.good{color:var(--cyan);font-weight:600}
+.tl.hash.bad{color:#ffb3c4;font-weight:600}
+.tl.ok{color:var(--cyan);font-weight:600}
+.tl.note{color:var(--paper);font-family:var(--f-body);font-style:italic;font-size:14px;margin-top:4px}
+.chatmsg{background:var(--parchment);border:2px solid var(--ink);border-radius:8px;padding:8px 12px;font-size:14px}
+.cmp{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.cmp li{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;background:var(--mist);border-radius:6px;padding:6px 10px;font-size:14px}
+.cmp code{font:600 13px var(--f-mono);overflow-wrap:anywhere}
+.cmp i{font-style:normal;font-weight:700;color:var(--ok, #2f8f7f)}
+
+/* plafond de gaz */
+.meter.big{height:22px;position:relative;overflow:visible}
+.meter.big .fill{border-radius:999px}
+.meter .mark{position:absolute;top:-6px;bottom:-6px;width:0;border-left:2px dashed var(--ink)}
+.meter .mark span{position:absolute;top:-20px;left:-24px;font:600 11px var(--f-mono);white-space:nowrap}
+.gblock{margin:0;font:600 13px var(--f-mono);min-height:1.4em}
+.small{font-size:13px;color:var(--ink-2)}
+
+/* fondu (le temps passe) */
+.fade{position:absolute;inset:0;background:var(--ink);opacity:0;pointer-events:none;transition:opacity .9s ease;display:grid;place-items:center;color:var(--paper);font:400 34px/1.2 var(--f-display);text-align:center;padding:16px;z-index:5}
+.fade.on{opacity:1;pointer-events:auto}
+
+/* toast des faits réels */
+.fact-toast{max-width:min(460px,calc(100% - 24px))}
+.fact-toast .ftitle{font:400 20px/1.2 var(--f-display)}
+
+/* carnet */
+.frise{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.frise li{border-left:4px solid var(--peach);padding:2px 0 2px 10px;font-size:13px}
+.frise li b{display:block;font:600 12px var(--f-mono);color:var(--ink-2)}
+.frise li strong{display:block;font-size:14px}
+.frise .empty{border:0;padding:0;color:var(--ink-2)}
+.panel a,.truth a,.teaser a{color:var(--ink);font-weight:700}
+
+/* carte de fin */
+.truth{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.truth li{display:grid;grid-template-columns:118px 1fr;gap:10px;font-size:14px;line-height:1.45;border-bottom:1px solid var(--lav);padding-bottom:8px}
+.truth li b{font:600 12px/1.5 var(--f-mono);color:var(--ink-2)}
+.endsec{margin:6px 0 0;font:600 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+@media (max-width:560px){ .truth li{grid-template-columns:1fr;gap:2px} }
+
+.speaker[data-who="Lena"]{background:var(--lav)}
+.speaker[data-who="Karim"]{background:var(--peach)}
+
+.compact .screen{min-height:120px;max-height:200px;font-size:12px}
+.compact .fade{font-size:24px}
+.compact .truth li{font-size:12px}
+@media (prefers-reduced-motion: reduce){ .fade{transition:none} }

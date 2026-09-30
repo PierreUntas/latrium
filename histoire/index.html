@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>L'Atrium · histoire vraie</title>
+<meta name="description" content="Les vrais jours d'Ethereum, vécus par des personnages inventés. Chapitre 1 : la nuit du lancement de Frontier, le 30 juillet 2015. Les dates, les blocs et les chiffres sont réels.">
+<link rel="canonical" href="https://latrium.vercel.app/histoire/">
+<meta name="theme-color" content="#e7e5fa">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="L'Atrium">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://latrium.vercel.app/histoire/">
+<meta property="og:title" content="L'Atrium · histoire vraie">
+<meta property="og:description" content="30 juillet 2015, un hackerspace à Paris : Ethereum démarre. Vis la vraie histoire d'Ethereum, un chapitre à la fois.">
+<meta property="og:image" content="https://latrium.vercel.app/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="../src/style.css">
+<link rel="stylesheet" href="histoire.css">
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas id="cv" aria-label="Un hackerspace parisien en 2015 : une grande table avec des ordinateurs portables, une machine de minage, un canapé et une fenêtre sur les toits"></canvas>
+
+  <div class="objective" id="objective" hidden><span class="eyebrow" id="objDate">30 juillet 2015</span><strong id="objText"></strong></div>
+
+  <div class="hud-right">
+    <button class="sound-btn" id="soundBtn" aria-pressed="true" aria-label="Couper le son">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#aeefe7" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><path class="wave" d="M16 9.5c1.2 1.3 1.2 3.7 0 5M18.5 7c2.6 2.8 2.6 7.2 0 10" fill="none" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/><path class="cross" d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <button class="chest-btn" id="carnetBtn" hidden aria-label="Ouvrir ton carnet">
+      <svg viewBox="0 0 30 30" aria-hidden="true"><path d="M6 4h17a2 2 0 0 1 2 2v20H8a2 2 0 0 1-2-2z" fill="#f7c8a6" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 24a2 2 0 0 1 2-2h17" fill="none" stroke="#3a3cb2" stroke-width="1.6"/><path d="M11 9h9M11 13h7" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/><path d="M15.5 15.5l2.5 3.5-2.5 1.5-2.5-1.5z" fill="#aeefe7" stroke="#3a3cb2" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      <span>Carnet</span>
+    </button>
+  </div>
+
+  <div class="ledger-toast fact-toast" id="toast" role="status" aria-live="polite">
+    <div class="eyebrow" id="toastHead">Fait réel</div>
+    <div class="ftitle" id="toastRow"></div>
+    <div class="sub">Ajouté à ton carnet</div>
+  </div>
+
+  <aside class="panel" id="panel" hidden>
+    <header><h2>Carnet</h2><button class="x" id="panelClose" aria-label="Fermer">×</button></header>
+    <h3>Ton compte</h3>
+    <dl class="facts" id="acct"></dl>
+    <h3>Ce qui s'est vraiment passé</h3>
+    <ol class="frise" id="frise"></ol>
+    <p class="muted">Les personnages sont inventés. Les dates, les numéros de bloc et les chiffres sont réels. Source : <a href="https://ethereum.org/fr/history/" target="_blank" rel="noopener">ethereum.org/fr/history</a>.</p>
+  </aside>
+
+  <div class="dialog" id="dialog" hidden>
+    <span class="speaker" id="speaker"></span>
+    <p class="line" id="line"></p>
+    <div class="choices" id="choices"></div>
+    <span class="more" id="more" aria-hidden="true">▸</span>
+  </div>
+
+  <div class="veil" id="modal" hidden><div class="card" id="modalCard"></div></div>
+
+  <div class="fade" id="fade" aria-live="polite"></div>
+
+  <div class="veil" id="title">
+    <div class="card">
+      <a class="lang-btn" href="/">← L'Atrium</a>
+      <p class="eyebrow" id="titleEyebrow">Chapitre 1 · 30 juillet 2015</p>
+      <h1>L'Atrium <span class="h1sub">histoire vraie</span></h1>
+      <p class="lede" id="titleLede">Les vrais jours d'Ethereum, vécus par des personnages inventés. Les dates, les blocs et les chiffres, eux, sont réels.</p>
+      <ol class="eras" id="eras"></ol>
+      <div class="row"><button class="btn primary" id="startBtn">Commencer</button><button class="btn" id="newBtn" hidden>Rejouer le chapitre 1</button></div>
+      <p class="hint">Touche le sol pour marcher. Touche quelqu'un pour lui parler.</p>
+    </div>
+  </div>
+
+  <div class="veil" id="end" hidden><div class="card wide" id="endCard"></div></div>
+</div>
+<p class="caption"><b>L'Atrium · histoire vraie</b> · Chapitre 1 : Frontier · Souris ou doigt : touche le sol pour marcher · Clavier : flèches ou ZQSD, Espace pour parler, C pour le carnet</p>
+
+<script src="../src/audio.js"></script>
+<script src="histoire.js"></script>
+</body>
+</html>

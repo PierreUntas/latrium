@@ -260,3 +260,4 @@ button:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
 #title .card{position:relative}
 .lang-btn{position:absolute;top:12px;right:14px;font:inherit;font-size:13px;color:var(--ink-2);background:none;border:1px solid currentColor;border-radius:999px;padding:3px 10px;cursor:pointer;opacity:.8}
 .lang-btn:hover,.lang-btn:focus-visible{opacity:1}
+.caption a{color:var(--ink);font-weight:700}
