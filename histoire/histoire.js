@@ -52,8 +52,31 @@ Object.assign(FACTS, {
 });
 const FACT_ORDER1 = ['presale', 'genesis', 'launch', 'gas', 'rule', 'first'];
 const FACT_ORDER2 = ['homestead', 'daosale', 'hack', 'delay', 'softfork', 'fork', 'etc'];
-const FACT_ORDER = FACT_ORDER1.concat(FACT_ORDER2);
-const ERAS = [['2015', 'Frontier'], ['2016', 'The DAO'], ['2017', 'La ruée des ICO'], ['2020', "L'été de la DeFi"], ['2021', 'London'], ['2022', 'La Fusion'], ['2024', 'Dencun, Pectra']];
+Object.assign(FACTS, {
+  parityhack:{ date:'19 juillet 2017', title:'Le premier coup contre Parity', text:"Une faille des portefeuilles multisig Parity permet de dérober 153 037 ETH. La bibliothèque de code est corrigée et redéployée dès le 20 juillet." },
+  erc20:{ date:'19 novembre 2015', title:'Le standard ERC-20', text:"L'EIP-20 décrit ce qu'un jeton doit savoir faire sur Ethereum. En 2017, des centaines de projets s'en servent pour vendre leurs jetons : les ICO." },
+  byzantium:{ date:'16 octobre 2017 · bloc 4 370 000', title:'Byzantium', text:"Byzantium réduit la récompense des mineurs de 5 à 3 ETH par bloc." },
+  parityfreeze:{ date:'6 novembre 2017', title:'513 774 ETH gelés', text:"Un utilisateur initialise la bibliothèque des multisigs Parity, en devient propriétaire, puis la détruit. 513 774 ETH restent bloqués dans 587 portefeuilles. Aucun fork ne les a débloqués." },
+  kitties:{ date:'28 novembre 2017', title:'CryptoKitties', text:"Lancement de CryptoKitties, des chats numériques uniques (ERC-721). Le jeu représente environ un quart du trafic d'Ethereum et fait exploser les transactions en attente." },
+  blackthursday:{ date:'12 mars 2020', title:'Le Jeudi noir', text:"L'ether passe d'environ 197 $ à 89 $ en moins de 36 heures. Le réseau saturé, des liquidateurs remportent des coffres Maker pour 0 DAI : environ 8,32 millions de dollars d'ethers." },
+  comp:{ date:'15 juin 2020', title:'COMP et la culture de rendement', text:"Compound commence à distribuer son jeton COMP à ceux qui prêtent et empruntent : 2 880 par jour. C'est le début de l'« été de la DeFi »." },
+  uni:{ date:'17 septembre 2020', title:'400 UNI', text:"Uniswap lance son jeton UNI et en offre 400 à chaque adresse qui avait déjà utilisé le protocole." },
+  deposit:{ date:'14 octobre 2020 · bloc 11 052 984', title:'Le contrat de dépôt', text:"Le contrat de dépôt du staking est déployé. Chaque validateur y dépose 32 ETH." },
+  beacon:{ date:'1er décembre 2020 · 12:00 UTC', title:'La Beacon Chain', text:"La Beacon Chain, la chaîne de preuve d'enjeu, produit ses premiers blocs. Elle tourne à côté d'Ethereum, sans encore le remplacer." },
+  london:{ date:'5 août 2021 · 12:33 UTC · bloc 12 965 000', title:'London', text:"London active l'EIP-1559 : chaque bloc a des frais de base, les mêmes pour tous, et l'utilisateur ajoute un pourboire pour celui qui produit le bloc." },
+  burn:{ date:'5 août 2021', title:'Des ethers brûlés', text:"Depuis London, les frais de base de chaque transaction sont détruits au lieu d'aller au mineur." },
+  bellatrix:{ date:'6 septembre 2022', title:'Bellatrix', text:"Bellatrix prépare la Beacon Chain à la Fusion." },
+  merge:{ date:'15 septembre 2022 · 06:42 UTC', title:'La Fusion', text:"La difficulté totale atteint 58 750 000 000 000 000 000 000. Au bloc 15 537 394, la preuve de travail s'arrête et la preuve d'enjeu prend le relais. Le minage n'est plus possible." },
+  energy:{ date:'15 septembre 2022', title:'99,95 % d’énergie en moins', text:"L'Ethereum Foundation estimait que la preuve d'enjeu réduirait la consommation d'énergie du réseau d'environ 99,95 %." },
+  shapella:{ date:'12 avril 2023 · 22:27 UTC', title:'Shapella', text:"Shapella permet enfin de retirer les ethers mis en jeu depuis 2020." },
+  dencun:{ date:'13 mars 2024 · 13:55 UTC', title:'Dencun et les blobs', text:"Dencun introduit les « blobs » (EIP-4844), un espace de données bon marché pour les L2. Chez plusieurs d'entre eux, les frais chutent de plus de 90 %." },
+  pectra:{ date:'7 mai 2025 · 10:05 UTC', title:'Pectra', text:"Avec l'EIP-7702, un compte classique peut déléguer son fonctionnement à un contrat intelligent. Un validateur peut désormais avoir jusqu'à 2 048 ETH en jeu." },
+  tenyears:{ date:'30 juillet 2025', title:'Dix ans', text:"Dix ans, jour pour jour, après le lancement de Frontier." },
+  fusaka:{ date:'3 décembre 2025', title:'Fusaka', text:"La mise à jour suivante, Fusaka, continue d'agrandir l'espace disponible pour les L2 (PeerDAS)." },
+});
+const FACT_ORDERS = { 1:FACT_ORDER1, 2:FACT_ORDER2, 3:['erc20', 'parityhack', 'byzantium', 'parityfreeze', 'kitties'], 4:['blackthursday', 'comp', 'uni', 'deposit', 'beacon'], 5:['london', 'burn'], 6:['bellatrix', 'merge', 'energy', 'shapella'], 7:['dencun', 'pectra', 'tenyears', 'fusaka'] };
+const FACT_ORDER = [1, 2, 3, 4, 5, 6, 7].flatMap(n => FACT_ORDERS[n]);
+const ERAS = [['2015', 'Frontier'], ['2016', 'The DAO'], ['2017', 'La ruée des ICO'], ['2020', "L'été de la DeFi"], ['2021', 'London'], ['2022', 'La Fusion'], ['2024 – 2025', 'Dix ans']];
 const KEEP = ["Le mot de passe sur un post-it, sous l'écran", 'Le fichier et le mot de passe dans un e-mail à moi-même', 'Le mot de passe sur papier chez moi, le fichier sur une clé USB'];
 const KEEP_SHORT = ['Post-it sous l’écran', 'E-mail à toi-même', 'Papier + clé USB, séparés'];
 
@@ -105,6 +128,7 @@ function drawBoard(g){
   rr(g, 140, 150, 330, 230, 6); fs(g, C.paper, C.ink, 3);
   g.fillStyle = C.lav; g.fillRect(150, 380, 310, 8); g.strokeStyle = C.ink; g.lineWidth = 2; g.strokeRect(150, 380, 310, 8);
   if (chap === 2) return drawBoard2(g);
+  if (chap >= 3) return drawBoardN(g, BOARDS[chap]);
   g.fillStyle = C.ink; g.font = '400 34px Gloock, Georgia, serif'; g.fillText('30 · 07 · 2015', 170, 200);
   // trois blocs reliés
   for (let i = 0; i < 3; i++){ const x = 176 + i * 92; g.strokeStyle = C.ink2; g.lineWidth = 2.2; g.strokeRect(x, 222, 54, 40); g.fillStyle = C.ink2; g.font = '600 18px "JetBrains Mono", monospace'; g.fillText(String(i), x + 21, 249);
@@ -122,6 +146,20 @@ function drawBoard2(g){
   g.fillStyle = C.ink2; g.font = '600 19px "JetBrains Mono", monospace'; g.fillText('#1 920 000', 176, 334);
   g.beginPath(); g.ellipse(236, 327, 78, 20, -.04, 0, TAU); g.strokeStyle = hexA(C.peach, 1); g.lineWidth = 3; g.stroke();
   g.fillStyle = C.ink2; g.font = '600 18px "JetBrains Mono", monospace'; g.fillText('ETH | ETC ?', 330, 334);
+}
+const BOARDS = {
+  3:{ title:'2017', lines:['ICO = ?', 'white paper ≠ code', 'gaz : enchère ?!'], circle:'#4 370 000', side:'5 → 3 ETH' },
+  4:{ title:'DeFi', lines:['coffre ≥ 150 %', 'APY 12 000 % ?!', '→ lire le code'], circle:'32 ETH', side:'Beacon' },
+  5:{ title:'London', lines:['base fee → brûlée', '+ pourboire', 'EIP-1559'], circle:'#12 965 000', side:'burn' },
+  6:{ title:'La Fusion', lines:['TTD :', '58 750 000 000', '000 000 000 000'], circle:'#15 537 394', side:'PoW → PoS' },
+  7:{ title:'Dix ans', lines:['blobs → L2', 'EIP-7702', '30.07.2015 → 2025'], circle:'#22 431 084', side:'merci !' },
+};
+function drawBoardN(g, B){
+  g.fillStyle = C.ink; g.font = '400 34px Gloock, Georgia, serif'; g.fillText(B.title, 170, 200);
+  g.fillStyle = C.ink2; g.font = '600 16px "JetBrains Mono", monospace'; B.lines.forEach((l, i) => g.fillText(l, 176, 236 + i * 24));
+  g.fillStyle = C.ink2; g.font = '600 18px "JetBrains Mono", monospace'; g.fillText(B.circle, 176, 334);
+  const w = g.measureText(B.circle).width; g.beginPath(); g.ellipse(176 + w / 2, 327, w / 2 + 16, 20, -.04, 0, TAU); g.strokeStyle = hexA(C.peach, 1); g.lineWidth = 3; g.stroke();
+  g.fillStyle = C.ink2; g.font = '600 17px "JetBrains Mono", monospace'; g.fillText(B.side, 212 + w, 334);
 }
 function drawPoster(g){
   rr(g, 500, 160, 86, 132, 4); fs(g, C.peri, C.ink, 2.5);
@@ -185,7 +223,7 @@ function laptop(g, x, y, t, mine){
     const w = 20 + ((Math.sin(i * 7.3 + x) + 1) * 26) + (reduce ? 0 : Math.sin(t * 2 + i) * 3);
     g.fillStyle = hexA(i === lines - 1 ? C.peach : C.cyan, .85); g.fillRect(x - 36, y - 52 + i * 9, w, 4);
   }
-  if (mine && (phase === 'genesis' || phase === 'node' || phase === 'c2-drain' || phase === 'c2-fork') && !busy){ const a = reduce ? .8 : .45 + Math.sin(t * 4) * .35; g.strokeStyle = hexA(C.peach, a); g.lineWidth = 5; g.strokeRect(x - 49, y - 65, 98, 70); }
+  if (mine && (phase === 'genesis' || phase === 'node' || phase === 'c2-drain' || phase === 'c2-fork' || goal === 'laptop') && !busy){ const a = reduce ? .8 : .45 + Math.sin(t * 4) * .35; g.strokeStyle = hexA(C.peach, a); g.lineWidth = 5; g.strokeRect(x - 49, y - 65, 98, 70); }
 }
 function drawDesk(g, t){
   g.strokeStyle = C.ink; g.lineWidth = 6; g.beginPath(); g.moveTo(284, 712); g.lineTo(284, 770); g.moveTo(776, 712); g.lineTo(776, 770); g.stroke();
@@ -213,6 +251,9 @@ function drawRig(g, t){
   }
   g.strokeStyle = C.ink; g.lineWidth = 3.5; g.strokeRect(x, y, w, h);
   g.beginPath(); g.moveTo(x, y); g.lineTo(x + 16, y - 12); g.lineTo(x + w + 16, y - 12); g.lineTo(x + w, y); g.moveTo(x + w + 16, y - 12); g.lineTo(x + w + 16, y + h - 12); g.lineTo(x + w, y + h); g.stroke();
+  if (rig.retired){ const px = x + w / 2, py = y - 66; rr(g, px - 20, py - 26, 40, 30, 5); fs(g, C.peach);
+    g.beginPath(); g.moveTo(px, py - 26); g.quadraticCurveTo(px - 4, py - 60, px + 8, py - 84); g.strokeStyle = C.ink; g.lineWidth = 3; g.stroke();
+    for (const [a, l] of [[-2.7, 44], [-2.1, 40], [-1.2, 42], [-.5, 38], [-.1, 34]]){ g.beginPath(); g.moveTo(px + 8, py - 84); g.quadraticCurveTo(px + 8 + Math.cos(a) * l * .6, py - 84 + Math.sin(a) * l * .6 - 10, px + 8 + Math.cos(a) * l, py - 84 + Math.sin(a) * l + 10); g.strokeStyle = C.teal; g.lineWidth = 6; g.stroke(); } }
   if (rig.flash > 0){ const a = rig.flash; const gr = g.createRadialGradient(x + w / 2, y, 10, x + w / 2, y, 170); gr.addColorStop(0, hexA(C.cyan, .6 * a)); gr.addColorStop(1, hexA(C.cyan, 0)); g.fillStyle = gr; g.beginPath(); g.arc(x + w / 2, y, 170, 0, TAU); g.fill(); }
 }
 function drawSofa(g){
@@ -314,6 +355,8 @@ function drawMarker(g, x, y, t){
 const player = {}, lena = {}, karim = {}, cat = {}, rig = { on:false, spin:0, flash:0 };
 let phase = 'title', lock = true, busy = false, time = 0, sky = 'evening', sleeping = false, chapterDone = 0, addr = '';
 const ch1 = {}, ch2 = {}; const facts = []; let chap = 1;
+const CHS = { 1:ch1, 2:ch2, 3:{}, 4:{}, 5:{}, 6:{}, 7:{} };
+const newbie = { vis:false };
 const fx = [], tweens = [];
 
 function newAddr(){ let s = '0x'; for (let i = 0; i < 40; i++) s += '0123456789abcdef'[Math.floor(Math.random() * 16)]; return s; }
@@ -322,7 +365,9 @@ function resetWorld(){
   Object.assign(lena, { x:430, y:800, face:1, walk:0, moving:false, target:null, shirt:C.lav, pants:C.peri, hair:C.peach, style:'long', skin:C.skin, glasses:true, gesture:false });
   Object.assign(karim, { x:1070, y:792, face:1, walk:0, moving:false, target:null, shirt:C.teal, pants:C.ink2, hair:C.ink, cap:C.violet, skin:C.skin, logo:true, gesture:false });
   Object.assign(cat, { x:1372, y:792, face:-1, sleep:true });
-  Object.assign(rig, { on:false, spin:0, flash:0 });
+  Object.assign(rig, { on:false, spin:0, flash:0, retired:false });
+  for (let n = 3; n <= 7; n++) for (const k of Object.keys(CHS[n])) delete CHS[n][k];
+  newbie.vis = false; if (typeof goal !== 'undefined') goal = null;
   Object.assign(ch2, { invested:false, spotted:null, chain:null, heard:0 });
   Object.assign(ch1, { downloaded:false, built:false, keep:null, keepChanged:false, eth:0, lenaEth:false, account:false });
   facts.length = 0; fx.length = 0; tweens.length = 0;
@@ -331,7 +376,7 @@ function resetWorld(){
 }
 
 /* ---------- déplacements ---------- */
-function obstacles(){ return [[530, 708, 300, 62], [1238, 726, 116, 26], [222, 812, 150, 44], [1445, 664, 72, 22], [lena.x, lena.y, 32, 12], [karim.x, karim.y, 32, 12]]; }
+function obstacles(){ return [[530, 708, 300, 62], [1238, 726, 116, 26], [222, 812, 150, 44], [1445, 664, 72, 22], [lena.x, lena.y, 32, 12], [karim.x, karim.y, 32, 12]].concat(newbie.vis ? [[newbie.x, newbie.y, 32, 12]] : []); }
 function collide(e){
   for (const [cx, cy, rx, ry] of obstacles()){
     let dx = (e.x - cx) / rx, dy = (e.y - cy) / ry, d = dx*dx + dy*dy;
@@ -384,6 +429,9 @@ function renderPanel(){
     rows.push(['The DAO', ch2.invested ? 'Tu y as mis ton ether' : 'Tu n’y as pas touché']);
     rows.push(['Chaîne suivie', ch2.chain === 'eth' ? 'Ethereum (avec le fork)' : ch2.chain === 'etc' ? 'Ethereum Classic (sans le fork)' : '—']);
   }
+  if (typeof journeyLines === 'function') journeyLines().slice(2).forEach(([y, t]) => rows.push([y, t]));
+  if (CHS[7].guardians) rows[2][1] += ' · + gardiens (EIP-7702)';
+  if (chap >= 3 || chapterDone >= 3) rows.splice(1, 1);
   $('acct').innerHTML = rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
   const got = FACT_ORDER.filter(id => facts.includes(id));
   $('frise').innerHTML = got.length ? got.map(id => `<li><b>${FACTS[id].date}</b><strong>${FACTS[id].title}</strong>${FACTS[id].text}</li>`).join('') : '<li class="empty">Rien pour l’instant. Les faits réels s’ajoutent ici au fil du chapitre.</li>';
@@ -688,7 +736,7 @@ function showEnd(saved){
     <p class="teaser"><b>Chapitre 2 · 2016, The DAO.</b> Un fonds d'investissement géré uniquement par du code, plus de 3,6 millions d'ethers siphonnés, et une question que personne n'avait prévue : a-t-on le droit de réécrire l'histoire ?</p>
     <div class="row"></div>${saved ? '<p class="hint">Progression sauvegardée sur cet appareil.</p>' : ''}`;
   const row = $('endCard').querySelector('.row');
-  [['Chapitre 2 : The DAO', () => chapter2(readSave() || { chapterDone, addr, ch1:{ ...ch1 }, facts:facts.slice() }), true], ['Rester au hackerspace', () => { lock = false; }]].forEach(([label, fn, primary]) => {
+  endButtons(1).forEach(([label, fn, primary]) => {
     const b = document.createElement('button'); b.className = 'btn' + (primary ? ' primary' : ''); b.textContent = label;
     b.addEventListener('click', () => { $('end').hidden = true; busy = false; fn(); }); row.appendChild(b); });
   $('end').hidden = false; row.firstChild.focus({ preventScroll:true }); sfx('end');
@@ -896,10 +944,10 @@ function showEnd2(saved){
     <p class="endsec">Ce que tu as fait</p><ul class="recap">${you.map(r => `<li>${r}</li>`).join('')}</ul>
     <p class="endsec">Ce qui s'est vraiment passé</p><ol class="truth">${truth}</ol>
     <p class="hint">Il n'y a pas de bonne réponse : les deux chaînes existent toujours, et le débat entre « corriger une injustice » et « ne jamais réécrire l'histoire » n'est pas clos. Lena, Karim et Wei sont inventés, les faits sont réels : <a href="https://ethereum.org/fr/history/" target="_blank" rel="noopener">ethereum.org/fr/history</a> · <a href="https://blog.ethereum.org/2016/06/17/critical-update-re-dao-vulnerability" target="_blank" rel="noopener">alerte du 17 juin</a> · <a href="https://blog.ethereum.org/2016/07/20/hard-fork-completed" target="_blank" rel="noopener">fork du 20 juillet</a>.</p>
-    <p class="teaser"><b>Bientôt · Chapitre 3 · 2017, la ruée des ICO.</b> Tout le monde lance son jeton, des chats numériques bloquent le réseau, et un portefeuille gèle des centaines de milliers d'ethers d'un seul clic.</p>
+    <p class="teaser"><b>Chapitre 3 · 2017, la ruée des ICO.</b> Tout le monde lance son jeton, des chats numériques bloquent le réseau, et un portefeuille gèle des centaines de milliers d'ethers d'un seul clic.</p>
     <div class="row"></div>${saved ? '<p class="hint">Progression sauvegardée sur cet appareil.</p>' : ''}`;
   const row = $('endCard').querySelector('.row');
-  [['Rester au hackerspace', () => { lock = false; }, true], ["Retour à L'Atrium", () => { location.href = '/'; }]].forEach(([label, fn, primary]) => {
+  endButtons(2).forEach(([label, fn, primary]) => {
     const b = document.createElement('button'); b.className = 'btn' + (primary ? ' primary' : ''); b.textContent = label;
     b.addEventListener('click', () => { $('end').hidden = true; busy = false; fn(); }); row.appendChild(b); });
   $('end').hidden = false; row.firstChild.focus({ preventScroll:true }); sfx('end');
@@ -929,15 +977,575 @@ const TALK2 = {
   cat(){ sfx('meow'); return chat([[null, "Wei ne sait pas ce qu'est un fork. Il a l'air parfaitement heureux."]]); },
 };
 
+/* ---------- outils communs aux chapitres 3 à 7 ---------- */
+let goal = null; // qui porte le losange de l'objectif : 'lena', 'karim', 'laptop', 'sofa', 'newbie', 'rig'
+function aim(txt, target, ph){ setObjective(txt); goal = target; phase = ph; free(); }
+function place(list){ for (const [e, x, y, f] of list) Object.assign(e, { x, y, face:f == null ? e.face : f, target:null, moving:false }); }
+async function skip(label, date, sk, pos){ closeDialog(); await fadeTo(label); setDate(date); if (sk) sky = sk; if (pos) place(pos); snapCam(); await fadeOut(); }
+function decor(n){ sky = 'day'; rig.on = n < 6; rig.retired = n >= 7; cat.sleep = false; Object.assign(cat, { x:1372, y:800, face:-1 }); newbie.vis = false; }
+async function startChapter(n, d){
+  resetWorld(); if (d) loadSave(d); chap = n; buildCache(); decor(n);
+  for (const k of Object.keys(CHS[n])) delete CHS[n][k];
+  place([[lena, 430, 800, 1], [karim, 1070, 792, 1]]);
+  $('carnetBtn').hidden = false; renderPanel();
+  phase = `c${n}-intro`; lock = true; busy = true; goal = null; snapCam();
+  track('Histoire lancée', { chapitre:n });
+  await wait(250);
+  await walkTo(player, 800, 820, 220); player.face = -1;
+}
+function modalCard(html, wide = true){ mcard.className = wide ? 'card wide' : 'card'; mcard.innerHTML = html; modal.hidden = false; const f = mcard.querySelector('button:not([disabled])'); if (f) f.focus({ preventScroll:true }); }
+function doneBtn(label, res, val){ const row = $('mRow'); row.innerHTML = ''; const b = document.createElement('button'); b.className = 'btn primary'; b.id = 'mDone'; b.textContent = label; row.appendChild(b); b.focus({ preventScroll:true }); b.addEventListener('click', () => { closeModal(); res(val); }); }
+const mlog = (id, txt, cls) => { const li = document.createElement('li'); li.textContent = txt; if (cls) li.className = cls; const ul = $(id); ul.appendChild(li); while (ul.children.length > 5) ul.firstChild.remove(); };
+const tickMs = ms => DEBUG && window.__fast ? 5 : ms;
+
+/* sélection multiple : repérer les signaux d'alerte */
+function showFlags(o){
+  return new Promise(res => {
+    modalCard(`<p class="eyebrow">${o.eyebrow}</p><h2>${o.title}</h2><p>${o.intro}</p>
+      <div class="rules">${o.items.map((it, i) => `<button class="rule" aria-pressed="false" data-i="${i}">${it[0]}</button>`).join('')}</div>
+      <div id="fVerdict"></div><div class="row" id="mRow"><button class="btn primary" id="mGo">${o.go}</button></div>`);
+    mcard.querySelectorAll('.rule').forEach(b => b.addEventListener('click', () => { if (b.disabled) return; sfx('select'); b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); }));
+    $('mGo').addEventListener('click', () => {
+      let good = 0, wrong = 0;
+      mcard.querySelectorAll('.rule').forEach(b => { const it = o.items[+b.dataset.i], on = b.getAttribute('aria-pressed') === 'true'; b.disabled = true;
+        if (it[1] && on) good++; if (!it[1] && on) wrong++; if (it[1]) b.classList.add('shady'); });
+      const total = o.items.filter(it => it[1]).length; sfx(good === total && !wrong ? 'gift' : 'select');
+      $('fVerdict').innerHTML = `<div class="verdict ${good === total && !wrong ? 'ok' : 'ko'}"><span class="pill">${good} / ${total}</span>${o.explain}</div>`;
+      doneBtn('Continuer', res, { good, wrong, total });
+    });
+  });
+}
+
+/* ---------- chapitre 3 : 2017, la ruée ---------- */
+function showGasAuction(){
+  return new Promise(res => {
+    const PRICES = [1, 4, 20, 50];
+    let mine = null, blocks = 0, included = false, bumps = 0, timer = null;
+    modalCard(`<p class="eyebrow">Ton portable · mardi 5 décembre 2017</p><h2>Rembourser Lena : 0,1 ETH</h2>
+      <p>Le réseau est saturé. Chaque bloc prend les transactions qui paient le plus cher le gaz : c'est une enchère. Choisis ton prix du gaz.</p>
+      <div class="tips rules" style="grid-template-columns:repeat(4,1fr)">${PRICES.map(p => `<button class="rule radio act" aria-pressed="false" data-p="${p}">${p} gwei</button>`).join('')}</div>
+      <p class="meter-legend"><span>Prix le plus bas accepté dans le dernier bloc : <b id="aMin">—</b></span><span id="aState">Pas encore envoyée</span></p>
+      <ul class="tradelog" id="aLog"></ul><div class="row" id="mRow"></div>
+      <p class="small">Illustration : les prix changeaient d'un bloc à l'autre. En décembre 2017, CryptoKitties représentait à lui seul environ un quart du trafic d'Ethereum.</p>`);
+    const floor = () => 14 + Math.round(Math.abs(Math.sin(blocks * 1.7)) * 16);
+    mcard.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => {
+      if (included) return; sfx('select'); const p = +b.dataset.p;
+      if (mine != null && p <= mine) return; if (mine != null) bumps++;
+      mine = p; mcard.querySelectorAll('[data-p]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      $('aState').textContent = `Envoyée à ${p} gwei · en attente`;
+      mlog('aLog', mine > 4 && bumps ? `Tu remplaces ta transaction : même contenu, prix plus haut (${p} gwei).` : `Transaction envoyée à ${p} gwei.`);
+      if (!timer) timer = setInterval(tick, tickMs(900));
+    }));
+    const tick = () => {
+      blocks++; const f = floor(); $('aMin').textContent = f + ' gwei';
+      if (mine >= f){ included = true; clearInterval(timer); sfx('ledger'); $('aState').textContent = 'Incluse ✓';
+        mlog('aLog', `Bloc suivant : incluse. Tu as payé ${mine} gwei par unité de gaz${mine >= 50 ? ', bien plus que nécessaire.' : '.'}`, 'ok');
+        CHS[3].gas = mine; CHS[3].bumps = bumps; mcard.querySelectorAll('[data-p]').forEach(x => { x.disabled = true; }); doneBtn('Continuer', res); }
+      else mlog('aLog', `Nouveau bloc : les transactions à ${f} gwei et plus passent. La tienne (${mine}) attend.`);
+    };
+  });
+}
+async function chapter3(d){
+  await startChapter(3, d);
+  setDate('Jeudi 20 juillet 2017 · 19:10');
+  await say(null, "Été 2017. Le hackerspace a une nouvelle machine à café, et une caisse commune : un portefeuille multisig Parity, qui demande deux signatures sur trois pour dépenser.");
+  face(karim, player); karim.gesture = true;
+  await say('Karim', "Tu as vu, hier ? Quelqu'un a vidé des portefeuilles multisig Parity. 153 037 ethers. Les mêmes portefeuilles que notre caisse commune.");
+  learn('parityhack');
+  await say('Karim', "Nous, on n'a rien perdu. Parity a corrigé le code et l'a redéployé dès le lendemain. Mais je n'aime pas ça.");
+  face(lena, player);
+  await say('Lena', "Pendant ce temps, tout le monde lance son jeton. Il suffit d'un contrat ERC-20, d'un site et d'un « white paper ». Regarde ce qu'on m'a envoyé.");
+  learn('erc20');
+  aim('Lis le white paper que Lena a reçu (Lena)', 'lena', 'c3-paper');
+}
+async function c3Paper(){
+  lock = true; busy = true; closeDialog(); goal = null;
+  const r = await showFlags({ eyebrow:'White paper · « NUAGE », le jeton du cloud décentralisé (inventé)', title:'Repère les signaux d’alerte', intro:'Sélectionne tout ce qui devrait te faire hésiter, puis vérifie.',
+    items:[['Rendement annoncé : x10 en trois mois', true], ['Équipe anonyme, « pour des raisons de sécurité »', true], ['Le code du contrat de vente est publié', false], ['Le produit arrive « bientôt ». La vente, elle, c’est maintenant', true], ['Jeton au standard ERC-20', false], ['Bonus de 40 % si tu achètes dans l’heure', true]],
+    go:'Vérifier', explain:'Un rendement promis, une équipe qu’on ne peut pas retrouver, un produit qui n’existe pas encore et une pression pour acheter vite : les quatre signaux classiques. Qu’un contrat soit publié ou au standard ERC-20 ne dit rien de l’honnêteté du projet.' });
+  CHS[3].flags = r.good;
+  const c = await say('Lena', r.good >= 3 ? "Tu as l'œil. Bon… et si c'était quand même le prochain grand projet ?" : "Tu as raté des signaux, mais franchement, moi aussi au début. Alors, on y va ?", ['J’y mets un peu d’ether', 'Je passe mon tour']);
+  CHS[3].ico = c === 0;
+  if (c === 0) await say('Lena', "Un peu seulement, hein. On verra bien ce que devient NUAGE.");
+  else await say('Lena', "Tu as sans doute raison. Il y en a trois nouveaux par jour.");
+  await skip('Trois mois plus tard.', 'Lundi 16 octobre 2017 · 09:30', 'day', [[player, 900, 830, 1], [karim, 1070, 792, -1]]);
+  face(karim, player);
+  await say('Karim', "Ce matin, bloc 4 370 000 : Byzantium. Ma machine touche 3 ethers par bloc au lieu de 5. Ça fait bizarre.");
+  learn('byzantium');
+  if (CHS[3].ico) await say('Karim', "Et ton NUAGE ? Le site ne répond plus depuis une semaine. L'équipe anonyme est… restée anonyme.");
+  await skip('Trois semaines plus tard.', 'Mardi 7 novembre 2017 · 18:45', 'evening', [[player, 800, 830, -1], [lena, 430, 800, 1], [karim, 700, 800, 1]]);
+  karim.gesture = true;
+  await say('Karim', "La caisse du hackerspace est bloquée. Pas volée : bloquée. Pour toujours, peut-être.");
+  aim('Demande à Karim ce qui s’est passé', 'karim', 'c3-parity');
+}
+async function c3Parity(){
+  lock = true; busy = true; goal = null; face(karim, player);
+  await say('Karim', "Hier, quelqu'un a trouvé la bibliothèque de code dont dépendent tous les multisigs Parity. Elle n'avait jamais été initialisée. Il l'a initialisée : il en est devenu le propriétaire.");
+  await say('Karim', "Puis il a appelé sa fonction « kill ». La bibliothèque s'est autodétruite. Les portefeuilles qui s'en servaient ne savent plus rien faire. Ils ne peuvent plus envoyer un seul ether.");
+  learn('parityfreeze');
+  await say('Karim', "513 774 ethers, dans 587 portefeuilles. Et notre caisse. Il a écrit qu'il ne l'avait pas fait exprès.");
+  const c = await say('Lena', "Il y a des gens qui parlent de faire un fork, comme pour The DAO.", ['Un fork réglerait le problème', 'On ne peut pas forker à chaque accident']);
+  CHS[3].fork = c === 0;
+  if (ch2.chain === 'etc') await say('Karim', "Toi qui avais choisi la chaîne d'origine… tu sais ce que ça fait, quand le code a parlé.");
+  await say('Karim', c === 0 ? "Peut-être. Mais cette fois, il n'y a pas de voleur à rattraper, pas de délai de 27 jours. Juste une erreur. Je doute que la communauté accepte." : "C'est ce que je pense aussi. Même quand ça me coûte.");
+  await say('Lena', "On fera une nouvelle caisse. Avec un contrat qu'on lira jusqu'au bout, cette fois.");
+  await skip('Un mois plus tard.', 'Mardi 5 décembre 2017 · 21:00', 'evening', [[player, 800, 830, -1], [lena, 430, 800, 1], [karim, 1070, 792, -1]]);
+  face(lena, player);
+  await say('Lena', "Tout le réseau est bouché. Des gens élèvent des chats numériques sur Ethereum, CryptoKitties, et ça représente un quart du trafic !");
+  learn('kitties');
+  await say('Lena', "Et toi, tu me dois 0,1 ether pour les pizzas de la semaine dernière. Bon courage pour me rembourser ce soir.");
+  aim('Rembourse Lena (portable)', 'laptop', 'c3-gas');
+}
+async function c3Gas(){
+  lock = true; busy = true; goal = null;
+  await showGasAuction();
+  face(lena, player);
+  await say('Lena', CHS[3].gas >= 50 ? "Reçu ! Tu as payé les frais au prix fort, mais au moins c'est passé." : "Reçu ! Tu as trouvé le bon prix. Un jour, il faudra une meilleure façon de fixer les frais qu'une enchère à l'aveugle.");
+  await say('Karim', "Moi, je retiens une chose de cette année : le code qu'on ne lit pas finit toujours par coûter cher.");
+  await say(null, "Wei s'étire sur la machine de Karim. Lui ne sera jamais un chat numérique.");
+  endChapter(3, { eyebrow:'Chapitre 3 terminé · 2017', title:'L’année où tout le monde voulait son jeton',
+    you:[
+      CHS[3].flags >= 3 ? `Tu as repéré ${CHS[3].flags} signaux d’alerte sur 4 dans le white paper.` : `Tu n’as repéré que ${CHS[3].flags} signal(aux) d’alerte sur 4.`,
+      CHS[3].ico ? 'Tu as quand même mis un peu d’ether dans NUAGE. Son site a disparu en trois mois.' : 'Tu es passé à côté de NUAGE. Tant mieux.',
+      CHS[3].fork ? 'Pour la caisse bloquée, tu aurais voulu un fork. Il n’y en a pas eu.' : 'Pour la caisse bloquée, tu as accepté qu’on ne forke pas à chaque accident.',
+      `Tu as remboursé Lena en pleine folie CryptoKitties, à ${CHS[3].gas} gwei.`,
+    ],
+    links:[['ethereum.org/fr/history', 'https://ethereum.org/fr/history/'], ['post-mortem de Parity', 'https://medium.com/paritytech/a-postmortem-on-the-parity-multi-sig-library-self-destruct-63daca3a4cf7']],
+    note:'NUAGE est inventé, comme Lena, Karim, Wei et la caisse du hackerspace. Les événements et les chiffres sont réels.',
+    teaser:'<b>Chapitre 4 · 2020, l’été de la DeFi.</b> Un krach éclair, des coffres liquidés pour zéro, et un été où tout le monde « cultive » des jetons.',
+    track:{ ico:CHS[3].ico, flags:CHS[3].flags } });
+}
+const TALK3 = {
+  lena(){ if (phase === 'c3-paper') return c3Paper(); face(lena, player); return chat([['Lena', { 'c3-parity':"Karim est dans tous ses états. Va le voir.", 'c3-gas':"J'attends mes 0,1 ether ! Ton portable est sur la table." }[phase] || "Tout le monde parle de jetons. Presque personne ne parle de ce qu'ils servent à faire."]]); },
+  karim(){ if (phase === 'c3-parity') return c3Parity(); face(karim, player); return chat([['Karim', { 'c3-paper':"Lena veut te montrer un white paper. Prépare-toi à rire. Ou à pleurer.", 'c3-gas':"Même moi, je n'arrive pas à faire passer mes transactions ce soir." }[phase] || "Trois ethers par bloc depuis Byzantium. Ma machine ne va pas m'enrichir, mais elle tient le réseau."]]); },
+  laptop(){ if (phase === 'c3-gas') return c3Gas(); return chat([[null, "Ton portable. Des dizaines d'onglets : des sites de jetons, des forums, un tableau de prix du gaz."]]); },
+  rig(){ return chat([[null, "La machine de Karim. Une étiquette « code is law » un peu décollée, et un post-it neuf : « lire le code jusqu'au bout »."]]); },
+  board(){ return chat([[null, "Au tableau : « ICO = ? », « white paper ≠ code », et un calcul du prix du gaz barré trois fois."]]); },
+  window(){ return chat([[null, sky === 'evening' ? "Les lumières de Paris s'allument. Quelque part, quelqu'un achète un chat numérique très cher." : "Les toits de Paris. Rien n'a changé dehors, tout a changé dedans."]]); },
+  cat(){ sfx('meow'); return chat([[null, "Wei, génération zéro. Pas à vendre."]]); },
+};
+
+/* ---------- chapitre 4 : 2020, l'été de la DeFi ---------- */
+function showVault(){
+  return new Promise(res => {
+    const COLL0 = 10, DEBT0 = 800, MIN = 1.5;
+    const PATH = [197, 194, 190, 184, 178, 171, 165, 160, 152, 147, 141, 136, 131, 128, 124, 121, 118, 114, 112, 110, 108, 104, 101, 99, 97, 95, 94, 92, 91, 90, 89];
+    let t = 0, coll = COLL0, debt = DEBT0, pending = null, liquidated = false, timer = null, acted = null;
+    modalCard(`<p class="eyebrow">Coffre Maker de Lena · jeudi 12 mars 2020</p><h2>Le prix de l'ether s'effondre</h2>
+      <p>Lena a déposé ${COLL0} ETH et emprunté ${DEBT0} DAI. Si la valeur de ses ethers passe sous 150 % de sa dette, le coffre est liquidé. Le réseau est saturé : une transaction « normale » peut mettre très longtemps.</p>
+      <div class="counters"><div><span>Prix de l'ETH</span><b id="vP"></b><small>$</small></div><div id="vRc"><span>Ratio du coffre</span><b id="vR"></b><small>minimum 150 %</small></div><div><span>Liquidation si l'ETH passe sous</span><b id="vL"></b><small>$</small></div></div>
+      <div class="row" id="vAct">
+        <button class="btn act" data-a="add" data-g="fast">Ajouter 5 ETH · gaz rapide</button>
+        <button class="btn act" data-a="add" data-g="slow">Ajouter 5 ETH · gaz normal</button>
+        <button class="btn act" data-a="repay" data-g="fast">Rembourser 400 DAI · gaz rapide</button>
+      </div>
+      <ul class="tradelog" id="vLog"></ul><div class="row" id="mRow"></div>
+      <p class="small">Illustration : le prix réel est passé d'environ 197 $ à 89 $ en moins de 36 heures. Le coffre de Lena est inventé.</p>`);
+    const liqP = () => debt * MIN / coll;
+    const draw = () => { const p = PATH[Math.min(t, PATH.length - 1)], r = coll * p / debt; $('vP').textContent = p; $('vR').textContent = liquidated ? '—' : Math.round(r * 100) + ' %'; $('vL').textContent = Math.round(liqP()); $('vRc').className = r < 1.75 ? 'pricey' : 'cheap'; };
+    draw();
+    mcard.querySelectorAll('[data-a]').forEach(b => b.addEventListener('click', () => {
+      if (pending || acted || liquidated) return; sfx('select');
+      pending = { a:b.dataset.a, at:t + (b.dataset.g === 'fast' ? 3 : 16) }; acted = b.dataset.a + '-' + b.dataset.g;
+      mcard.querySelectorAll('[data-a]').forEach(x => { x.disabled = true; });
+      mlog('vLog', b.dataset.g === 'fast' ? 'Envoyée avec un prix du gaz élevé. Elle devrait passer vite.' : 'Envoyée au prix normal. Elle attend parmi des milliers d’autres…');
+    }));
+    const end = () => { clearInterval(timer); CHS[4].vault = liquidated ? 'liquidated' : 'saved'; CHS[4].action = acted || 'none'; doneBtn('Continuer', res); };
+    timer = setInterval(() => {
+      t++; const p = PATH[Math.min(t, PATH.length - 1)];
+      if (pending && t >= pending.at){ if (pending.a === 'add') coll += 5; else debt -= 400; sfx('ledger'); mlog('vLog', pending.a === 'add' ? 'Incluse : 5 ETH ajoutés au coffre.' : 'Incluse : 400 DAI remboursés.', 'ok'); pending = null; }
+      if (!liquidated && p < liqP()){ liquidated = true; sfx('theft'); mlog('vLog', `Liquidé à ${p} $. Les ethers de Lena partent aux enchères… et un robot les emporte pour 0 DAI.`, 'ko'); }
+      draw();
+      if (t >= PATH.length - 1){ if (!liquidated) mlog('vLog', 'Le prix touche 89 $. Le coffre tient.', 'ok'); end(); }
+    }, tickMs(550));
+  });
+}
+async function chapter4(d){
+  await startChapter(4, d);
+  setDate('Jeudi 12 mars 2020 · 17:40'); sky = 'evening';
+  await say(null, "Mars 2020. On parle d'un virus, de confinement, de fermer le hackerspace. Et ce soir, tous les marchés tombent en même temps.");
+  face(lena, player); lena.gesture = true;
+  await say('Lena', "Mon coffre Maker ! J'ai mis 10 ethers en garantie pour emprunter 800 DAI. Si l'ether continue de tomber, il sera liquidé. Aide-moi, vite !");
+  aim('Aide Lena à sauver son coffre (portable)', 'laptop', 'c4-vault');
+}
+async function c4Vault(){
+  lock = true; busy = true; goal = null;
+  await showVault();
+  learn('blackthursday');
+  face(lena, player);
+  if (CHS[4].vault === 'saved') await say('Lena', "Il a tenu… Merci. D'autres n'ont pas eu cette chance : le réseau était si saturé que des robots ont remporté des enchères de liquidation pour zéro DAI.");
+  else await say('Lena', "Liquidé. Et tu sais le pire ? Le réseau était si saturé que des robots ont remporté des enchères de liquidation pour zéro DAI. Mes ethers sont partis pour rien.");
+  await say('Karim', "8,32 millions de dollars d'ethers, emportés pour zéro. Le code a fait exactement ce qu'on lui avait dit. Personne n'avait prévu un réseau bouché.");
+  await skip('Trois mois plus tard. Le hackerspace rouvre.', 'Lundi 22 juin 2020 · 18:15', 'day', [[player, 800, 830, 1], [lena, 430, 800, 1], [karim, 1070, 792, -1]]);
+  face(karim, player);
+  await say('Karim', "Depuis une semaine, Compound distribue un jeton, COMP, à ceux qui prêtent et empruntent chez eux. Tout le monde s'y met. On appelle ça « cultiver » des rendements.");
+  learn('comp');
+  await say('Karim', "Et regarde celui-là : PATATE. 12 000 % de rendement annuel. Lancé hier. Pas d'audit. Je suis presque tenté.");
+  aim('Décide quoi faire de tes ethers (Karim)', 'karim', 'c4-farm');
+}
+async function c4Farm(){
+  lock = true; busy = true; goal = null; face(karim, player);
+  const c = await say('Karim', "Alors ? PATATE, ou quelque chose de plus calme ?", ['Tenter PATATE', 'Échanger quelques DAI sur Uniswap, tranquille', 'Ne rien toucher']);
+  CHS[4].farm = ['patate', 'uniswap', 'rien'][c];
+  if (c === 0){ await say('Karim', "Ok. Moi aussi, un tout petit peu. Pour voir.");
+    await say(null, "Deux jours plus tard, le contrat de PATATE a une fonction que personne n'avait lue : elle permettait au créateur de tout retirer. Il l'a fait.");
+    await say('Karim', "Envolé. Tout. Je te l'avais dit, que j'étais « presque » tenté…"); }
+  else if (c === 1){ await say('Karim', "Uniswap ? Pas de rendement magique, juste des échanges entre jetons, sans intermédiaire. Sage."); CHS[4].uni = true; }
+  else await say('Karim', "Ne rien toucher, c'est aussi une stratégie. Souvent la meilleure.");
+  await skip('Trois mois plus tard.', 'Jeudi 17 septembre 2020 · 11:20', 'day', [[player, 800, 830, -1], [lena, 430, 800, 1], [karim, 1070, 792, -1]]);
+  face(lena, player);
+  await say('Lena', "Uniswap vient de lancer son jeton, UNI. Et ils en offrent 400 à chaque adresse qui a déjà utilisé Uniswap !");
+  learn('uni');
+  if (CHS[4].uni) await say('Lena', "Tu l'as utilisé en juin, non ? Regarde ton adresse… 400 UNI. Pour avoir été là avant tout le monde.");
+  else await say('Lena', "Toi, tu ne l'avais jamais utilisé… Tant pis. Ce genre de cadeau, personne ne le voit venir.");
+  await skip('Le 1er décembre 2020.', 'Mardi 1er décembre 2020 · 12:55', 'day', [[player, 800, 830, -1], [lena, 560, 800, 1], [karim, 1070, 792, -1]]);
+  face(lena, player);
+  await say('Lena', "Ça y est. J'ai déposé 32 ethers dans le contrat de dépôt. À 13 h, heure de Paris, la Beacon Chain démarre, et je serai validatrice.");
+  learn('deposit'); learn('beacon');
+  await say('Lena', "Plus besoin de cartes graphiques pour sécuriser le réseau. Il suffit de mettre des ethers en jeu, et de bien se comporter.");
+  aim('Parle à Karim', 'karim', 'c4-karim');
+}
+async function c4Karim(){
+  lock = true; busy = true; goal = null; face(karim, player);
+  await say('Karim', "Tu sais ce que ça veut dire, pour moi ? Un jour, ma machine ne servira plus à rien.");
+  const c = await say('Karim', "Pas tout de suite. La Beacon Chain tourne à côté, pour l'instant. Mais un jour, les deux vont fusionner.", ['Tu pourrais devenir validateur, toi aussi', 'Elle aura bien servi, ta machine', 'Ça fait peur, ce changement']);
+  CHS[4].karim = c;
+  await say('Karim', ['Peut-être. Mais je ne sais pas si j’ai envie d’avoir 32 ethers bloqués. Je vais y réfléchir.', 'Cinq ans. Elle a vu la genèse, The DAO, CryptoKitties. Oui. Elle aura bien servi.', 'Un peu. Mais si ça consomme moins et que c’est plus sûr… je ne vais pas me battre contre.'][c]);
+  endChapter(4, { eyebrow:'Chapitre 4 terminé · 2020', title:'L’été de la DeFi',
+    you:[
+      CHS[4].vault === 'saved' ? 'Tu as sauvé le coffre de Lena pendant le Jeudi noir.' : 'Le coffre de Lena a été liquidé pendant le Jeudi noir, malgré toi.',
+      { patate:'Tu as tenté PATATE. Son créateur est parti avec la caisse.', uniswap:'Tu as échangé quelques DAI sur Uniswap. En septembre, 400 UNI sont arrivés sur ton adresse.', rien:'Tu n’as rien touché pendant l’été des rendements fous.' }[CHS[4].farm],
+      'Tu étais là quand Lena est devenue validatrice, le jour du démarrage de la Beacon Chain.',
+    ],
+    links:[['ethereum.org/fr/history', 'https://ethereum.org/fr/history/'], ['Jeudi noir de MakerDAO', 'https://www.quadrigainitiative.com/casestudy/makerdaoabnormalliquidations.php'], ['lancement d’UNI', 'https://www.coindesk.com/business/2020/09/17/uniswaps-distribution-is-built-on-something-that-cant-be-forked-actual-users']],
+    note:'PATATE et le coffre de Lena sont inventés. Maker, Compound, Uniswap, les dates et les chiffres sont réels.',
+    teaser:'<b>Chapitre 5 · 2021, London.</b> La fin des enchères à l’aveugle pour les frais, et des ethers qu’on brûle à chaque bloc.',
+    track:{ vault:CHS[4].vault, farm:CHS[4].farm } });
+}
+const TALK4 = {
+  lena(){ face(lena, player); return chat([['Lena', { 'c4-vault':"Vite, ton portable ! Mon coffre !", 'c4-farm':"Karim te montre encore ses rendements miracles ?", 'c4-karim':"Va parler à Karim. Je crois que ça le travaille." }[phase] || "Je suis validatrice. Si mon nœud tombe en panne, je perds un peu. Si je triche, je perds beaucoup. C'est ça, la preuve d'enjeu."]]); },
+  karim(){ if (phase === 'c4-farm') return c4Farm(); if (phase === 'c4-karim') return c4Karim(); face(karim, player); return chat([['Karim', { 'c4-vault':"Aide Lena ! Le prix dégringole !" }[phase] || "Ma machine tourne encore. Pour combien de temps, je ne sais pas."]]); },
+  laptop(){ if (phase === 'c4-vault') return c4Vault(); return chat([[null, "Ton portable. Un onglet affiche la Beacon Chain : des milliers de validateurs, et Lena parmi eux."]]); },
+  board(){ return chat([[null, "Au tableau : « coffre ≥ 150 % », « APY 12 000 % ?! → lire le code », et « 32 ETH » entouré."]]); },
+  rig(){ return chat([[null, "La machine de Karim tourne toujours. Il la dépoussière plus souvent qu'avant."]]); },
+  window(){ return chat([[null, "2020. Pendant des semaines, les rues sont restées vides. La chaîne, elle, n'a jamais arrêté de produire des blocs."]]); },
+  cat(){ sfx('meow'); return chat([[null, "Wei a passé le confinement chez Lena. Il a l'air de trouver le hackerspace trop bruyant, maintenant."]]); },
+};
+
+/* ---------- chapitre 5 : 2021, London ---------- */
+function showLondon(){
+  return new Promise(res => {
+    let burned = 0, tip = null, timer = null, base = 42;
+    modalCard(`<p class="eyebrow">Ton portable · jeudi 5 août 2021</p><h2>Après London : frais de base + pourboire</h2>
+      <p>Depuis le bloc 12 965 000, chaque bloc affiche des <b>frais de base</b>, les mêmes pour tout le monde, qui sont <b>brûlés</b>. Tu ajoutes seulement un <b>pourboire</b> pour le mineur. Plus besoin de deviner.</p>
+      <div class="counters"><div><span>Frais de base du bloc</span><b id="lBase"></b><small>gwei · brûlés</small></div><div class="cheap"><span>ETH brûlés sous tes yeux</span><b id="lBurn">0</b><small>ETH</small></div><div><span>Ton pourboire</span><b id="lTip">—</b><small>gwei · au mineur</small></div></div>
+      <div class="tips rules">${[1, 2, 5].map(p => `<button class="rule radio act" aria-pressed="false" data-t="${p}">Pourboire de ${p} gwei</button>`).join('')}</div>
+      <ul class="tradelog" id="lLog"></ul><div class="row" id="mRow"></div>
+      <p class="small">Illustration : les frais de base montent quand les blocs sont pleins et baissent quand ils sont vides. Chiffres du compteur fictifs.</p>`);
+    const draw = () => { $('lBase').textContent = base; $('lBurn').textContent = burned.toFixed(2).replace('.', ','); };
+    draw();
+    timer = setInterval(() => { base = Math.max(20, Math.min(90, base + Math.round(Math.sin(burned * 7) * 4))); burned += base * 0.0035; draw(); }, tickMs(400));
+    mcard.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => {
+      if (tip) return; tip = +b.dataset.t; sfx('ledger'); $('lTip').textContent = tip;
+      mcard.querySelectorAll('[data-t]').forEach(x => { x.setAttribute('aria-pressed', String(x === b)); x.disabled = true; });
+      mlog('lLog', `Incluse au bloc suivant. Tu as payé ${base} gwei de frais de base (brûlés) + ${tip} gwei de pourboire.`, 'ok');
+      mlog('lLog', tip >= 5 ? 'Ton pourboire était généreux : 1 ou 2 gwei auraient suffi, le réseau n’est pas saturé.' : 'Un petit pourboire suffit quand le réseau n’est pas saturé.');
+      CHS[5].tip = tip; setTimeout(() => { clearInterval(timer); doneBtn('Continuer', res); }, tickMs(1200));
+    }));
+  });
+}
+async function chapter5(d){
+  await startChapter(5, d);
+  setDate('Mercredi 4 août 2021 · 20:30'); sky = 'evening';
+  await say(null, "Été 2021. Cette année, l'ether a battu tous ses records. Au hackerspace, on ne parle plus de DeFi, on parle d'images : les NFT.");
+  face(lena, player);
+  await say('Lena', "Regarde ! « Les Pigeons de Paris », 10 000 pigeons dessinés, un par NFT. Le nôtre, celui de la fenêtre, est dedans. Enfin, un qui lui ressemble.");
+  const c = await say('Lena', "La vente ouvre ce soir. Tout le monde va se battre pour les frais, comme en 2017. Tu en prends un ?", ['J’en prends un', 'Je regarde seulement']);
+  CHS[5].nft = c === 0;
+  if (c === 0){ await say('Lena', "Alors prépare-toi : ce soir, c'est encore l'enchère à l'aveugle sur le gaz.");
+    await say(null, "Tu mets un prix du gaz très haut pour être sûr de passer. La transaction passe. Les frais coûtent presque autant que le pigeon."); }
+  else await say('Lena', "Sage. Demain, de toute façon, les frais ne se paieront plus pareil.");
+  face(karim, player);
+  await say('Karim', "Demain, bloc 12 965 000 : London. Avec l'EIP-1559, une partie des frais ne va plus aux mineurs. Elle est brûlée. Détruite.");
+  const k = await say('Karim', "Je devrais être contre, non ? C'est mon revenu qui baisse.", ['Tu es contre ?', 'Pourquoi brûler des ethers ?']);
+  await say('Karim', k === 0 ? "Non. Des frais prévisibles, c'est mieux pour tout le monde. Et puis mes cartes n'en ont plus pour très longtemps, de toute façon." : "Pour que les frais servent tout le réseau plutôt qu'un seul mineur. Et pour qu'on ne puisse pas les gonfler en remplissant ses propres blocs.");
+  await skip('Le lendemain.', 'Jeudi 5 août 2021 · 14:40', 'day', [[player, 800, 830, -1], [lena, 430, 800, 1], [karim, 1070, 792, -1]]);
+  await say('Karim', "C'est passé à 14 h 33, heure de Paris. Bloc 12 965 000. Essaie d'envoyer quelque chose, tu vas voir la différence.");
+  learn('london');
+  aim('Envoie une transaction après London (portable)', 'laptop', 'c5-send');
+}
+async function c5Send(){
+  lock = true; busy = true; goal = null;
+  await showLondon();
+  learn('burn');
+  face(lena, player);
+  await say('Lena', "Tu vois ? Plus besoin de deviner. Le portefeuille te propose les frais, et tu sais ce que tu paies.");
+  if (CHS[5].nft) await say('Lena', "Ton pigeon, au fait, tu l'aimes toujours ? Il paraît que la moitié des collections de cet été ne vaudront plus rien dans un an.");
+  await say('Karim', "Et le plus drôle : une partie de ce que tu viens de payer n'existe plus. Brûlée. Chaque bloc rend l'ether un peu plus rare.");
+  endChapter(5, { eyebrow:'Chapitre 5 terminé · 2021', title:'Des frais qu’on comprend enfin',
+    you:[
+      CHS[5].nft ? 'Tu as acheté un pigeon NFT la veille de London, en payant le gaz au prix fort.' : 'Tu as regardé la folie des NFT sans y toucher.',
+      `Après London, tu as envoyé ta transaction avec un pourboire de ${CHS[5].tip} gwei.`,
+      'Tu as vu une partie des frais être brûlée, bloc après bloc.',
+    ],
+    links:[['ethereum.org/fr/history', 'https://ethereum.org/fr/history/'], ['EIP-1559', 'https://eips.ethereum.org/EIPS/eip-1559']],
+    note:'« Les Pigeons de Paris » sont inventés. London, l’EIP-1559 et la date sont réels.',
+    teaser:'<b>Chapitre 6 · 2022, la Fusion.</b> Un matin de septembre, toutes les machines de minage s’arrêtent en même temps. Dont celle de Karim.',
+    track:{ nft:CHS[5].nft, tip:CHS[5].tip } });
+}
+const TALK5 = {
+  lena(){ face(lena, player); return chat([['Lena', phase === 'c5-send' ? "Essaie d'envoyer quelque chose, tu vas voir." : "Mon pigeon a une écharpe. C'est le plus beau des 10 000. Objectivement."]]); },
+  karim(){ face(karim, player); return chat([['Karim', "Les frais de base sont brûlés, le pourboire est pour moi. Des petits pourboires, en général."]]); },
+  laptop(){ if (phase === 'c5-send') return c5Send(); return chat([[null, "Ton portable. Un compteur en ligne affiche les ethers brûlés depuis London. Il ne s'arrête jamais."]]); },
+  board(){ return chat([[null, "Au tableau : « base fee → brûlée », « + pourboire », « EIP-1559 ». Quelqu'un a dessiné un petit feu."]]); },
+  rig(){ return chat([[null, "La machine de Karim. Ses revenus ont baissé avec London, mais il la fait tourner quand même."]]); },
+  window(){ return chat([[null, "Un pigeon se pose sur la barre d'appui. Il ne sait pas qu'il a un sosie numérique."]]); },
+  cat(){ sfx('meow'); return chat([[null, "Wei regarde le pigeon de la fenêtre. Le pigeon regarde Wei. Aucun des deux n'a de NFT."]]); },
+};
+
+/* ---------- chapitre 6 : 2022, la Fusion ---------- */
+function showTTD(){
+  return new Promise(res => {
+    const TTD = 58750000000000000000000n;
+    let td = TTD - 3000000000000000000n * 40n, timer = null, done = false;
+    modalCard(`<p class="eyebrow">Ton portable · jeudi 15 septembre 2022</p><h2>La difficulté totale approche</h2>
+      <p>La Fusion ne se déclenche pas à une heure ni à un numéro de bloc, mais quand la <b>difficulté totale</b> accumulée par tous les mineurs depuis 2015 atteint une valeur fixée à l'avance.</p>
+      <p class="meter-legend"><span>Difficulté totale</span><span>Seuil : <b>58 750 000 000 000 000 000 000</b></span></p>
+      <p class="gblock" id="tVal" style="font-size:18px"></p>
+      <div class="meter big"><div class="fill" id="tFill"></div></div>
+      <ul class="tradelog" id="tLog"></ul><div class="row" id="mRow"></div>
+      <p class="small">Montée accélérée pour le jeu. Le seuil et le bloc 15 537 394 sont réels.</p>`);
+    const fmtBig = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    const draw = () => { $('tVal').textContent = fmtBig(td); const left = Number((TTD - td) / 1000000000000000000n); $('tFill').style.width = Math.max(0, 100 - left / 1.2) + '%'; };
+    draw();
+    timer = setInterval(() => {
+      if (done) return;
+      td += 3000000000000000000n + BigInt(Math.floor(Math.random() * 400)) * 1000000000000000n; sfx('blip');
+      if (td >= TTD){ done = true; td = TTD; clearInterval(timer); draw(); rig.on = false; sfx('end');
+        mlog('tLog', 'Seuil atteint. Le dernier bloc miné est derrière nous.');
+        mlog('tLog', 'Bloc 15 537 394 · 06:42:42 UTC : proposé par un validateur, plus par un mineur.', 'ok');
+        doneBtn('Lever les yeux de l’écran', res); }
+      else draw();
+    }, tickMs(260));
+  });
+}
+async function chapter6(d){
+  await startChapter(6, d);
+  place([[karim, 1070, 792, 1], [lena, 560, 800, 1]]);
+  setDate('Jeudi 15 septembre 2022 · 08:20'); sky = 'dawn';
+  await say(null, "15 septembre 2022, tôt le matin. Karim est arrivé avant tout le monde. Il n'a pas dormi. Sa machine tourne, comme depuis sept ans.");
+  face(karim, player);
+  await say('Karim', "C'est ce matin. Bellatrix est passé le 6 septembre, la Beacon Chain est prête. Ce matin, ma machine va miner ses derniers blocs.");
+  learn('bellatrix');
+  aim('Regarde la difficulté totale monter (portable)', 'laptop', 'c6-ttd');
+}
+async function c6TTD(){
+  lock = true; busy = true; goal = null;
+  await showTTD();
+  learn('merge');
+  await say(null, "8 h 42 à Paris. Les ventilateurs de la machine de Karim ralentissent. Puis s'arrêtent. Pour la première fois depuis 2015, la pièce est silencieuse.");
+  face(lena, player);
+  await say('Lena', "Mon validateur vient de proposer un bloc. Ça fonctionne. Tout fonctionne. Les soldes n'ont pas bougé, les contrats non plus.");
+  await say('Lena', "Et le réseau consomme à peu près 99,95 % d'électricité en moins. Toutes ces machines, partout dans le monde, éteintes d'un coup.");
+  learn('energy');
+  aim('Va voir Karim', 'karim', 'c6-karim');
+}
+async function c6Karim(){
+  lock = true; busy = true; goal = null; face(karim, player);
+  await say('Karim', "Elle a vu le bloc zéro, tu te rends compte ? On l'a allumée ensemble, ce soir de juillet 2015.");
+  const c = await say('Karim', "Je ne sais pas quoi en faire, maintenant.", ['Garde-la. Comme souvenir.', 'Revends les cartes, quelqu’un en fera bon usage', 'Deviens validateur, avec ce que tu as miné']);
+  CHS[6].rig = ['keep', 'sell', 'validator'][c];
+  await say('Karim', ["Comme souvenir… Oui. Je vais lui trouver une place. Elle l'a mérité.", "Tu as raison. Des étudiants en auront besoin pour leurs projets. C'est mieux qu'un tas de poussière.", "Avec ce que j'ai miné en sept ans ? … Oui. Oui, je crois que je peux. Continuer à sécuriser le réseau, autrement."][c]);
+  const s = await say('Lena', "Et toi ? Tes ethers dorment dans ton coffre depuis des années. Tu pourrais les mettre en jeu, toi aussi.", ['Via un service de staking partagé', 'Je les garde dans mon coffre']);
+  CHS[6].stake = s === 0;
+  await say('Lena', s === 0 ? "Pas besoin d'avoir 32 ethers pour ça. Mais souviens-toi : tu confies tes ethers à un autre contrat. Lis-le." : "C'est ton choix. Rien ne t'oblige à rien.");
+  await skip('Sept mois plus tard.', 'Jeudi 13 avril 2023 · 09:00', 'day', [[player, 800, 830, -1], [lena, 560, 800, 1], [karim, 1070, 792, -1]]);
+  face(lena, player);
+  await say('Lena', "Cette nuit, Shapella. Pour la première fois depuis 2020, je peux retirer mes ethers mis en jeu. Je ne vais pas le faire. Mais savoir que je peux, ça change tout.");
+  learn('shapella');
+  endChapter(6, { eyebrow:'Chapitre 6 terminé · 2022', title:'Le matin où les machines se sont tues',
+    you:[
+      'Tu as regardé la difficulté totale atteindre son seuil, et la machine de Karim s’arrêter.',
+      { keep:'Tu as conseillé à Karim de garder sa machine en souvenir.', sell:'Tu as conseillé à Karim de revendre ses cartes à des étudiants.', validator:'Tu as poussé Karim à devenir validateur à son tour.' }[CHS[6].rig],
+      CHS[6].stake ? 'Tu as mis tes ethers en jeu via un service partagé.' : 'Tu as gardé tes ethers dans ton coffre.',
+    ],
+    links:[['ethereum.org/fr/history', 'https://ethereum.org/fr/history/'], ['annonce de la Fusion', 'https://blog.ethereum.org/2022/08/24/mainnet-merge-announcement'], ['99,95 % d’énergie en moins', 'https://blog.ethereum.org/2021/05/18/country-power-no-more']],
+    note:'La machine de Karim est inventée, comme lui. La Fusion, son seuil, son bloc et Shapella sont réels.',
+    teaser:'<b>Chapitre 7 · 2024 – 2025, dix ans.</b> Des blobs pour les L2, des comptes qui deviennent intelligents, une nouvelle venue au hackerspace… et un anniversaire.',
+    track:{ rig:CHS[6].rig, stake:CHS[6].stake } });
+}
+const TALK6 = {
+  lena(){ face(lena, player); return chat([['Lena', { 'c6-ttd':"Regarde sur ton portable. On y est presque.", 'c6-karim':"Va voir Karim. Je crois qu'il a besoin de quelqu'un." }[phase] || "Mon validateur tourne sur un petit ordinateur pas plus gros qu'un livre. Qui aurait cru ça, en 2015 ?"]]); },
+  karim(){ if (phase === 'c6-karim') return c6Karim(); face(karim, player); return chat([['Karim', phase === 'c6-ttd' ? "Je ne peux pas regarder. Dis-moi quand c'est fini." : "C'est calme, sans le bruit des ventilateurs. Trop calme."]]); },
+  laptop(){ if (phase === 'c6-ttd') return c6TTD(); return chat([[null, "Ton portable. Un bloc toutes les 12 secondes, réglé comme une horloge, proposé par des validateurs."]]); },
+  rig(){ return chat([[null, rig.on ? "La machine de Karim tourne pour la dernière fois. Karim n'arrive pas à la regarder." : "La machine de Karim, silencieuse. Les ventilateurs ne tournent plus."]]); },
+  board(){ return chat([[null, "Au tableau, un très long nombre : 58 750 000 000 000 000 000 000. Et en dessous : « PoW → PoS »."]]); },
+  window(){ return chat([[null, "Le jour se lève. Quelque part, des milliers de machines de minage viennent de s'arrêter en même temps."]]); },
+  cat(){ sfx('meow'); return chat([[null, "Wei cherche sa place chaude, contre la machine. Elle est froide. Il a l'air contrarié."]]); },
+};
+
+/* ---------- chapitre 7 : 2024 – 2025, dix ans ---------- */
+function showBlobs(){
+  return new Promise(res => {
+    modalCard(`<p class="eyebrow">Portable d'Inès · mercredi 13 mars 2024</p><h2>Envoyer 5 € à une amie</h2>
+      <p>Même transaction, trois endroits différents. Où l'envoyer ?</p>
+      <div class="rules">
+        <button class="rule radio act" data-n="l1">Ethereum directement <small>· cher quand le réseau est chargé</small></button>
+        <button class="rule radio act" data-n="l2">Un L2, un « rollup » qui regroupe les transactions et les publie sur Ethereum</button>
+      </div><div id="bOut"></div><div class="row" id="mRow"></div>
+      <p class="small">Depuis Dencun, les L2 publient leurs données dans des « blobs », bien moins chers. Chez plusieurs L2, les frais ont baissé de plus de 90 % dans les jours qui ont suivi.</p>`);
+    mcard.querySelectorAll('[data-n]').forEach(b => b.addEventListener('click', () => {
+      mcard.querySelectorAll('[data-n]').forEach(x => { x.disabled = true; x.setAttribute('aria-pressed', String(x === b)); }); sfx('ledger');
+      CHS[7].net = b.dataset.n;
+      $('bOut').innerHTML = b.dataset.n === 'l2' ? '<div class="verdict ok"><span class="pill">Envoyé</span>Quelques centimes de frais. La transaction est finalisée sur le L2, puis ses données partent dans un blob sur Ethereum.</div>'
+        : '<div class="verdict ko"><span class="pill">Envoyé</span>Ça marche, mais les frais coûtent presque autant que les 5 €. Pour de petits montants, un L2 est fait pour ça.</div>';
+      doneBtn('Continuer', res);
+    }));
+  });
+}
+function showGuardians(){
+  return new Promise(res => {
+    const G = [['Lena', true], ['Karim', true], ['Wei, le chat', false], ['Ton papier de 2015, rangé chez toi', true]];
+    modalCard(`<p class="eyebrow">Ton portable · mercredi 7 mai 2025 · Pectra</p><h2>Rendre ton compte intelligent</h2>
+      <p>Avec l'EIP-7702, ton compte de 2015 garde son adresse, mais peut déléguer son fonctionnement à un contrat. Par exemple : si tu perds ta clé, deux « gardiens » sur trois peuvent t'aider à en définir une nouvelle.</p>
+      <p><b>Choisis tes trois gardiens.</b></p>
+      <div class="rules">${G.map((g, i) => `<button class="rule" aria-pressed="false" data-g="${i}">${g[0]}</button>`).join('')}</div>
+      <div id="gOut"></div><div class="row" id="mRow"><button class="btn primary" id="mGo" disabled>Signer la délégation</button></div>`);
+    const picked = new Set();
+    mcard.querySelectorAll('[data-g]').forEach(b => b.addEventListener('click', () => {
+      const i = +b.dataset.g; sfx('select');
+      if (picked.has(i)) picked.delete(i); else if (picked.size < 3) picked.add(i);
+      mcard.querySelectorAll('[data-g]').forEach(x => x.setAttribute('aria-pressed', String(picked.has(+x.dataset.g))));
+      $('mGo').disabled = picked.size !== 3;
+    }));
+    $('mGo').addEventListener('click', () => {
+      const cat = picked.has(2); CHS[7].guardians = [...picked].map(i => G[i][0]); CHS[7].catGuard = cat; sfx(cat ? 'meow' : 'gift');
+      mcard.querySelectorAll('[data-g]').forEach(x => { x.disabled = true; });
+      $('gOut').innerHTML = cat ? '<div class="verdict ko"><span class="pill">Signé</span>Wei n’a pas de clé, ni de pouces. Il te reste deux vrais gardiens : il faudra qu’ils soient d’accord tous les deux.</div>'
+        : '<div class="verdict ok"><span class="pill">Signé</span>Ton compte a maintenant un filet de sécurité. Si tu perds ta clé, deux gardiens sur trois pourront t’aider.</div>';
+      doneBtn('Continuer', res);
+    });
+  });
+}
+async function chapter7(d){
+  await startChapter(7, d);
+  Object.assign(newbie, { x:1260, y:840, face:-1, walk:0, moving:false, target:null, vis:true, shirt:C.cyan, pants:C.peach, hair:C.ink2, style:'bun', skin:C.skin, gesture:false });
+  setDate('Mercredi 13 mars 2024 · 16:10');
+  await say(null, "Mars 2024. Sur la vieille machine de Karim, quelqu'un a posé un petit palmier en pot. Et ce soir, il y a une nouvelle au hackerspace.");
+  learn('dencun');
+  face(lena, player);
+  await say('Lena', "Je te présente Inès. Elle vient d'arriver, elle veut comprendre Ethereum. Je me suis dit que tu étais la bonne personne. Tu as tout vu depuis le début, toi.");
+  aim('Parle à Inès', 'newbie', 'c7-ines');
+}
+async function c7Ines(){
+  lock = true; busy = true; goal = null; face(newbie, player); face(player, newbie);
+  await say('Inès', "Salut ! J'ai essayé d'envoyer 5 € à une amie sur Ethereum, et les frais m'ont fait peur. C'est toujours aussi cher ?");
+  const c = await say('Inès', "Tu peux m'expliquer ?", ['Je te montre, sur ton portable', 'En 2017, c’était bien pire']);
+  if (c === 1) await say('Inès', "Pire que ça ? Raconte-moi plus tard. Montre-moi d'abord !");
+  closeDialog();
+  await showBlobs();
+  await say('Inès', CHS[7].net === 'l2' ? "Quelques centimes ! Et c'est quand même sécurisé par Ethereum ?" : "Ah oui, les frais piquent. Et sur un L2, c'est quand même sécurisé par Ethereum ?");
+  await say('Karim', "C'est tout l'idée. Aujourd'hui, Dencun a rendu ça beaucoup moins cher pour les L2. Le réseau principal devient la fondation, et on construit les étages au-dessus.");
+  await skip('Un an plus tard.', 'Mercredi 7 mai 2025 · 12:10', 'day', [[player, 800, 830, -1], [lena, 430, 800, 1], [karim, 1070, 792, -1], [newbie, 1260, 840, -1]]);
+  face(lena, player);
+  await say('Lena', "Pectra est passé ce matin. Tu te souviens de ton compte de 2015, celui que tu as créé le soir du lancement ?");
+  if (ch1.keep === 0) await say('Lena', "Celui dont le mot de passe était sur un post-it… Aujourd'hui, tu peux enfin lui donner un filet de sécurité.");
+  else if (ch1.keep === 1) await say('Lena', "Celui dont la clé traînait dans tes e-mails… Aujourd'hui, tu peux enfin lui donner un filet de sécurité.");
+  else await say('Lena', "Ton papier et ta clé USB ont tenu dix ans. Aujourd'hui, tu peux ajouter un filet de sécurité en plus.");
+  learn('pectra');
+  aim('Rends ton compte intelligent (portable)', 'laptop', 'c7-7702');
+}
+async function c7Guard(){
+  lock = true; busy = true; goal = null;
+  await showGuardians();
+  face(lena, player);
+  await say('Lena', CHS[7].catGuard ? "Tu as mis Wei comme gardien ? … Bon. Karim et moi, on fera le travail." : "Gardienne de ton compte. Je suis touchée. Je te promets de ne jamais le perdre, ce rôle.");
+  await skip('Le 30 juillet 2025.', 'Mercredi 30 juillet 2025 · 17:26', 'evening', [[player, 800, 830, -1], [lena, 560, 800, 1], [karim, 1040, 800, -1], [newbie, 1240, 840, -1]]);
+  await say(null, "30 juillet 2025, 17 h 26. Dix ans, jour pour jour, heure pour heure, après le premier bloc. Le hackerspace a sorti des pizzas. Les mêmes.");
+  learn('tenyears');
+  aim('Porte un toast avec Karim', 'karim', 'c7-toast');
+}
+async function c7Toast(){
+  lock = true; busy = true; goal = null; face(karim, player); face(lena, player);
+  await say('Karim', "Dix ans. On a fabriqué un bloc zéro, perdu une caisse commune, vu un fork, éteint ma machine…");
+  await say('Lena', "Et personne n'a jamais « appuyé sur le bouton ». Il n'y a toujours pas de bouton.");
+  if (ch2.chain) await say('Karim', ch2.chain === 'etc' ? "Toi et moi, on avait choisi la chaîne d'origine, en 2016. Elle tourne toujours, d'ailleurs." : "En 2016, toi et Lena, vous aviez choisi le fork. Moi non. Et on est toujours là, tous les trois.");
+  const c = await say('Inès', "Et vous, qu'est-ce que vous retenez de ces dix ans ?", ['Qu’il faut vérifier soi-même', 'Que des inconnus peuvent construire ensemble', 'Que rien n’est jamais fini']);
+  CHS[7].lesson = c;
+  await say('Lena', ["Vérifier soi-même. Le bloc zéro, le code de The DAO, le white paper, le contrat de PATATE… Tout revient à ça.", "Des milliers de gens qui ne se connaissent pas, et un réseau qui ne s'est jamais arrêté. Oui.", "Le prochain, Fusaka, est déjà en préparation. Il y a toujours une suite."][c]);
+  await say('Karim', "À la prochaine décennie.");
+  learn('fusaka');
+  await say(null, "Wei monte sur la vieille machine, se couche à côté du palmier, et s'endort. Quelque part, un nouveau bloc arrive. Puis un autre.");
+  endChapter(7, { eyebrow:'Chapitre 7 terminé · 2015 – 2025', title:'Dix ans, et pas de bouton',
+    you:[
+      CHS[7].net === 'l2' ? 'Tu as montré à Inès comment envoyer 5 € sur un L2, pour quelques centimes.' : 'Tu as montré à Inès pourquoi on envoie les petits montants sur un L2.',
+      `Tu as rendu ton compte de 2015 intelligent, avec pour gardiens : ${CHS[7].guardians.join(', ')}.`,
+      'Tu étais là le 30 juillet 2025, dix ans après le premier bloc.',
+    ],
+    links:[['ethereum.org/fr/history', 'https://ethereum.org/fr/history/'], ['EIP-4844', 'https://eips.ethereum.org/EIPS/eip-4844'], ['EIP-7702', 'https://eips.ethereum.org/EIPS/eip-7702']],
+    note:'Inès, Lena, Karim, Wei et le hackerspace sont inventés. Dencun, Pectra, Fusaka et leurs dates sont réels.',
+    journey:true, track:{ net:CHS[7].net, lesson:CHS[7].lesson } });
+}
+const TALK7 = {
+  newbie(){ if (phase === 'c7-ines') return c7Ines(); face(newbie, player); return chat([['Inès', phase === 'c7-toast' ? "Karim t'attend pour le toast !" : "Je lis tout ce que je peux. Lena m'a dit : « vérifie toujours toi-même ». C'est la règle numéro un, apparemment."]]); },
+  lena(){ face(lena, player); return chat([['Lena', { 'c7-ines':"Va dire bonjour à Inès. Elle est près de la vieille machine.", 'c7-7702':"Ton portable. Choisis bien tes gardiens.", 'c7-toast':"Karim a préparé un discours. Il va pleurer, je te préviens." }[phase] || "Dix ans. J'ai toujours mon fichier de prévente, tu sais. Sur trois clés USB."]]); },
+  karim(){ if (phase === 'c7-toast') return c7Toast(); face(karim, player); return chat([['Karim', "Je suis validateur, maintenant. Ou pas. Peu importe : je fais toujours tourner un nœud. Vieille habitude."]]); },
+  laptop(){ if (phase === 'c7-7702') return c7Guard(); return chat([[null, "Ton portable. Ton compte de 2015 est toujours là, à la même adresse."]]); },
+  rig(){ return chat([[null, "La vieille machine de Karim, éteinte depuis 2022. Un petit palmier pousse dessus. Wei dort souvent à côté."]]); },
+  board(){ return chat([[null, "Au tableau : « blobs → L2 », « EIP-7702 », et en grand : « 30.07.2015 → 30.07.2025 »."]]); },
+  window(){ return chat([[null, "Les toits de Paris, dix ans plus tard. Toujours des pigeons. Toujours aucun bouton."]]); },
+  cat(){ sfx('meow'); return chat([[null, "Wei a dix ans de plus. Il dort toujours là où c'est chaud. Désormais, c'est à côté du palmier."]]); },
+};
+const TALKS = { 2:TALK2, 3:TALK3, 4:TALK4, 5:TALK5, 6:TALK6, 7:TALK7 };
+const CHAPTERS = { 1:() => chapter1(), 2:d => chapter2(d), 3:d => chapter3(d), 4:d => chapter4(d), 5:d => chapter5(d), 6:d => chapter6(d), 7:d => chapter7(d) };
+
+/* ---------- fin de chapitre (générique) ---------- */
+function journeyLines(){
+  const L = [];
+  if (ch1.built) L.push(['2015', ch1.downloaded ? 'Bloc zéro fabriqué, après un faux fichier' : 'Bloc zéro fabriqué toi-même']);
+  if (ch2.chain) L.push(['2016', `${ch2.invested ? 'Ether dans The DAO' : 'Pas dans The DAO'} · ${ch2.chain === 'eth' ? 'avec le fork' : 'chaîne d’origine'}`]);
+  if (CHS[3].gas) L.push(['2017', `${CHS[3].flags}/4 signaux repérés · ${CHS[3].ico ? 'NUAGE acheté' : 'NUAGE évité'}`]);
+  if (CHS[4].vault) L.push(['2020', `Coffre de Lena ${CHS[4].vault === 'saved' ? 'sauvé' : 'liquidé'} · ${{ patate:'PATATE', uniswap:'400 UNI', rien:'rien touché' }[CHS[4].farm]}`]);
+  if (CHS[5].tip) L.push(['2021', `${CHS[5].nft ? 'Un pigeon NFT' : 'Pas de NFT'} · pourboire de ${CHS[5].tip} gwei`]);
+  if (CHS[6].rig) L.push(['2022', `${CHS[6].stake ? 'Ethers mis en jeu' : 'Ethers au coffre'} · la machine de Karim ${{ keep:'gardée', sell:'revendue', validator:'remplacée par un validateur' }[CHS[6].rig]}`]);
+  if (CHS[7].guardians) L.push(['2025', `Compte intelligent · gardiens : ${CHS[7].guardians.join(', ')}`]);
+  return L;
+}
+function endButtons(n){
+  const next = n < 7 ? [[`Chapitre ${n + 1} : ${ERAS[n][1]}`, () => CHAPTERS[n + 1](readSave()), true]] : [];
+  return next.concat([['Rester au hackerspace', () => { lock = false; }, !next.length], ...(n >= 7 ? [["Retour à L'Atrium", () => { location.href = '/'; }]] : [])]);
+}
+function mountButtons(n){
+  const row = $('endCard').querySelector('.row');
+  endButtons(n).forEach(([label, fn, primary]) => { const b = document.createElement('button'); b.className = 'btn' + (primary ? ' primary' : ''); b.textContent = label;
+    b.addEventListener('click', () => { $('end').hidden = true; busy = false; fn(); }); row.appendChild(b); });
+  $('end').hidden = false; row.firstChild.focus({ preventScroll:true }); sfx('end');
+}
+function endChapter(n, o){
+  closeDialog(); goal = null;
+  chapterDone = Math.max(chapterDone, n); phase = 'free'; setObjective(null);
+  const saved = writeSave(); track('Histoire chapitre fini', { chapitre:n, ...(o.track || {}) });
+  const truth = FACT_ORDERS[n].map(id => `<li><b>${FACTS[id].date}</b><span>${FACTS[id].text}</span></li>`).join('');
+  const jr = o.journey ? `<p class="endsec">Tes dix ans</p><ol class="truth">${journeyLines().map(([y, t]) => `<li><b>${y}</b><span>${t}</span></li>`).join('')}</ol>` : '';
+  $('endCard').innerHTML = `<p class="eyebrow">${o.eyebrow}</p><h2>${o.title}</h2>
+    <p class="endsec">Ce que tu as fait</p><ul class="recap">${o.you.map(r => `<li>${r}</li>`).join('')}</ul>${jr}
+    <p class="endsec">Ce qui s'est vraiment passé</p><ol class="truth">${truth}</ol>
+    <p class="hint">${o.note} ${o.links.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(' · ')}</p>
+    ${o.teaser ? `<p class="teaser">${o.teaser}</p>` : '<p class="teaser"><b>Fin de L’Atrium · histoire vraie.</b> L’histoire, elle, continue : le 3 décembre 2025, Fusaka. Et après, ce que les gens en feront.</p>'}
+    <div class="row"></div>${saved ? '<p class="hint">Progression sauvegardée sur cet appareil.</p>' : ''}`;
+  mountButtons(n);
+}
+
 /* ---------- sauvegarde ---------- */
 const SAVE_KEY = 'atrium.histoire.v1';
 function readSave(){ try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); return d && d.v === 1 ? d : null; } catch (e) { return null; } }
-function writeSave(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, addr, ch1:{ ...ch1 }, ch2:{ ...ch2 }, facts:facts.slice(), savedAt:Date.now() })); return true; } catch (e) { return false; } }
-function loadSave(d){ addr = d.addr || addr; Object.assign(ch1, d.ch1 || {}); Object.assign(ch2, d.ch2 || {}); facts.length = 0; facts.push(...(d.facts || [])); chapterDone = d.chapterDone || 0; }
+function writeSave(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, addr, ch1:{ ...ch1 }, ch2:{ ...ch2 }, ch3:{ ...CHS[3] }, ch4:{ ...CHS[4] }, ch5:{ ...CHS[5] }, ch6:{ ...CHS[6] }, ch7:{ ...CHS[7] }, facts:facts.slice(), savedAt:Date.now() })); return true; } catch (e) { return false; } }
+function loadSave(d){ addr = d.addr || addr; Object.assign(ch1, d.ch1 || {}); Object.assign(ch2, d.ch2 || {}); for (let n = 3; n <= 7; n++) Object.assign(CHS[n], d['ch' + n] || {}); facts.length = 0; facts.push(...(d.facts || [])); chapterDone = d.chapterDone || 0; }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
 function resumeFree(d){
   resetWorld();
   loadSave(d);
+  if (chapterDone >= 3){ chap = Math.min(chapterDone, 7); buildCache(); decor(chap); if (chap === 7) Object.assign(newbie, { x:1240, y:840, face:-1, walk:0, moving:false, target:null, vis:true, shirt:C.cyan, pants:C.peach, hair:C.ink2, style:'bun', skin:C.skin, gesture:false }); setDate(ERAS[chap - 1][0] + ' · ' + ERAS[chap - 1][1]); $('carnetBtn').hidden = false; renderPanel(); phase = 'free'; lock = false; busy = false; player.y = 846; player.x = 620; snapCam(); return; }
   if (chapterDone >= 2){ chap = 2; buildCache(); sky = 'day'; rig.on = true; cat.sleep = false; Object.assign(cat, { x:980, y:850 }); setDate('Mercredi 20 juillet 2016'); $('carnetBtn').hidden = false; renderPanel(); phase = 'free'; lock = false; busy = false; player.y = 846; player.x = 620; snapCam(); return; }
   chap = 1; buildCache();
   sky = 'dawn'; rig.on = true; cat.sleep = false; Object.assign(cat, { x:980, y:850 }); Object.assign(lena, { x:880, y:800 }); karim.face = -1;
@@ -973,7 +1581,8 @@ const talk = {
   coffee(){ return chat([[null, "Une machine à café qui a connu des jours meilleurs. Quelqu'un a scotché dessus : « Détartrée le 12/05. Peut-être. »"]]); },
   poster(){ return chat([[null, "Une affiche faite main : un losange, et en dessous, « FRONTIER ». Quelqu'un a ajouté au crayon : « pour développeurs. Vous êtes prévenus. »"]]); },
 };
-for (const k of Object.keys(talk)){ const f = talk[k]; talk[k] = () => (chap === 2 && TALK2[k]) ? TALK2[k]() : f(); }
+talk.newbie = () => {};
+for (const k of Object.keys(talk)){ const f = talk[k]; talk[k] = () => (TALKS[chap] && TALKS[chap][k]) ? TALKS[chap][k]() : f(); }
 const INTER = [
   { id:'lena', hit:() => [lena.x, lena.y - 85 * persp(lena.y), 60], appr:() => [lena.x + 92 * (player.x < lena.x ? -1 : 1), lena.y + 12] },
   { id:'karim', hit:() => [karim.x, karim.y - 85 * persp(karim.y), 60], appr:() => [karim.x - 92, karim.y + 14] },
@@ -981,6 +1590,7 @@ const INTER = [
   { id:'rig', hit:() => [1235, 660, 95], appr:() => [karim.x - 92, karim.y + 14] },
   { id:'cat', hit:() => [cat.x, cat.y - 24, 44], appr:() => [cat.x - 70, cat.y + 18] },
   { id:'sofa', hit:() => [222, 790, 120], appr:() => [380, 846] },
+  { id:'newbie', hit:() => newbie.vis ? [newbie.x, newbie.y - 85 * persp(newbie.y), 58] : [-999, -999, 0], appr:() => [newbie.x - 92, newbie.y + 12] },
   { id:'coffee', hit:() => [1440, 600, 70], appr:() => [1410, 730] },
   { id:'board', hit:() => [305, 265, 150], appr:null },
   { id:'poster', hit:() => [543, 225, 60], appr:null },
@@ -1028,7 +1638,7 @@ window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
 /* ---------- écran titre ---------- */
-const READY = 2; // chapitres jouables
+const READY = 7; // chapitres jouables
 function setupTitle(){
   const d = readSave(), done = d ? d.chapterDone : 0;
   $('eras').innerHTML = ERAS.map(([y, n], i) => {
@@ -1036,14 +1646,15 @@ function setupTitle(){
     const inner = `<b>${y}</b>${n}${i >= READY ? ' · bientôt' : i < done ? ' · rejouer' : ''}`;
     return i < done ? `<li class="${st}"><button type="button" data-era="${i + 1}">${inner}</button></li>` : `<li class="${st}">${inner}</li>`;
   }).join('');
-  if (done === 1){
-    $('titleEyebrow').textContent = 'Chapitre 2 · 2016';
-    $('titleLede').textContent = "Un an a passé. Au hackerspace, tout le monde ne parle plus que d'une chose : The DAO.";
-    $('startBtn').textContent = 'Continuer : chapitre 2';
+  const LEDE = { 1:"Un an a passé. Au hackerspace, tout le monde ne parle plus que d'une chose : The DAO.", 2:"2017. Tout le monde lance son jeton, et la caisse du hackerspace dort dans un portefeuille multisig.", 3:"2020. Le monde s'arrête, les marchés s'effondrent, et Lena a un coffre Maker.", 4:"2021. Des pigeons en NFT, et demain, une nouvelle façon de payer les frais.", 5:"2022. Un matin de septembre, la machine de Karim va s'arrêter pour de bon.", 6:"2024. Une nouvelle venue au hackerspace, et bientôt, dix ans." };
+  if (done >= 1 && done < 7){
+    $('titleEyebrow').textContent = `Chapitre ${done + 1} · ${ERAS[done][0]}`;
+    $('titleLede').textContent = LEDE[done];
+    $('startBtn').textContent = `Continuer : chapitre ${done + 1}`;
     $('newBtn').hidden = false;
-  } else if (done >= 2){
-    $('titleEyebrow').textContent = 'Chapitre 2 terminé';
-    $('titleLede').textContent = "Le chapitre 3, 2017 et la ruée des ICO, arrive bientôt. Tu peux rejouer un chapitre en le choisissant ci-dessus.";
+  } else if (done >= 7){
+    $('titleEyebrow').textContent = 'Les sept chapitres sont terminés';
+    $('titleLede').textContent = "Dix ans d'Ethereum, de la genèse à Pectra. Tu peux rejouer n'importe quel chapitre en le choisissant ci-dessus.";
     $('startBtn').textContent = 'Retourner au hackerspace';
     $('newBtn').hidden = false;
   }
@@ -1051,12 +1662,12 @@ function setupTitle(){
 $('eras').addEventListener('click', ev => {
   const b = ev.target.closest('[data-era]'); if (!b) return;
   window.Sound && window.Sound.start(); $('title').hidden = true;
-  if (b.dataset.era === '1') chapter1(); else chapter2(readSave());
+  CHAPTERS[+b.dataset.era](readSave());
 });
 $('startBtn').addEventListener('click', () => {
   window.Sound && window.Sound.start(); $('title').hidden = true;
   const d = readSave();
-  if (d && d.chapterDone === 1) chapter2(d); else if (d && d.chapterDone >= 2) resumeFree(d); else chapter1();
+  if (d && d.chapterDone >= 1 && d.chapterDone < 7) CHAPTERS[d.chapterDone + 1](d); else if (d && d.chapterDone >= 7) resumeFree(d); else chapter1();
 });
 $('newBtn').addEventListener('click', () => { window.Sound && window.Sound.start(); $('title').hidden = true; clearSave(); chapter1(); });
 setupTitle();
@@ -1103,6 +1714,7 @@ function render(){
     { y:karim.y, d:() => drawPerson(g, karim, time) },
     { y:cat.y, d:() => drawCat(g, cat, time) },
   ];
+  if (newbie.vis) list.push({ y:newbie.y, d:() => drawPerson(g, newbie, time) });
   if (player.y < H + 60 && !sleeping) list.push({ y:player.y, d:() => drawPerson(g, player, time) });
   list.sort((a, b) => a.y - b.y).forEach(o => o.d());
   if (!busy && !lock){
@@ -1113,12 +1725,14 @@ function render(){
     if (phase === 'c2-karim' || phase === 'c2-karim2') drawMarker(g, ...head(karim), time);
     if (phase === 'c2-lena') drawMarker(g, ...head(lena), time);
     if (phase === 'c2-drain' || phase === 'c2-fork') drawMarker(g, 572, 596, time);
+    if (goal === 'laptop') drawMarker(g, 572, 596, time);
+    else if (goal === 'lena' || goal === 'karim' || goal === 'newbie') drawMarker(g, ...head({ lena, karim, newbie }[goal]), time);
   }
   fx.forEach(f => f.draw(g, Math.min(1, f.t / f.dur)));
 }
 let last = performance.now();
 function frame(now){ const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); render(); requestAnimationFrame(frame); }
-if (DEBUG) window.histoire = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, chap, ch2:{ ...ch2 }, ch1:{ ...ch1 }, facts:facts.slice(), player:[Math.round(player.x), Math.round(player.y)], sky }), fast:v => { window.__fast = v; } };
+if (DEBUG) window.histoire = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, chap, goal, chs:JSON.parse(JSON.stringify(CHS)), ch2:{ ...ch2 }, ch1:{ ...ch1 }, facts:facts.slice(), player:[Math.round(player.x), Math.round(player.y)], sky }), fast:v => { window.__fast = v; } };
 resetWorld();
 resize();
 window.addEventListener('resize', resize);

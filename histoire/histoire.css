@@ -73,3 +73,6 @@
 .eras li:has(button):hover{background:var(--cyan)}
 .eras li button:focus-visible{outline:3px solid var(--peri);outline-offset:4px}
 .compact .code{font-size:12px;padding:8px 10px}
+.speaker[data-who="Inès"]{background:var(--cyan)}
+.rule small{color:var(--ink-2);font-weight:400}
+.tradelog li.ok{color:#2f8f7f;font-weight:700} .tradelog li.ko{color:#b53a5a;font-weight:700}

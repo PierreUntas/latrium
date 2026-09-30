@@ -155,6 +155,10 @@ Une deuxième version du jeu, dans la vraie histoire d'Ethereum : chaque chapitr
 
 - **Chapitre 1 · Frontier (30 juillet – 7 août 2015)** : un hackerspace à Paris le soir du lancement. Fabriquer le bloc zéro à partir de l'empreinte du bloc 1 028 201 du réseau de test, créer son compte et choisir où garder sa clé, voir le premier bloc, découvrir le plafond de gaz de 5 000, puis attendre la première transaction (bloc 46 147, plafond 21 003).
 - **Chapitre 2 · The DAO (mai – juillet 2016)** : Lena y croit, Karim relit le code. Repérer la faille de réentrance, choisir d'y mettre son ether ou non, voir The DAO se faire vider (17 juin, plus de 3,6 millions d'ETH), écouter les deux camps, puis choisir la chaîne de son nœud au bloc 1 920 000 (`--support-dao-fork` ou `--oppose-dao-fork`) : Ethereum ou Ethereum Classic.
-- À venir : 2017 ICO, 2020 DeFi, 2021 London, 2022 la Fusion, 2024 Dencun et Pectra.
+- **Chapitre 3 · 2017, la ruée** : le vol des multisigs Parity (19 juillet, 153 037 ETH), un white paper d'ICO inventé dont il faut repérer les signaux d'alerte, Byzantium (5 → 3 ETH), la caisse du hackerspace gelée avec 513 774 ETH (6 novembre), puis l'enchère du gaz en pleine folie CryptoKitties.
+- **Chapitre 4 · 2020, l'été de la DeFi** : sauver le coffre Maker de Lena pendant le Jeudi noir (197 $ → 89 $, liquidations à 0 DAI), COMP et la culture de rendement, le jeton inventé PATATE, les 400 UNI, le contrat de dépôt et la Beacon Chain.
+- **Chapitre 5 · 2021, London** : un NFT inventé la veille, puis l'EIP-1559 au bloc 12 965 000 : frais de base brûlés et pourboire.
+- **Chapitre 6 · 2022, la Fusion** : la difficulté totale atteint 58 750 000 000 000 000 000 000, la machine de Karim s'arrête au bloc 15 537 394, puis Shapella.
+- **Chapitre 7 · 2024 – 2025, dix ans** : expliquer les L2 et les blobs de Dencun à Inès, une nouvelle venue, rendre son compte de 2015 intelligent avec l'EIP-7702 (Pectra), et fêter les dix ans le 30 juillet 2025. La carte de fin récapitule tout le parcours.
 
 Fichiers : `histoire/index.html`, `histoire/histoire.js`, `histoire/histoire.css` (réutilise `src/style.css` et `src/audio.js`). Sauvegarde locale : `atrium.histoire.v1`. Test : ouvrir `histoire/index.html#debug` (expose `window.histoire`).
