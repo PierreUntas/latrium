@@ -77,6 +77,7 @@
       <p class="lede" id="titleLede">Les vrais jours d'Ethereum, vécus par des personnages inventés. Les dates, les blocs et les chiffres, eux, sont réels.</p>
       <ol class="eras" id="eras"></ol>
       <div class="row"><button class="btn primary" id="startBtn">Commencer</button><button class="btn" id="newBtn" hidden>Tout recommencer</button></div>
+      <button class="linkish-lang" id="langBtn" type="button">English</button>
       <p class="hint">Touche le sol pour marcher. Touche quelqu'un pour lui parler.</p>
     </div>
   </div>
@@ -86,6 +87,43 @@
 <p class="caption"><b>L'Atrium · histoire vraie</b> · 7 chapitres, de 2015 à 2025 · Souris ou doigt : touche le sol pour marcher · Clavier : flèches ou ZQSD, Espace pour parler, C pour le carnet</p>
 
 <script src="../src/audio.js"></script>
-<script src="histoire.js"></script>
+<script>
+/* langue : ?lang=en|fr > choix mémorisé (partagé avec L'Atrium) > langue du navigateur */
+(function () {
+  var l = null;
+  try { l = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+  if (l === 'fr' || l === 'en') { try { localStorage.setItem('atrium.lang', l); } catch (e) {} }
+  else {
+    try { l = localStorage.getItem('atrium.lang'); } catch (e) {}
+    if (l !== 'fr' && l !== 'en') { var n = (navigator.languages && navigator.languages[0]) || navigator.language || 'fr'; l = /^fr\b/i.test(n) ? 'fr' : 'en'; }
+  }
+  var $ = function (q) { return document.querySelector(q); };
+  var sw = $('#langBtn');
+  sw.textContent = l === 'en' ? 'Français' : 'English';
+  sw.setAttribute('lang', l === 'en' ? 'fr' : 'en');
+  sw.addEventListener('click', function () { try { localStorage.setItem('atrium.lang', l === 'en' ? 'fr' : 'en'); } catch (e) {} location.href = location.pathname + '?lang=' + (l === 'en' ? 'fr' : 'en'); });
+  if (l === 'en') {
+    document.documentElement.lang = 'en';
+    document.title = "L'Atrium · the true story";
+    var set = function (q, t) { var e = $(q); if (e) e.textContent = t; };
+    var attr = function (q, a, t) { var e = $(q); if (e) e.setAttribute(a, t); };
+    attr('#cv', 'aria-label', 'A Paris hackerspace in 2015: a big table with laptops, a mining rig, a sofa and a window over the rooftops');
+    set('#objDate', '30 July 2015');
+    attr('#soundBtn', 'aria-label', 'Mute');
+    attr('#carnetBtn', 'aria-label', 'Open your notebook'); set('#carnetBtn span', 'Notebook');
+    set('#toastHead', 'Real fact'); set('#toast .sub', 'Added to your notebook');
+    set('#panel h2', 'Notebook'); attr('#panelClose', 'aria-label', 'Close');
+    var h3 = document.querySelectorAll('#panel h3'); h3[0].textContent = 'Your account'; h3[1].textContent = 'What really happened';
+    $('#panel .muted').innerHTML = 'The characters are made up. The dates, block numbers and figures are real. Source: <a href="https://ethereum.org/en/history/" target="_blank" rel="noopener">ethereum.org/history</a>.';
+    set('#titleEyebrow', 'Chapter 1 · 30 July 2015');
+    set('#title h1 .h1sub', 'the true story');
+    set('#titleLede', "The real days of Ethereum, lived by made-up characters. The dates, blocks and figures are real.");
+    set('#startBtn', 'Start'); set('#newBtn', 'Start over');
+    set('#title .hint', 'Tap the floor to walk. Tap someone to talk to them.');
+    $('.caption').innerHTML = "<b>L'Atrium · the true story</b> · 7 chapters, from 2015 to 2025 · Mouse or finger: tap the floor to walk · Keyboard: arrows or WASD, Space to talk, C for the notebook";
+  }
+  document.write('<script src="' + (l === 'en' ? 'histoire.en.js' : 'histoire.js') + '"><\/script>');
+})();
+</script>
 </body>
 </html>

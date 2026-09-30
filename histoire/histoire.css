@@ -76,3 +76,5 @@
 .speaker[data-who="Inès"]{background:var(--cyan)}
 .rule small{color:var(--ink-2);font-weight:400}
 .tradelog li.ok{color:#2f8f7f;font-weight:700} .tradelog li.ko{color:#b53a5a;font-weight:700}
+.linkish-lang{align-self:flex-start;background:none;border:0;padding:0;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font:600 13px var(--f-body)}
+.linkish-lang:hover{color:var(--ink)}

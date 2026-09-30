@@ -161,4 +161,6 @@ Une deuxième version du jeu, dans la vraie histoire d'Ethereum : chaque chapitr
 - **Chapitre 6 · 2022, la Fusion** : la difficulté totale atteint 58 750 000 000 000 000 000 000, la machine de Karim s'arrête au bloc 15 537 394, puis Shapella.
 - **Chapitre 7 · 2024 – 2025, dix ans** : expliquer les L2 et les blobs de Dencun à Inès, une nouvelle venue, rendre son compte de 2015 intelligent avec l'EIP-7702 (Pectra), et fêter les dix ans le 30 juillet 2025. La carte de fin récapitule tout le parcours.
 
+**Version anglaise** : même choix de langue que L'Atrium (`?lang=en`, bouton sur l'écran titre, ou langue du navigateur). Le code anglais `histoire/histoire.en.js` est généré à partir du français : les traductions sont dans `histoire/i18n/en.json`. Après avoir modifié un texte du jeu, lance `python3 tools/histoire-en.py --check` pour voir ce qui manque, complète `en.json`, puis `python3 tools/histoire-en.py` pour régénérer.
+
 Fichiers : `histoire/index.html`, `histoire/histoire.js`, `histoire/histoire.css` (réutilise `src/style.css` et `src/audio.js`). Sauvegarde locale : `atrium.histoire.v1`. Test : ouvrir `histoire/index.html#debug` (expose `window.histoire`).

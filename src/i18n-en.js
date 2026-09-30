@@ -749,3 +749,7 @@ Object.assign(window.ATRIUM_EN, {
 "Lexique": "Lexicon"
 });
 Object.assign(window.ATRIUM_EN, {"{0} objet{1} dans ton coffre. Tout l’Atrium peut les voir.": "{0} item{1} in your chest. The whole Atrium can see them."});
+Object.assign(window.ATRIUM_EN, {
+  "· 10 chapitres · Souris ou doigt : touche le sol pour marcher · Clavier : flèches ou ZQSD, Espace pour parler ·": "· 10 chapters · Mouse or finger: tap the floor to walk · Keyboard: arrows or WASD, Space to talk ·",
+  "Nouveau : la version histoire vraie": "New: the true story version",
+});
