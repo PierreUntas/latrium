@@ -41,7 +41,18 @@ const FACTS = {
   rule:{ date:'Règle du protocole', title:'Un 1 024e à la fois', text:"À chaque bloc, le mineur peut déplacer le plafond de gaz d'au plus 1/1024 de sa valeur. Pour passer de 5 000 à 21 000, il faut au moins 1 470 blocs d'affilée, soit environ six heures." },
   first:{ date:'7 août 2015 · 03:30 UTC', title:'La première transaction', text:"Bloc 46 147 : le plafond atteint 21 003. La première transaction du réseau y entre, avec 21 000 unités de gaz." },
 };
-const FACT_ORDER = ['presale', 'genesis', 'launch', 'gas', 'rule', 'first'];
+Object.assign(FACTS, {
+  homestead:{ date:'14 mars 2016 · bloc 1 150 000', title:'Homestead', text:"Deuxième grande version d'Ethereum : plusieurs changements du protocole, et un changement réseau qui permet de faire de futures mises à jour." },
+  daosale:{ date:'30 avril – 28 mai 2016', title:'The DAO lève des fonds', text:"The DAO, un fonds géré par un contrat, collecte des ethers pendant 28 jours. En mai, elle a attiré près de 14 % de tous les ethers émis, auprès de plus de 11 000 investisseurs." },
+  hack:{ date:'17 juin 2016', title:'The DAO est vidée', text:"Une faille d'appel récursif est exploitée : plus de 3,6 millions d'ETH, environ un tiers des 11,5 millions de The DAO, partent vers une « DAO enfant »." },
+  delay:{ date:'17 juin 2016', title:'27 jours de répit', text:"Les ethers détournés restent bloqués environ 27 jours, la période de création de la DAO enfant. Le voleur ne peut rien retirer avant." },
+  softfork:{ date:'28 juin 2016', title:'Le soft fork tombe', text:"Une faille de déni de service est découverte dans le soft fork proposé pour geler les fonds. On recommande de ne pas l'activer." },
+  fork:{ date:'20 juillet 2016 · 13:20 UTC', title:'Bloc 1 920 000', text:"Le hard fork déplace environ 12 millions d'ETH des contrats de The DAO vers un contrat de récupération. Environ 85 % des mineurs le suivent." },
+  etc:{ date:'20 juillet 2016', title:'Ethereum Classic', text:"Une partie de la communauté reste sur la chaîne d'origine, non modifiée : Ethereum Classic (ETC). Au moment de la séparation, chaque solde existe sur les deux chaînes. Les deux existent toujours." },
+});
+const FACT_ORDER1 = ['presale', 'genesis', 'launch', 'gas', 'rule', 'first'];
+const FACT_ORDER2 = ['homestead', 'daosale', 'hack', 'delay', 'softfork', 'fork', 'etc'];
+const FACT_ORDER = FACT_ORDER1.concat(FACT_ORDER2);
 const ERAS = [['2015', 'Frontier'], ['2016', 'The DAO'], ['2017', 'La ruée des ICO'], ['2020', "L'été de la DeFi"], ['2021', 'London'], ['2022', 'La Fusion'], ['2024', 'Dencun, Pectra']];
 const KEEP = ["Le mot de passe sur un post-it, sous l'écran", 'Le fichier et le mot de passe dans un e-mail à moi-même', 'Le mot de passe sur papier chez moi, le fichier sur une clé USB'];
 const KEEP_SHORT = ['Post-it sous l’écran', 'E-mail à toi-même', 'Papier + clé USB, séparés'];
@@ -93,6 +104,7 @@ function drawStatic(g){
 function drawBoard(g){
   rr(g, 140, 150, 330, 230, 6); fs(g, C.paper, C.ink, 3);
   g.fillStyle = C.lav; g.fillRect(150, 380, 310, 8); g.strokeStyle = C.ink; g.lineWidth = 2; g.strokeRect(150, 380, 310, 8);
+  if (chap === 2) return drawBoard2(g);
   g.fillStyle = C.ink; g.font = '400 34px Gloock, Georgia, serif'; g.fillText('30 · 07 · 2015', 170, 200);
   // trois blocs reliés
   for (let i = 0; i < 3; i++){ const x = 176 + i * 92; g.strokeStyle = C.ink2; g.lineWidth = 2.2; g.strokeRect(x, 222, 54, 40); g.fillStyle = C.ink2; g.font = '600 18px "JetBrains Mono", monospace'; g.fillText(String(i), x + 21, 249);
@@ -100,6 +112,16 @@ function drawBoard(g){
   g.fillStyle = C.ink2; g.font = '600 19px "JetBrains Mono", monospace'; g.fillText('#1 028 201', 176, 305);
   g.beginPath(); g.ellipse(236, 298, 78, 20, -.04, 0, TAU); g.strokeStyle = hexA(C.peach, 1); g.lineWidth = 3; g.stroke();
   g.fillStyle = C.ink2; g.font = '600 16px "JetBrains Mono", monospace'; g.fillText('gas limit : 5 000 ?!', 176, 348); g.fillText('tx : 21 000', 348, 305);
+}
+function drawBoard2(g){
+  g.fillStyle = C.ink; g.font = '400 34px Gloock, Georgia, serif'; g.fillText('The DAO', 170, 200);
+  g.fillStyle = C.ink2; g.font = '600 16px "JetBrains Mono", monospace';
+  g.fillText('retirer() :', 176, 236); g.fillText('1. envoyer', 196, 260); g.fillText('2. solde = 0', 196, 284);
+  g.fillStyle = hexA('#d9607e', 1); g.font = '600 22px "JetBrains Mono", monospace'; g.fillText('?!', 340, 284);
+  g.beginPath(); g.moveTo(320, 250); g.quadraticCurveTo(352, 262, 322, 276); g.strokeStyle = hexA(C.peach, 1); g.lineWidth = 3; g.stroke();
+  g.fillStyle = C.ink2; g.font = '600 19px "JetBrains Mono", monospace'; g.fillText('#1 920 000', 176, 334);
+  g.beginPath(); g.ellipse(236, 327, 78, 20, -.04, 0, TAU); g.strokeStyle = hexA(C.peach, 1); g.lineWidth = 3; g.stroke();
+  g.fillStyle = C.ink2; g.font = '600 18px "JetBrains Mono", monospace'; g.fillText('ETH | ETC ?', 330, 334);
 }
 function drawPoster(g){
   rr(g, 500, 160, 86, 132, 4); fs(g, C.peri, C.ink, 2.5);
@@ -129,10 +151,11 @@ function drawWindow(g, t){
   const x = 640, y = 104, w = 380, h = 300;
   const grd = g.createLinearGradient(0, y, 0, y + h);
   if (sky === 'dawn'){ grd.addColorStop(0, '#c9d2f7'); grd.addColorStop(.55, '#e9e4fb'); grd.addColorStop(1, '#fbd9c0'); }
+  else if (sky === 'day'){ grd.addColorStop(0, '#9fdcea'); grd.addColorStop(.6, '#d6f2f4'); grd.addColorStop(1, '#f3f6fd'); }
   else { grd.addColorStop(0, '#aab6f3'); grd.addColorStop(.6, '#d9cff6'); grd.addColorStop(1, '#f7c8a6'); }
   g.fillStyle = grd; g.fillRect(x, y, w, h);
   // soleil bas
-  g.fillStyle = hexA(sky === 'dawn' ? '#fff3e2' : '#fde3c9', .95); g.beginPath(); g.arc(sky === 'dawn' ? x + 90 : x + w - 90, y + h - 70, 28, 0, TAU); g.fill();
+  g.fillStyle = hexA(sky === 'dawn' ? '#fff3e2' : sky === 'day' ? '#fffbe8' : '#fde3c9', .95); g.beginPath(); if (sky === 'day') g.arc(x + w - 80, y + 60, 26, 0, TAU); else g.arc(sky === 'dawn' ? x + 90 : x + w - 90, y + h - 70, 28, 0, TAU); g.fill();
   // toits de zinc et cheminées
   g.fillStyle = hexA(C.ink, .22);
   g.beginPath(); g.moveTo(x, y + h);
@@ -150,7 +173,7 @@ function drawWindow(g, t){
 function drawLamps(g, t){
   for (const x of [400, 800, 1200]){
     g.beginPath(); g.moveTo(x, 48); g.lineTo(x, 92); g.strokeStyle = C.ink; g.lineWidth = 2; g.stroke();
-    if (sky !== 'dawn'){ const r = 90 + (reduce ? 0 : Math.sin(t * 1.3 + x) * 3); const gr = g.createRadialGradient(x, 110, 5, x, 110, r); gr.addColorStop(0, hexA('#fff1dc', .8)); gr.addColorStop(1, hexA('#fff1dc', 0)); g.fillStyle = gr; g.beginPath(); g.arc(x, 110, r, 0, TAU); g.fill(); }
+    if (sky === 'evening'){ const r = 90 + (reduce ? 0 : Math.sin(t * 1.3 + x) * 3); const gr = g.createRadialGradient(x, 110, 5, x, 110, r); gr.addColorStop(0, hexA('#fff1dc', .8)); gr.addColorStop(1, hexA('#fff1dc', 0)); g.fillStyle = gr; g.beginPath(); g.arc(x, 110, r, 0, TAU); g.fill(); }
     poly(g, [[x - 10, 92], [x + 10, 92], [x + 26, 116], [x - 26, 116]]); fs(g, C.peach);
   }
 }
@@ -162,7 +185,7 @@ function laptop(g, x, y, t, mine){
     const w = 20 + ((Math.sin(i * 7.3 + x) + 1) * 26) + (reduce ? 0 : Math.sin(t * 2 + i) * 3);
     g.fillStyle = hexA(i === lines - 1 ? C.peach : C.cyan, .85); g.fillRect(x - 36, y - 52 + i * 9, w, 4);
   }
-  if (mine && (phase === 'genesis' || phase === 'node') && !busy){ const a = reduce ? .8 : .45 + Math.sin(t * 4) * .35; g.strokeStyle = hexA(C.peach, a); g.lineWidth = 5; g.strokeRect(x - 49, y - 65, 98, 70); }
+  if (mine && (phase === 'genesis' || phase === 'node' || phase === 'c2-drain' || phase === 'c2-fork') && !busy){ const a = reduce ? .8 : .45 + Math.sin(t * 4) * .35; g.strokeStyle = hexA(C.peach, a); g.lineWidth = 5; g.strokeRect(x - 49, y - 65, 98, 70); }
 }
 function drawDesk(g, t){
   g.strokeStyle = C.ink; g.lineWidth = 6; g.beginPath(); g.moveTo(284, 712); g.lineTo(284, 770); g.moveTo(776, 712); g.lineTo(776, 770); g.stroke();
@@ -290,7 +313,7 @@ function drawMarker(g, x, y, t){
 /* ---------- état ---------- */
 const player = {}, lena = {}, karim = {}, cat = {}, rig = { on:false, spin:0, flash:0 };
 let phase = 'title', lock = true, busy = false, time = 0, sky = 'evening', sleeping = false, chapterDone = 0, addr = '';
-const ch1 = {}; const facts = [];
+const ch1 = {}, ch2 = {}; const facts = []; let chap = 1;
 const fx = [], tweens = [];
 
 function newAddr(){ let s = '0x'; for (let i = 0; i < 40; i++) s += '0123456789abcdef'[Math.floor(Math.random() * 16)]; return s; }
@@ -300,6 +323,7 @@ function resetWorld(){
   Object.assign(karim, { x:1070, y:792, face:1, walk:0, moving:false, target:null, shirt:C.teal, pants:C.ink2, hair:C.ink, cap:C.violet, skin:C.skin, logo:true, gesture:false });
   Object.assign(cat, { x:1372, y:792, face:-1, sleep:true });
   Object.assign(rig, { on:false, spin:0, flash:0 });
+  Object.assign(ch2, { invested:false, spotted:null, chain:null, heard:0 });
   Object.assign(ch1, { downloaded:false, built:false, keep:null, keepChanged:false, eth:0, lenaEth:false, account:false });
   facts.length = 0; fx.length = 0; tweens.length = 0;
   sky = 'evening'; sleeping = false; addr = newAddr();
@@ -355,6 +379,11 @@ function renderPanel(){
     ['Clé et mot de passe', ch1.keep != null ? KEEP_SHORT[ch1.keep] : '—'],
     ['Ton bloc zéro', ch1.built ? (ch1.downloaded ? 'Fabriqué toi-même (après un faux fichier)' : 'Fabriqué toi-même') : '—'],
   ];
+  if (chap === 2 || ch2.chain){
+    rows[1][1] = ch2.invested ? (ch2.chain === 'eth' ? '1 ETH (à récupérer via le contrat de remboursement)' : ch2.chain === 'etc' ? '1 ETH placé dans The DAO, qui reste soumis à son code' : 'Jetons DAO (contre 1 ETH)') : (ch1.eth ? '1 ETH' : '0 ETH');
+    rows.push(['The DAO', ch2.invested ? 'Tu y as mis ton ether' : 'Tu n’y as pas touché']);
+    rows.push(['Chaîne suivie', ch2.chain === 'eth' ? 'Ethereum (avec le fork)' : ch2.chain === 'etc' ? 'Ethereum Classic (sans le fork)' : '—']);
+  }
   $('acct').innerHTML = rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
   const got = FACT_ORDER.filter(id => facts.includes(id));
   $('frise').innerHTML = got.length ? got.map(id => `<li><b>${FACTS[id].date}</b><strong>${FACTS[id].title}</strong>${FACTS[id].text}</li>`).join('') : '<li class="empty">Rien pour l’instant. Les faits réels s’ajoutent ici au fil du chapitre.</li>';
@@ -468,7 +497,7 @@ function fadeOut(){ $('fade').classList.remove('on'); return wait(reduce ? 100 :
 
 /* ---------- chapitre 1 : Frontier ---------- */
 async function chapter1(){
-  resetWorld(); phase = 'intro'; lock = true; busy = true;
+  resetWorld(); chap = 1; buildCache(); { const d = readSave(); chapterDone = d ? d.chapterDone : 0; } phase = 'intro'; lock = true; busy = true;
   setDate('Jeudi 30 juillet 2015 · 17:02'); track('Histoire lancée', { chapitre:1 });
   await wait(250);
   await walkTo(player, 800, 820, 220);
@@ -640,7 +669,7 @@ async function thaw(){
   await say('Karim', "Tu dis ça comme si rien ne pouvait mal tourner.");
   await say('Lena', "Rien ne peut mal tourner. C'est du code.");
   closeDialog();
-  chapterDone = 1; phase = 'free'; setObjective(null);
+  chapterDone = Math.max(chapterDone, 1); phase = 'free'; setObjective(null);
   const saved = writeSave();
   track('Histoire chapitre fini', { chapitre:1, telecharge:ch1.downloaded, cle:ch1.keep });
   showEnd(saved);
@@ -651,12 +680,223 @@ function showEnd(saved){
     ch1.downloaded ? 'Tu as d’abord téléchargé un bloc zéro tout prêt. Il ne correspondait à celui de personne : tu as fini par fabriquer le tien.' : 'Tu as fabriqué ton bloc zéro toi-même, et il correspondait à celui des autres.',
     keepTxt, 'Tu as reçu ton premier ether, une semaine après le lancement.',
   ];
-  const truth = FACT_ORDER.map(id => `<li><b>${FACTS[id].date}</b><span>${FACTS[id].text}</span></li>`).join('');
+  const truth = FACT_ORDER1.map(id => `<li><b>${FACTS[id].date}</b><span>${FACTS[id].text}</span></li>`).join('');
   $('endCard').innerHTML = `<p class="eyebrow">Chapitre 1 terminé · Frontier</p><h2>La semaine où tout a démarré</h2>
     <p class="endsec">Ce que tu as fait</p><ul class="recap">${you.map(r => `<li>${r}</li>`).join('')}</ul>
     <p class="endsec">Ce qui s'est vraiment passé</p><ol class="truth">${truth}</ol>
     <p class="hint">Lena, Karim, Wei et le hackerspace sont inventés. Les dates, les blocs, les empreintes et les chiffres sont réels : <a href="https://ethereum.org/fr/history/" target="_blank" rel="noopener">ethereum.org/fr/history</a> · <a href="https://etherscan.io/block/0" target="_blank" rel="noopener">bloc 0</a> · <a href="https://etherscan.io/block/46147" target="_blank" rel="noopener">bloc 46 147</a>.</p>
-    <p class="teaser"><b>Bientôt · Chapitre 2 · 2016, The DAO.</b> Un fonds d'investissement géré uniquement par du code, plus de 3,6 millions d'ethers siphonnés, et une question que personne n'avait prévue : a-t-on le droit de réécrire l'histoire ?</p>
+    <p class="teaser"><b>Chapitre 2 · 2016, The DAO.</b> Un fonds d'investissement géré uniquement par du code, plus de 3,6 millions d'ethers siphonnés, et une question que personne n'avait prévue : a-t-on le droit de réécrire l'histoire ?</p>
+    <div class="row"></div>${saved ? '<p class="hint">Progression sauvegardée sur cet appareil.</p>' : ''}`;
+  const row = $('endCard').querySelector('.row');
+  [['Chapitre 2 : The DAO', () => chapter2(readSave() || { chapterDone, addr, ch1:{ ...ch1 }, facts:facts.slice() }), true], ['Rester au hackerspace', () => { lock = false; }]].forEach(([label, fn, primary]) => {
+    const b = document.createElement('button'); b.className = 'btn' + (primary ? ' primary' : ''); b.textContent = label;
+    b.addEventListener('click', () => { $('end').hidden = true; busy = false; fn(); }); row.appendChild(b); });
+  $('end').hidden = false; row.firstChild.focus({ preventScroll:true }); sfx('end');
+}
+
+/* ---------- chapitre 2 : The DAO (mai – juillet 2016) ---------- */
+function showCode(){
+  return new Promise(res => {
+    const OPTS = ['Le solde est remis à zéro après l’envoi des ethers', 'Il n’y a pas de mot de passe', 'Le montant est mal calculé'];
+    mcard.className = 'card wide';
+    mcard.innerHTML = `<p class="eyebrow">Portable de Karim · version simplifiée</p><h2>Ce qui chiffonne Karim</h2>
+      <pre class="code">fonction retirer(qui) :
+  montant = solde[qui]
+  envoyer(montant, qui)
+  solde[qui] = 0</pre>
+      <p>Quand un contrat reçoit des ethers, il peut exécuter son propre code… y compris rappeler <code>retirer()</code> avant que la ligne suivante ne s'exécute.</p>
+      <p><b>Qu'est-ce qui cloche ?</b></p>
+      <div class="rules">${OPTS.map((o, i) => `<button class="rule radio" aria-pressed="false" data-o="${i}">${o}</button>`).join('')}</div>
+      <div id="cVerdict"></div><div class="row" id="cRow"></div>`;
+    modal.hidden = false; mcard.querySelector('.rule').focus({ preventScroll:true });
+    mcard.querySelectorAll('.rule').forEach(b => b.addEventListener('click', () => {
+      if ($('cRow').firstChild) return;
+      const ok = b.dataset.o === '0'; sfx(ok ? 'gift' : 'fail');
+      mcard.querySelectorAll('.rule').forEach(x => { x.setAttribute('aria-pressed', String(x === b)); x.disabled = true; });
+      $('cVerdict').innerHTML = `<div class="verdict ${ok ? 'ok' : 'ko'}"><span class="pill">${ok ? 'Bien vu' : 'Pas tout à fait'}</span>Le contrat envoie les ethers <b>avant</b> de mettre le solde à zéro. Un contrat malin peut rappeler <code>retirer()</code> pendant l'envoi, encore et encore : son solde n'a pas encore bougé. On appelle ça un appel récursif, ou « réentrance ».</div>`;
+      const c = document.createElement('button'); c.className = 'btn primary'; c.textContent = 'Continuer'; $('cRow').appendChild(c); c.focus({ preventScroll:true });
+      c.addEventListener('click', () => { closeModal(); res(ok); });
+    }));
+  });
+}
+function showDrain(){
+  return new Promise(res => {
+    const TOTAL = 11500000, TARGET = 3640000;
+    let child = 0, calls = 0, timer = null, ended = false;
+    mcard.className = 'card wide';
+    mcard.innerHTML = `<p class="eyebrow">Ton portable · vendredi 17 juin 2016</p><h2>Quelqu'un vide The DAO</h2>
+      <div class="counters" style="grid-template-columns:repeat(2,minmax(0,1fr))"><div class="pricey"><span>The DAO</span><b id="dDao"></b><small>ETH</small></div><div><span>« DAO enfant » de l'attaquant</span><b id="dChild"></b><small>ETH</small></div></div>
+      <ul class="tradelog" id="dLog"></ul>
+      <div class="row"><button class="btn primary" id="dStop">Arrêter ça</button></div>
+      <p class="small">Animation. Chiffres réels : plus de 3,6 millions d'ETH, environ un tiers des 11,5 millions de The DAO.</p>`;
+    modal.hidden = false; $('dStop').focus({ preventScroll:true });
+    const log = t => { const li = document.createElement('li'); li.textContent = t; const ul = $('dLog'); ul.appendChild(li); while (ul.children.length > 4) ul.firstChild.remove(); };
+    const draw = () => { $('dDao').textContent = fmt(Math.round((TOTAL - child) / 1000) * 1000); $('dChild').textContent = fmt(Math.round(child / 1000) * 1000); };
+    draw();
+    timer = setInterval(() => {
+      calls++; child = Math.min(TARGET, child + 52000 + (calls % 3) * 9000); sfx('pop');
+      if (calls % 9 === 0) log(`retirer() → retirer() → retirer()… appel n° ${calls}`);
+      if (child >= TARGET){ clearInterval(timer); ended = true; sfx('theft'); $('dChild').textContent = '3,6 M+'; $('dDao').textContent = '≈ 7,9 M';
+        log('Ça s’arrête. Plus de 3,6 millions d’ETH sont partis.'); learn('hack'); $('dStop').textContent = 'Continuer'; }
+      else draw();
+    }, DEBUG && window.__fast ? 5 : 110);
+    $('dStop').addEventListener('click', () => {
+      if (ended){ closeModal(); res(); return; }
+      sfx('fail'); log('Impossible. Personne ne peut arrêter un contrat : il fait ce que son code permet.');
+    });
+  });
+}
+async function chapter2(d){
+  resetWorld(); if (d) loadSave(d); chap = 2; buildCache();
+  Object.assign(ch2, { invested:false, spotted:null, chain:null, heard:0 });
+  sky = 'day'; rig.on = true; cat.sleep = true;
+  Object.assign(karim, { x:1070, y:792, face:1 }); Object.assign(lena, { x:430, y:800, face:1 });
+  phase = 'c2-intro'; lock = true; busy = true; snapCam();
+  setDate('Mardi 17 mai 2016 · 18:40'); track('Histoire lancée', { chapitre:2 });
+  $('carnetBtn').hidden = false; renderPanel();
+  await wait(250);
+  await walkTo(player, 800, 820, 220); player.face = -1;
+  await say(null, "Mai 2016. Au hackerspace, le canapé a changé de place. La machine à café, non. La machine de Karim tourne toujours.");
+  learn('homestead');
+  face(lena, player);
+  await say('Lena', "Tu tombes bien ! Tu as entendu parler de The DAO ? Un fonds d'investissement sans patron, sans bureau, sans banque. Juste un contrat sur Ethereum.");
+  await say('Lena', "Tu envoies des ethers au contrat, tu reçois des jetons DAO. Ensuite, les détenteurs votent pour financer des projets. Le code fait tout le reste.");
+  learn('daosale');
+  const c = await say('Lena', "Depuis le 30 avril, tout le monde y met ses ethers. Une part énorme de tous les ethers qui existent !", ['Qui vérifie le code ?', 'Et si ça tourne mal ?']);
+  if (c === 0) await say('Lena', "Des gens très sérieux l'ont relu. Et puis tout est public : n'importe qui peut le lire. S'il y avait un problème, quelqu'un l'aurait vu, non ?");
+  else await say('Lena', "Qu'est-ce qui pourrait mal tourner ? Pas d'humain pour partir avec la caisse. Juste des règles écrites, que tout le monde peut lire.");
+  if (ch1.keep === 0) await say('Lena', "Au fait… ton post-it est toujours sous ton écran. Je dis ça, je dis rien.");
+  await say('Lena', "Karim n'est pas convaincu, évidemment. Va le voir, il te montrera ce qui le chiffonne.");
+  setObjective('Demande à Karim ce qui le chiffonne'); phase = 'c2-karim'; free();
+}
+async function c2Karim(){
+  lock = true; busy = true; face(karim, player);
+  await say('Karim', "Lena veut que j'y mette mes ethers. Moi, je lis le code avant de confier mes ethers à quelqu'un. Même quand ce quelqu'un est un contrat.");
+  if (ch1.downloaded) await say('Karim', "Tu te souviens de ton faux bloc zéro ? Même idée : on vérifie avant de faire confiance. Regarde ce bout-là.");
+  else await say('Karim', "Regarde ce bout-là. Je l'ai simplifié, mais l'idée est la même.");
+  closeDialog();
+  ch2.spotted = await showCode();
+  await say('Karim', ch2.spotted ? "Voilà. Tu l'as vu en dix secondes. Des gens en parlent sur les forums depuis des jours, et l'argent continue d'affluer." : "C'est subtil, hein ? Des gens en parlent sur les forums depuis des jours, et l'argent continue d'affluer.");
+  const c = await say('Karim', "Et toi ? Tu y mets ton ether ?", ["J'y mets mon ether", 'Je le garde']);
+  ch2.invested = c === 0;
+  if (ch2.invested){
+    await say('Karim', ch2.spotted ? "Même après avoir vu ça ? Bon. C'est ton ether." : "C'est ton ether. Je te souhaite d'avoir raison.");
+    closeDialog();
+    term.open('Ton portable · terminal');
+    await term.cmd('envoyer 1 ETH → The DAO');
+    await wait(500); term.line('Transaction incluse.', 'ok'); term.line('Reçu : des jetons DAO, à ton adresse.', 'ok');
+    await term.buttons([['Continuer', true]]); closeModal();
+    face(lena, player); await say('Lena', "Bienvenue parmi les propriétaires de The DAO !");
+  } else await say('Karim', "Sage. On verra bien qui avait raison.");
+  renderPanel();
+  closeDialog(); await c2June();
+}
+async function c2June(){
+  await fadeTo('Un mois plus tard.');
+  setDate('Vendredi 17 juin 2016 · 10:05');
+  Object.assign(player, { x:640, y:820, face:1, target:null }); Object.assign(lena, { x:430, y:800, face:1 }); Object.assign(karim, { x:880, y:790, face:-1 });
+  snapCam(); await fadeOut();
+  karim.gesture = true;
+  await say('Karim', "Tu as vu ?! Quelqu'un est en train de vider The DAO. En ce moment même ! Regarde sur ton portable !");
+  setObjective('Regarde ce qui se passe (portable)'); phase = 'c2-drain'; free();
+}
+async function c2Drain(){
+  lock = true; busy = true;
+  await showDrain();
+  face(lena, player);
+  await say('Lena', ch2.invested ? "Nos ethers… Ton ether aussi. C'était censé être le code qui décide. Et le code a décidé." : "C'était censé être le code qui décide. Et le code a décidé.");
+  await say('Karim', "Envoyer d'abord, remettre le solde à zéro ensuite. Exactement ce qu'on a vu.");
+  await say('Karim', "Il y a quand même une bonne nouvelle : les ethers sont coincés dans une DAO enfant. Le voleur ne peut rien retirer avant environ 27 jours.");
+  learn('delay');
+  await say('Lena', "27 jours pour décider quoi faire.");
+  closeDialog();
+  await fadeTo('Le 20 juillet 2016.');
+  sky = 'day'; setDate('Mercredi 20 juillet 2016 · 15:05');
+  Object.assign(player, { x:800, y:840, face:-1, target:null }); Object.assign(lena, { x:520, y:810, face:1 }); Object.assign(karim, { x:1040, y:800, face:-1 }); cat.sleep = false; Object.assign(cat, { x:760, y:860, face:1 });
+  snapCam(); await fadeOut();
+  await say(null, "20 juillet 2016, en début d'après-midi. Le bloc 1 920 000 approche. Ce soir, il y aura peut-être deux Ethereum.");
+  await say('Karim', "Le soft fork, celui qui devait juste geler les ethers volés, est tombé à l'eau fin juin : quelqu'un y a trouvé une faille. Il ne reste que le hard fork.");
+  learn('softfork');
+  await say('Lena', "Au bloc 1 920 000, les nœuds qui acceptent le fork déplaceront les ethers de The DAO vers un contrat de remboursement. Chacun pourra récupérer ce qu'il a mis.");
+  await say('Karim', "Et ceux qui refusent resteront sur la chaîne d'origine. Celle où ce qui est écrit reste écrit.");
+  phase = 'c2-debate'; closeDialog();
+  await c2Debate();
+}
+async function c2Debate(){
+  lock = true; busy = true;
+  const said = new Set();
+  for (;;){
+    const opts = ['Lena, pourquoi forker ?', 'Karim, pourquoi refuser ?'];
+    const c = await say(null, "Lena et Karim se regardent. Chacun attend que tu poses ta question.", said.size >= 2 ? [...opts, 'J’ai assez entendu'] : opts);
+    if (c === 2) break;
+    said.add(c);
+    if (c === 0){ face(lena, player);
+      await say('Lena', "Parce que c'est un vol, tout simplement. Si on peut le réparer, pourquoi le laisser faire ? Une communauté a le droit de corriger une erreur aussi grosse.");
+      await say('Lena', "Et on ne touche qu'aux contrats de The DAO. Aucun autre solde ne bouge.");
+    } else { face(karim, player);
+      await say('Karim', "Parce que la promesse d'Ethereum, c'est que personne ne peut changer les règles après coup. Si on le fait une fois pour The DAO, qui décidera de la prochaine fois ?");
+      await say('Karim', "Le contrat a fait ce que son code disait. C'est dur, mais c'est ça, « le code fait loi ».");
+    }
+  }
+  ch2.heard = said.size;
+  face(lena, player);
+  await say('Lena', "Ton nœud, ton choix. Personne ne peut le faire à ta place. Ni Karim, ni moi.");
+  setObjective('Choisis quelle chaîne suit ton nœud (portable)'); phase = 'c2-fork'; free();
+}
+async function c2Fork(){
+  lock = true; busy = true;
+  term.open('Ton portable · terminal');
+  term.line('Geth 1.4.10 propose deux options. Ton nœud suivra la chaîne que tu choisis.', 'note');
+  term.extra('<p class="chatmsg"><b>--support-dao-fork</b> : au bloc 1 920 000, déplacer les ethers de The DAO vers le contrat de remboursement.<br><b>--oppose-dao-fork</b> : ne rien changer, rester sur la chaîne d’origine.</p>');
+  const c = await term.buttons([['geth --support-dao-fork', true], ['geth --oppose-dao-fork', true]]);
+  term.extra('');
+  ch2.chain = c === 0 ? 'eth' : 'etc';
+  await term.cmd(c === 0 ? 'geth --support-dao-fork' : 'geth --oppose-dao-fork');
+  const ctr = term.line('', 'big');
+  for (let n = 1919994; n <= 1920000; n++){ ctr.textContent = `Bloc ${fmt(n)}`; sfx('blip'); await wait(reduce ? 80 : 520); }
+  sfx('ledger'); setDate('Mercredi 20 juillet 2016 · 15:20');
+  term.line('Bloc 1 920 000 · 20 juillet 2016, 13:20:40 UTC', 'ok');
+  if (c === 0){ term.line("≈ 12 millions d'ETH déplacés des contrats de The DAO vers le contrat de récupération.", 'ok'); term.line('Ton nœud suit la chaîne modifiée : Ethereum.', 'dim'); }
+  else { term.line('Aucun changement. Ton nœud suit la chaîne d’origine : Ethereum Classic.', 'ok'); term.line("Les ethers de The DAO restent là où le code les a mis.", 'dim'); }
+  learn('fork');
+  term.line('À cet instant, chaque solde existe sur les deux chaînes. Ton ether aussi.', 'note');
+  learn('etc');
+  renderPanel();
+  await term.buttons([["Lever les yeux de l'écran", true]]);
+  closeModal();
+  await c2After();
+}
+async function c2After(){
+  const eth = ch2.chain === 'eth';
+  await say(null, "Le bloc 1 920 000 est passé. Dans la pièce, deux écrans ne montrent plus la même chaîne.");
+  face(karim, player);
+  if (eth) await say('Karim', "Tu es avec Lena, alors. Je ne t'en veux pas. Ma machine, elle, reste sur l'ancienne chaîne. On ne sera pas nombreux.");
+  else await say('Karim', "Bienvenue sur la chaîne d'origine. On ne sera pas nombreux, mais on sera là.");
+  face(lena, player);
+  await say('Lena', "Presque tous les mineurs sont passés du côté du fork. Mais Karim a raison sur un point : la chaîne d'origine ne va pas disparaître.");
+  if (ch2.invested) await say(eth ? 'Lena' : 'Karim', eth ? "Et tes jetons DAO : tu vas pouvoir récupérer ton ether dans le contrat de remboursement." : "Tes jetons DAO, sur cette chaîne… Rien n'a bougé. Ton ether reste dans The DAO, soumis à son code. Le code a parlé.");
+  await say('Lena', "Karim… on reste amis ?");
+  await say('Karim', "On a juste choisi deux histoires différentes. Toi et moi, on reste dans la même.");
+  closeDialog();
+  chapterDone = Math.max(chapterDone, 2); phase = 'free'; setObjective(null);
+  const saved = writeSave();
+  track('Histoire chapitre fini', { chapitre:2, investi:ch2.invested, faille:ch2.spotted, chaine:ch2.chain });
+  showEnd2(saved);
+}
+function showEnd2(saved){
+  const eth = ch2.chain === 'eth';
+  const you = [
+    ch2.spotted ? 'Tu as repéré la faille du code de The DAO avant qu’elle ne soit exploitée.' : 'La faille du code t’a échappé. Elle a échappé à beaucoup de monde.',
+    ch2.invested ? (eth ? 'Tu avais mis ton ether dans The DAO. Avec le fork, tu as pu le récupérer.' : 'Tu avais mis ton ether dans The DAO. Sur la chaîne d’origine, il est resté soumis à son code.') : 'Tu as gardé ton ether hors de The DAO.',
+    ch2.heard >= 2 ? 'Tu as écouté les deux camps avant de décider.' : 'Tu as décidé sans entendre les deux camps.',
+    eth ? 'Ton nœud a suivi le fork : tu es sur Ethereum, comme la grande majorité.' : 'Ton nœud a refusé le fork : tu es sur Ethereum Classic, avec la minorité qui voulait que rien ne change.',
+  ];
+  const truth = FACT_ORDER2.map(id => `<li><b>${FACTS[id].date}</b><span>${FACTS[id].text}</span></li>`).join('');
+  $('endCard').innerHTML = `<p class="eyebrow">Chapitre 2 terminé · The DAO</p><h2>L'été où la chaîne s'est séparée</h2>
+    <p class="endsec">Ce que tu as fait</p><ul class="recap">${you.map(r => `<li>${r}</li>`).join('')}</ul>
+    <p class="endsec">Ce qui s'est vraiment passé</p><ol class="truth">${truth}</ol>
+    <p class="hint">Il n'y a pas de bonne réponse : les deux chaînes existent toujours, et le débat entre « corriger une injustice » et « ne jamais réécrire l'histoire » n'est pas clos. Lena, Karim et Wei sont inventés, les faits sont réels : <a href="https://ethereum.org/fr/history/" target="_blank" rel="noopener">ethereum.org/fr/history</a> · <a href="https://blog.ethereum.org/2016/06/17/critical-update-re-dao-vulnerability" target="_blank" rel="noopener">alerte du 17 juin</a> · <a href="https://blog.ethereum.org/2016/07/20/hard-fork-completed" target="_blank" rel="noopener">fork du 20 juillet</a>.</p>
+    <p class="teaser"><b>Bientôt · Chapitre 3 · 2017, la ruée des ICO.</b> Tout le monde lance son jeton, des chats numériques bloquent le réseau, et un portefeuille gèle des centaines de milliers d'ethers d'un seul clic.</p>
     <div class="row"></div>${saved ? '<p class="hint">Progression sauvegardée sur cet appareil.</p>' : ''}`;
   const row = $('endCard').querySelector('.row');
   [['Rester au hackerspace', () => { lock = false; }, true], ["Retour à L'Atrium", () => { location.href = '/'; }]].forEach(([label, fn, primary]) => {
@@ -664,15 +904,42 @@ function showEnd(saved){
     b.addEventListener('click', () => { $('end').hidden = true; busy = false; fn(); }); row.appendChild(b); });
   $('end').hidden = false; row.firstChild.focus({ preventScroll:true }); sfx('end');
 }
+const TALK2 = {
+  lena(){
+    const L = { 'c2-karim':"Va voir Karim. Il va encore me dire que je suis trop confiante.", 'c2-drain':"Regarde sur ton portable. Je n'arrive pas à y croire.", 'c2-fork':"Ton nœud, ton choix. Personne ne peut le faire à ta place.",
+      free:ch2.chain === 'etc' ? "Tu as choisi l'autre chaîne. Ça ne change rien entre nous. Enfin, presque rien." : "Tu sais ce qui me fait peur, maintenant ? La prochaine fois qu'on voudra corriger quelque chose, on se souviendra qu'on l'a déjà fait." };
+    face(lena, player); return chat([['Lena', L[phase] || L.free]]);
+  },
+  karim(){
+    if (phase === 'c2-karim') return c2Karim();
+    const L = { 'c2-drain':"Ton portable ! Regarde !", 'c2-fork':"Moi, j'ai déjà choisi. Toi, c'est sur ton portable que ça se passe.",
+      free:ch2.chain === 'etc' ? "Ma machine mine sur la chaîne d'origine. Il y a de la place, crois-moi." : "Ma machine reste sur la chaîne d'origine. Il faut bien que quelqu'un la fasse tourner." };
+    face(karim, player); return chat([['Karim', L[phase] || L.free]]);
+  },
+  laptop(){
+    if (phase === 'c2-drain') return c2Drain();
+    if (phase === 'c2-fork') return c2Fork();
+    if (phase === 'c2-intro' || phase === 'c2-karim') return chat([[null, "Ton portable. Sur l'écran, des dizaines d'onglets ouverts sur The DAO."]]);
+    return chat([[null, ch2.chain === 'etc' ? "Ton portable. Ton nœud suit Ethereum Classic, la chaîne d'origine." : "Ton portable. Ton nœud suit Ethereum, la chaîne avec le fork."]]);
+  },
+  board(){ return chat([[null, "Au tableau, quelqu'un a écrit « retirer() : 1. envoyer, 2. solde = 0 » et ajouté « ?! » en rouge. En dessous : « #1 920 000 », et « ETH | ETC ? »."]]); },
+  window(){ return chat([[null, "Plein été sur les toits. Dehors, personne ne sait qu'une chaîne est en train de se couper en deux."]]); },
+  rig(){ return chat([[null, "La machine de Karim. Il a collé une étiquette dessus, écrite à la main : « code is law »."]]); },
+  sofa(){ return chat([[null, "Le canapé a changé de place, mais c'est toujours le même. Quelqu'un y a oublié un t-shirt « The DAO »."]]); },
+  cat(){ sfx('meow'); return chat([[null, "Wei ne sait pas ce qu'est un fork. Il a l'air parfaitement heureux."]]); },
+};
 
 /* ---------- sauvegarde ---------- */
 const SAVE_KEY = 'atrium.histoire.v1';
 function readSave(){ try { const d = JSON.parse(localStorage.getItem(SAVE_KEY)); return d && d.v === 1 ? d : null; } catch (e) { return null; } }
-function writeSave(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, addr, ch1:{ ...ch1 }, facts:facts.slice(), savedAt:Date.now() })); return true; } catch (e) { return false; } }
+function writeSave(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify({ v:1, chapterDone, addr, ch1:{ ...ch1 }, ch2:{ ...ch2 }, facts:facts.slice(), savedAt:Date.now() })); return true; } catch (e) { return false; } }
+function loadSave(d){ addr = d.addr || addr; Object.assign(ch1, d.ch1 || {}); Object.assign(ch2, d.ch2 || {}); facts.length = 0; facts.push(...(d.facts || [])); chapterDone = d.chapterDone || 0; }
 function clearSave(){ try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
 function resumeFree(d){
   resetWorld();
-  addr = d.addr || addr; Object.assign(ch1, d.ch1 || {}); facts.push(...(d.facts || [])); chapterDone = d.chapterDone;
+  loadSave(d);
+  if (chapterDone >= 2){ chap = 2; buildCache(); sky = 'day'; rig.on = true; cat.sleep = false; Object.assign(cat, { x:980, y:850 }); setDate('Mercredi 20 juillet 2016'); $('carnetBtn').hidden = false; renderPanel(); phase = 'free'; lock = false; busy = false; player.y = 846; player.x = 620; snapCam(); return; }
+  chap = 1; buildCache();
   sky = 'dawn'; rig.on = true; cat.sleep = false; Object.assign(cat, { x:980, y:850 }); Object.assign(lena, { x:880, y:800 }); karim.face = -1;
   player.y = 846; player.x = 520;
   setDate('Vendredi 7 août 2015'); $('carnetBtn').hidden = false; renderPanel();
@@ -706,6 +973,7 @@ const talk = {
   coffee(){ return chat([[null, "Une machine à café qui a connu des jours meilleurs. Quelqu'un a scotché dessus : « Détartrée le 12/05. Peut-être. »"]]); },
   poster(){ return chat([[null, "Une affiche faite main : un losange, et en dessous, « FRONTIER ». Quelqu'un a ajouté au crayon : « pour développeurs. Vous êtes prévenus. »"]]); },
 };
+for (const k of Object.keys(talk)){ const f = talk[k]; talk[k] = () => (chap === 2 && TALK2[k]) ? TALK2[k]() : f(); }
 const INTER = [
   { id:'lena', hit:() => [lena.x, lena.y - 85 * persp(lena.y), 60], appr:() => [lena.x + 92 * (player.x < lena.x ? -1 : 1), lena.y + 12] },
   { id:'karim', hit:() => [karim.x, karim.y - 85 * persp(karim.y), 60], appr:() => [karim.x - 92, karim.y + 14] },
@@ -760,20 +1028,35 @@ window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
 window.addEventListener('blur', () => keys.clear());
 
 /* ---------- écran titre ---------- */
+const READY = 2; // chapitres jouables
 function setupTitle(){
-  const d = readSave(), done = d && d.chapterDone >= 1;
-  $('eras').innerHTML = ERAS.map(([y, n], i) => `<li class="${i === 0 ? (done ? 'done' : 'now') : ''}"><b>${y}</b>${n}${i > 0 ? ' · bientôt' : ''}</li>`).join('');
-  if (done){
-    $('titleEyebrow').textContent = 'Chapitre 1 terminé';
-    $('titleLede').textContent = "Le chapitre 2, 2016 et The DAO, arrive bientôt. En attendant, le hackerspace est toujours là, et ton premier ether aussi.";
+  const d = readSave(), done = d ? d.chapterDone : 0;
+  $('eras').innerHTML = ERAS.map(([y, n], i) => {
+    const st = i < done ? 'done' : i === done && i < READY ? 'now' : '';
+    const inner = `<b>${y}</b>${n}${i >= READY ? ' · bientôt' : i < done ? ' · rejouer' : ''}`;
+    return i < done ? `<li class="${st}"><button type="button" data-era="${i + 1}">${inner}</button></li>` : `<li class="${st}">${inner}</li>`;
+  }).join('');
+  if (done === 1){
+    $('titleEyebrow').textContent = 'Chapitre 2 · 2016';
+    $('titleLede').textContent = "Un an a passé. Au hackerspace, tout le monde ne parle plus que d'une chose : The DAO.";
+    $('startBtn').textContent = 'Continuer : chapitre 2';
+    $('newBtn').hidden = false;
+  } else if (done >= 2){
+    $('titleEyebrow').textContent = 'Chapitre 2 terminé';
+    $('titleLede').textContent = "Le chapitre 3, 2017 et la ruée des ICO, arrive bientôt. Tu peux rejouer un chapitre en le choisissant ci-dessus.";
     $('startBtn').textContent = 'Retourner au hackerspace';
     $('newBtn').hidden = false;
   }
 }
+$('eras').addEventListener('click', ev => {
+  const b = ev.target.closest('[data-era]'); if (!b) return;
+  window.Sound && window.Sound.start(); $('title').hidden = true;
+  if (b.dataset.era === '1') chapter1(); else chapter2(readSave());
+});
 $('startBtn').addEventListener('click', () => {
   window.Sound && window.Sound.start(); $('title').hidden = true;
   const d = readSave();
-  if (d && d.chapterDone >= 1) resumeFree(d); else chapter1();
+  if (d && d.chapterDone === 1) chapter2(d); else if (d && d.chapterDone >= 2) resumeFree(d); else chapter1();
 });
 $('newBtn').addEventListener('click', () => { window.Sound && window.Sound.start(); $('title').hidden = true; clearSave(); chapter1(); });
 setupTitle();
@@ -827,12 +1110,15 @@ function render(){
     if (phase === 'karim' || phase === 'thaw') drawMarker(g, ...head(karim), time);
     if (phase === 'genesis' || phase === 'node') drawMarker(g, 572, 596, time);
     if (phase === 'sleep') drawMarker(g, 222, 712, time);
+    if (phase === 'c2-karim' || phase === 'c2-karim2') drawMarker(g, ...head(karim), time);
+    if (phase === 'c2-lena') drawMarker(g, ...head(lena), time);
+    if (phase === 'c2-drain' || phase === 'c2-fork') drawMarker(g, 572, 596, time);
   }
   fx.forEach(f => f.draw(g, Math.min(1, f.t / f.dur)));
 }
 let last = performance.now();
 function frame(now){ const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); render(); requestAnimationFrame(frame); }
-if (DEBUG) window.histoire = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, ch1:{ ...ch1 }, facts:facts.slice(), player:[Math.round(player.x), Math.round(player.y)], sky }), fast:v => { window.__fast = v; } };
+if (DEBUG) window.histoire = { interact:id => interact(INTER.find(i => i.id === id)), state:() => ({ phase, lock, busy, chapterDone, chap, ch2:{ ...ch2 }, ch1:{ ...ch1 }, facts:facts.slice(), player:[Math.round(player.x), Math.round(player.y)], sky }), fast:v => { window.__fast = v; } };
 resetWorld();
 resize();
 window.addEventListener('resize', resize);

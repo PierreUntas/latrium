@@ -154,6 +154,7 @@ Ouvrir `index.html#debug` expose `window.atrium` dans la console : `state()`, `i
 Une deuxième version du jeu, dans la vraie histoire d'Ethereum : chaque chapitre est une vraie époque, vécue par des personnages inventés. Les dates, numéros de bloc, empreintes et chiffres sont réels et vérifiés (ethereum.org/fr/history, etherscan).
 
 - **Chapitre 1 · Frontier (30 juillet – 7 août 2015)** : un hackerspace à Paris le soir du lancement. Fabriquer le bloc zéro à partir de l'empreinte du bloc 1 028 201 du réseau de test, créer son compte et choisir où garder sa clé, voir le premier bloc, découvrir le plafond de gaz de 5 000, puis attendre la première transaction (bloc 46 147, plafond 21 003).
-- À venir : 2016 The DAO, 2017 ICO, 2020 DeFi, 2021 London, 2022 la Fusion, 2024 Dencun et Pectra.
+- **Chapitre 2 · The DAO (mai – juillet 2016)** : Lena y croit, Karim relit le code. Repérer la faille de réentrance, choisir d'y mettre son ether ou non, voir The DAO se faire vider (17 juin, plus de 3,6 millions d'ETH), écouter les deux camps, puis choisir la chaîne de son nœud au bloc 1 920 000 (`--support-dao-fork` ou `--oppose-dao-fork`) : Ethereum ou Ethereum Classic.
+- À venir : 2017 ICO, 2020 DeFi, 2021 London, 2022 la Fusion, 2024 Dencun et Pectra.
 
 Fichiers : `histoire/index.html`, `histoire/histoire.js`, `histoire/histoire.css` (réutilise `src/style.css` et `src/audio.js`). Sauvegarde locale : `atrium.histoire.v1`. Test : ouvrir `histoire/index.html#debug` (expose `window.histoire`).

@@ -65,3 +65,11 @@
 .compact .fade{font-size:24px}
 .compact .truth li{font-size:12px}
 @media (prefers-reduced-motion: reduce){ .fade{transition:none} }
+
+/* chapitre 2 */
+.code{margin:0;background:var(--ink);color:var(--cyan);font:14px/1.6 var(--f-mono);border-radius:8px;padding:12px 14px;white-space:pre-wrap}
+.card code{font:600 13px var(--f-mono);background:var(--mist);border-radius:4px;padding:0 4px}
+.eras li button{all:unset;cursor:pointer;display:flex;flex-direction:column}
+.eras li:has(button):hover{background:var(--cyan)}
+.eras li button:focus-visible{outline:3px solid var(--peri);outline-offset:4px}
+.compact .code{font-size:12px;padding:8px 10px}
