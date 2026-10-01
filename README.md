@@ -167,7 +167,7 @@ Fichiers : `histoire/index.html`, `histoire/histoire.js`, `histoire/histoire.css
 
 ## Organisation du site
 
-- `/` : le portfolio de Pierre Untas, à visiter dans le hall de L'Atrium (`index.html`, page autonome qui reprend le moteur de dessin et la musique du jeu). Pierre se présente dès l'entrée, et chaque vitrine présente un projet (Mona Editions, Secib & Claude, Mines d'Éther, Decentralized Cloud Storage, L'Atrium).
+- `/` : le portfolio de Pierre Untas, à visiter dans le hall de L'Atrium (`index.html`, page autonome qui reprend le moteur de dessin et la musique du jeu). Pierre se présente dès l'entrée, et chaque vitrine présente un projet (Mona Editions, Secret Pro, Mines d'Éther, Decentralized Cloud Storage, L'Atrium).
 - `/en/` : la version anglaise du portfolio (`en/index.html`), générée par `python3 tools/portfolio-en.py` à partir de `index.html`. Après chaque modification du portfolio, relancer ce script. La page `/` envoie vers `/en/` les navigateurs non francophones, sauf si le visiteur a choisi le français (`?lang=fr`, choix mémorisé avec celui du jeu).
 - Images de partage du portfolio : `og-portfolio.jpg` et `og-portfolio-en.jpg`, générées par `node tools/make-og-portfolio.js`.
 - `/game/` : le jeu L'Atrium (`game/index.html`, qui charge `src/`).

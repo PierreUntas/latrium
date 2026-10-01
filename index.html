@@ -608,7 +608,7 @@ const P = {
     body:'Dix chapitres dans ce hall : son premier coffre, les arnaques, les contrats, les validateurs, les frais, les ponts. En français et en anglais.',
     facts:['Moteur maison en Canvas 2D, musique générée en Web Audio', 'Sauvegarde locale, carnet du joueur, version anglaise complète', 'Tests de bout en bout avec Playwright'],
     tags:['JavaScript', 'Canvas 2D', 'Web Audio', 'i18n'], links:[['Jouer à L’Atrium', 'https://www.pierreuntas.com/game/'], ['Code', GH + 'latrium']] },
-  secib:{ kind:'Application de bureau · développée avec l’IA', col:C.peach, title:'Secib & Claude', short:'Interroger Claude sur les pièces d’un dossier d’avocat, sans jamais envoyer de données confidentielles en clair.',
+  secib:{ kind:'Application de bureau · confidentialité', col:C.peach, title:'Secret Pro', short:'Interroger Claude sur les pièces d’un dossier d’avocat, sans jamais envoyer de données confidentielles en clair.',
     body:'Une application de bureau pour un cabinet d’avocats : on choisit un dossier client dans le logiciel métier Secib, on coche des pièces, puis on demande à Claude un résumé, une chronologie ou des informations précises. Comme le demande le guide déontologique du CNB, les noms, adresses ou IBAN sont pseudonymisés sur l’ordinateur avant tout envoi, avec un écran de revue.',
     facts:['Back-end en Rust (Tauri), interface en React et TypeScript', 'Module de pseudonymisation isolé : 11 catégories, IBAN et SIREN validés par clé, table de correspondance impossible à envoyer ou à écrire sur disque (garanti par un test de compilation)', 'Client HTTP pour l’API Secib : authentification, limite de concurrence, reprises avec backoff, testé contre un serveur simulé', 'Clé API chiffrée dans le trousseau système, journal local des envois'],
     tags:['Rust', 'Tauri', 'React', 'TypeScript', 'API Claude'], links:[], status:'Code privé · démo sur demande' },
@@ -821,7 +821,7 @@ async function talkPierre(){
     const c = await say('Pierre', intro ? 'Salut, moi c’est Pierre, développeur blockchain et full-stack. Chaque vitrine garde un de mes projets, et le grand cristal, c’est L’Atrium : mon jeu pour découvrir Ethereum.' : 'Qu’est-ce qui t’intéresse ?', ['Ton parcours', 'Tes projets', 'Te contacter', 'Je visite']);
     intro = false;
     if (c === 0){ showPath(); await say('Pierre', 'Sept ans à la tête d’une marque de mode, trois ans de full-stack en entreprise, et aujourd’hui la blockchain. Tout est dans la fiche.'); }
-    else if (c === 1){ showBook(); await say('Pierre', 'Commence par Mona Editions, juste là : c’est celui dont je suis le plus fier. Il tourne en production sur Base. Et va voir Secib & Claude, à droite.'); break; }
+    else if (c === 1){ showBook(); await say('Pierre', 'Commence par Mona Editions, juste là : c’est celui dont je suis le plus fier. Il tourne en production sur Base. Et va voir Secret Pro, à droite.'); break; }
     else if (c === 2){ showContact(); await say('Pierre', 'Un e-mail, un appel ou un message sur LinkedIn : je réponds vite. GitHub pour le code.'); }
     else break;
   }
@@ -837,7 +837,7 @@ const AFTER = {
   mona:[['Pierre', 'Mona Editions, c’est mon projet de fin de formation chez Alyra. Il est en production sur Base, avec un audit et 100 % de couverture de tests.']],
 
 
-  secib:[['Pierre', 'Celui-là, je l’ai développé entièrement avec l’IA, pour une avocate. Mon travail, c’était de savoir quoi construire, et de garantir qu’aucun nom de client ne parte en clair.']],
+  secib:[['Pierre', 'Celui-là, je l’ai construit pour une avocate. Le plus délicat : garantir qu’aucun nom de client ne parte en clair. Tout est pseudonymisé sur l’ordinateur avant l’envoi.']],
   mines:[['Pierre', 'Mines d’Éther, je l’ai construit avec l’IA. La suite : inscrire les parcelles et les objets uniques en smart contracts. Le serveur en est déjà la source de vérité.']],
 };
 async function interact(it){

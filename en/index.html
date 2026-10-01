@@ -608,7 +608,7 @@ const P = {
     body:'Ten chapters in this hall: your first vault, scams, contracts, validators, fees, bridges. In French and English.',
     facts:['Custom Canvas 2D engine, music generated with Web Audio', 'Local save, player notebook, full English version', 'End-to-end tests with Playwright'],
     tags:['JavaScript', 'Canvas 2D', 'Web Audio', 'i18n'], links:[['Play L’Atrium', 'https://www.pierreuntas.com/game/?lang=en'], ['Code', GH + 'latrium']] },
-  secib:{ kind:'Desktop app · built with AI', col:C.peach, title:'Secib & Claude', short:'Ask Claude about the documents in a law firm’s case file, without ever sending confidential data in the clear.',
+  secib:{ kind:'Desktop app · privacy', col:C.peach, title:'Secret Pro', short:'Ask Claude about the documents in a law firm’s case file, without ever sending confidential data in the clear.',
     body:'A desktop app for a law firm: pick a client case in Secib, the firm’s practice management software, tick some documents, then ask Claude for a summary, a timeline or specific details. As the French bar’s ethics guidance requires, names, addresses and IBANs are pseudonymised on the computer before anything is sent, with a review screen.',
     facts:['Rust back end (Tauri), React and TypeScript interface', 'Isolated pseudonymisation module: 11 categories, IBAN and SIREN checked by checksum, a mapping table that can never be sent or written to disk (enforced by a compile-time test)', 'HTTP client for the Secib API: authentication, concurrency limit, retries with backoff, tested against a mock server', 'API key encrypted in the system keychain, local log of everything sent'],
     tags:['Rust', 'Tauri', 'React', 'TypeScript', 'API Claude'], links:[], status:'Private code · demo on request' },
@@ -821,7 +821,7 @@ async function talkPierre(){
     const c = await say('Pierre', intro ? 'Hi, I’m Pierre, a blockchain and full-stack developer. Each display case holds one of my projects, and the big crystal is L’Atrium: my game for discovering Ethereum.' : 'What would you like to know?', ['Your background', 'Your projects', 'Contact you', 'I’ll look around']);
     intro = false;
     if (c === 0){ showPath(); await say('Pierre', 'Seven years running a fashion brand, three years of full-stack in industry, and now blockchain. It’s all on the card.'); }
-    else if (c === 1){ showBook(); await say('Pierre', 'Start with Mona Editions, right there: it’s the one I’m proudest of. It’s live on Base. And take a look at Secib & Claude, on the right.'); break; }
+    else if (c === 1){ showBook(); await say('Pierre', 'Start with Mona Editions, right there: it’s the one I’m proudest of. It’s live on Base. And take a look at Secret Pro, on the right.'); break; }
     else if (c === 2){ showContact(); await say('Pierre', 'Email, call or message me on LinkedIn: I reply quickly. GitHub for the code.'); }
     else break;
   }
@@ -837,7 +837,7 @@ const AFTER = {
   mona:[['Pierre', 'Mona Editions was my final project at Alyra. It’s live on Base, audited, with 100% test coverage.']],
 
 
-  secib:[['Pierre', 'I built this one entirely with AI, for a lawyer. My job was knowing what to build, and making sure no client name ever leaves in the clear.']],
+  secib:[['Pierre', 'I built this one for a lawyer. The tricky part: making sure no client name ever leaves in the clear. Everything is pseudonymised on the computer before it’s sent.']],
   mines:[['Pierre', 'I built Mines d’Éther with AI. Next: putting land plots and unique items into smart contracts. The server is already the source of truth.']],
 };
 async function interact(it){
