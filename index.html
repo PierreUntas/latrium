@@ -825,7 +825,8 @@ function showPath(){
 function showContact(){
   open = 'pierre';
   sheet(`<p class="eyebrow">Contact</p><h3>Écris-moi</h3><p>Pour une mission, un poste en remote, ou simplement parler d’Ethereum.</p>
-    <div class="links" style="margin-top:0"><a class="btn primary small" href="https://www.linkedin.com/in/pierre-untas" target="_blank" rel="noopener">LinkedIn ↗</a><a class="btn small" href="https://github.com/PierreUntas" target="_blank" rel="noopener">GitHub ↗</a>
+    <ul class="facts" style="list-style:none;padding:0"><li><b>E-mail</b> · <a href="mailto:pierre.untas@gmail.com">pierre.untas@gmail.com</a></li><li><b>Téléphone</b> · <a href="tel:+33642480357">+33 6 42 48 03 57</a></li></ul>
+    <div class="links" style="margin-top:12px"><a class="btn primary small" href="mailto:pierre.untas@gmail.com">M’écrire</a><a class="btn small" href="https://www.linkedin.com/in/pierre-untas" target="_blank" rel="noopener">LinkedIn ↗</a><a class="btn small" href="https://github.com/PierreUntas" target="_blank" rel="noopener">GitHub ↗</a>
     <button class="btn small" id="copyDiscord" type="button">Discord · pierreuntas</button></div><span class="copied" id="copied" aria-live="polite"></span>`, 'right');
   $('copyDiscord').addEventListener('click', async () => { try { await navigator.clipboard.writeText('pierreuntas'); $('copied').textContent = 'Pseudo copié'; } catch (e) { $('copied').textContent = 'Pseudo : pierreuntas'; } });
 }
@@ -850,7 +851,7 @@ async function talkPierre(){
     intro = false;
     if (c === 0){ showPath(); await say('Pierre', 'Sept ans à la tête d’une marque de mode, trois ans de full-stack en entreprise, et aujourd’hui la blockchain. Tout est dans la fiche.'); }
     else if (c === 1){ showBook(); await say('Pierre', 'Commence par Mona Editions, juste là : c’est celui dont je suis le plus fier. Il tourne en production sur Base. Et va voir Secib & Claude, à droite.'); break; }
-    else if (c === 2){ showContact(); await say('Pierre', 'LinkedIn pour me contacter, GitHub pour le code, Discord pour discuter. Je réponds vite.'); }
+    else if (c === 2){ showContact(); await say('Pierre', 'Un e-mail, un appel ou un message sur LinkedIn : je réponds vite. GitHub pour le code.'); }
     else break;
   }
   hush(); busy = false;
