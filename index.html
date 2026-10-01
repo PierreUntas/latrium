@@ -158,7 +158,7 @@ h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance
     <button class="sound-btn" id="soundBtn" type="button" aria-pressed="true" aria-label="Couper le son">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#aeefe7" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><path class="wave" d="M16 9.5c1.2 1.3 1.2 3.7 0 5M18.5 7c2.6 2.8 2.6 7.2 0 10" fill="none" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/><path class="cross" d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
-    <button class="hud-btn" id="bookBtn" type="button" aria-label="Ouvrir le carnet des vitrines">Vitrines <b id="bookCount">0/5</b></button>
+    <button class="hud-btn" id="bookBtn" type="button" aria-label="Ouvrir la liste des vitrines">Vitrines <b id="bookCount">0/5</b></button>
   </div>
 
   <div class="dialog" id="dialog" hidden>
@@ -596,10 +596,10 @@ const GH = 'https://github.com/PierreUntas/';
 const P = {
   pierre:{ kind:'Qui je suis', title:'Pierre Untas', short:'Développeur blockchain et full-stack · Bordeaux · remote international.',
     body:'Après sept ans à la tête d’une marque de mode et trois ans de développement full-stack en entreprise, je conçois aujourd’hui des applications blockchain. Mona Editions, ma plateforme de certification d’œuvres d’art en production sur Base, est née de ce croisement entre l’univers du design et les smart contracts.',
-    facts:['Développeur full-stack chez Human Immobilier (2023 – 2026)', 'Certifié développeur blockchain par Alyra (2026)', 'Freelance Web3 depuis juin 2026'], tags:['Solidity', 'TypeScript', 'Rust', '.NET'], links:[['Mon parcours', '#parcours'], ['Me contacter', '#contact']] },
+    facts:['Développeur full-stack chez Human Immobilier (2023 – 2026)', 'Certifié développeur blockchain par Alyra (2026)', 'Freelance Web3 depuis juin 2026'], tags:['Solidity', 'TypeScript', 'C#', '.NET'], links:[['Mon parcours', '#parcours'], ['Me contacter', '#contact']] },
   mona:{ kind:'Produit · smart contracts', col:C.peach, title:'Mona Editions', short:'Certifier une œuvre d’art physique avec un jeton, et donner au collectionneur un certificat qui le suit pour toujours.',
     body:'Les artistes certifient et exposent leurs œuvres, et transfèrent le certificat lors d’une revente, sans portefeuille crypto. En scannant le QR code d’une œuvre, on voit son histoire : artiste, édition, provenance. Projet né pendant ma formation Alyra, aujourd’hui en production sur Base.',
-    facts:['Smart contracts Solidity (ERC-1155) avec optimisation du gaz, tests sous Hardhat', 'Contrat vérifié sur Basescan, réclamation du certificat par QR code sécurisée par arbre de Merkle', 'Privy : connexion par e-mail, gaz sponsorisé, export de la clé privée', 'Front Next.js et TypeScript, stockage IPFS, déploiement sur Vercel', 'CI GitHub Actions : compilation et tests des contrats, build du front à chaque push et pull request'],
+    facts:['Smart contracts Solidity (ERC-1155) avec optimisation du gaz, audités, tests sous Hardhat avec 100 % de couverture', 'Contrat vérifié sur Basescan, réclamation du certificat par QR code sécurisée par arbre de Merkle', 'Privy : connexion par e-mail, gaz sponsorisé, export de la clé privée', 'Front Next.js et TypeScript, stockage IPFS, déploiement sur Vercel', 'CI GitHub Actions : compilation et tests des contrats, build du front à chaque push et pull request'],
     tags:['Solidity', 'Hardhat', 'Next.js', 'TypeScript', 'IPFS', 'Privy', 'Base'], links:[['Voir le site', 'https://monaeditions.com'], ['Le contrat sur Basescan', 'https://basescan.org/address/0x4f093952cF2377eFa05BC15E32ffFF63Cd4Fc208'], ['Code', GH + 'MonaEditions']], lead:true },
   storage:{ kind:'Application complète', col:C.cyan, title:'Decentralized Cloud Storage', short:'Un cloud personnel décentralisé : fichiers sur IPFS, dossiers, notes et un LLM local.',
     body:'Les fichiers sont stockés sur IPFS, les métadonnées dans MongoDB. Une API REST en ASP.NET Core gère le stockage, et une interface Nuxt.js permet de créer des dossiers, d’envoyer des fichiers, d’écrire des notes et de discuter avec un modèle de langage qui tourne en local.',
@@ -609,10 +609,10 @@ const P = {
     facts:['Moteur maison en Canvas 2D, musique générée en Web Audio', 'Sauvegarde locale, carnet du joueur, version anglaise complète', 'Tests de bout en bout avec Playwright'],
     tags:['JavaScript', 'Canvas 2D', 'Web Audio', 'i18n'], links:[['Jouer à L’Atrium', 'https://www.pierreuntas.com/game/'], ['Code', GH + 'latrium']] },
   secib:{ kind:'Application de bureau · confidentialité', col:C.peach, title:'Secret Pro', short:'Interroger Claude sur les pièces d’un dossier d’avocat, sans jamais envoyer de données confidentielles en clair.',
-    body:'Une application de bureau pour un cabinet d’avocats : on choisit un dossier client dans le logiciel métier Secib, on coche des pièces, puis on demande à Claude un résumé, une chronologie ou des informations précises. Comme le demande le guide déontologique du CNB, les noms, adresses ou IBAN sont pseudonymisés sur l’ordinateur avant tout envoi, avec un écran de revue.',
-    facts:['Back-end en Rust (Tauri), interface en React et TypeScript', 'Module de pseudonymisation isolé : 11 catégories, IBAN et SIREN validés par clé, table de correspondance impossible à envoyer ou à écrire sur disque (garanti par un test de compilation)', 'Client HTTP pour l’API Secib : authentification, limite de concurrence, reprises avec backoff, testé contre un serveur simulé', 'Clé API chiffrée dans le trousseau système, journal local des envois'],
+    body:'Une application de bureau pour un cabinet d’avocats : on choisit un dossier client dans le logiciel métier Secib, on coche des pièces, puis on demande à Claude un résumé, une chronologie ou des informations précises. Comme le recommande le guide déontologique du CNB, les noms, adresses ou IBAN sont pseudonymisés sur l’ordinateur avant tout envoi, avec un écran de revue.',
+    facts:['Back-end en Rust (Tauri), interface en React et TypeScript', 'Module de pseudonymisation isolé : 11 catégories, IBAN et SIREN validés par clé, table de correspondance impossible à envoyer ou à écrire sur disque (vérifié par un test de compilation)', 'Client HTTP pour l’API Secib : authentification, limite de concurrence, reprises avec backoff, testé contre un serveur simulé', 'Clé API chiffrée dans le trousseau système, journal local des envois'],
     tags:['Rust', 'Tauri', 'React', 'TypeScript', 'API Claude'], links:[], status:'Code privé · démo sur demande' },
-  mines:{ kind:'Jeu multijoueur · développé avec l’IA', col:C.teal, title:'Mines d’Éther', short:'Un monde en blocs aux couleurs d’Ethereum, à construire entre amis dans le navigateur.',
+  mines:{ kind:'Jeu multijoueur · interface développée avec l’IA · smart contracts en cours', col:C.teal, title:'Mines d’Éther', short:'Un monde en blocs aux couleurs d’Ethereum, à construire entre amis dans le navigateur.',
     body:'On mine, on fabrique, on bâtit dans un monde infini généré au fil des pas. Chaque bloc se comporte comme un jeton : miner frappe, poser brûle, et chaque bloc posé porte le nom de son auteur. Prochaine étape : inscrire les objets uniques et les parcelles en smart contracts.',
     facts:['Rendu Three.js, textures pixel art générées en code, maillage des tronçons dans un Web Worker', 'Multijoueur en temps réel avec Supabase (Auth, Realtime, Postgres), parcelles, chat modéré', 'Le serveur fait autorité : chaque action passe par une fonction SQL qui vérifie les règles, la portée, le rythme et les déplacements', 'Jetons simulés : ERC-1155 pour les ressources, ERC-721 pour les objets uniques, registre des frappes et des brûlages', 'Une quarantaine de scénarios, dont les tentatives de triche, testés contre un vrai Postgres à chaque push'],
     tags:['Three.js', 'Supabase', 'Postgres', 'Web Workers', 'ERC-1155 · ERC-721'], links:[], status:'Lien de démo à venir' },
@@ -620,7 +620,7 @@ const P = {
 const ORDER = ['mona', 'secib', 'mines', 'storage', 'atrium'];
 const PATH = [
   ['Janvier 2026 – aujourd’hui', 'Fondateur et développeur blockchain', 'Mona Editions · freelance depuis juin 2026', ['Plateforme de certification d’œuvres d’art physiques en production sur Base', 'Smart contracts Solidity (ERC-1155), tests Hardhat, contrat vérifié sur Basescan', 'Next.js, IPFS, Privy (e-mail, gaz sponsorisé), CI GitHub Actions'], true],
-  ['Juin 2023 – mai 2026', 'Développeur full-stack', 'Human Immobilier', ['Plusieurs produits du groupe : un ERP, un CRM, des sites web et des tâches planifiées', 'Back-end .NET Core et SQL Server, architecture DDD / CQRS ; front en Blazor et Vue.js', 'Tests unitaires, d’intégration et de validation ; monitoring Prometheus et Grafana ; Kanban sur Azure DevOps']],
+  ['Juin 2023 – mai 2026', 'Développeur full-stack', 'Human Immobilier · groupe immobilier', ['Plusieurs produits du groupe : un ERP, un CRM, des sites web et des tâches planifiées', 'Back-end .NET Core et SQL Server, architecture DDD / CQRS ; front en Blazor et Vue.js', 'Tests unitaires, d’intégration et de validation ; monitoring Prometheus et Grafana ; Kanban sur Azure DevOps']],
   ['Janvier 2022 – janvier 2023', 'Fondateur', 'Minimal Miner', ['Conception, assemblage et vente de serveurs de minage crypto : mon premier contact avec la blockchain, à l’origine de ma reconversion']],
   ['Juillet 2016 – décembre 2022', 'Fondateur et président', 'Anders Arens · marque de mode de luxe', ['Conception et fabrication des collections, sourcing des fournisseurs et des ateliers', 'Vente en boutiques multimarques de luxe aux États-Unis, en Europe et au Japon, et en ligne', 'Recrutement d’agents commerciaux et d’investisseurs, salons professionnels et fashion weeks']],
 ];
@@ -830,7 +830,7 @@ async function talkPierre(){
 async function talkNonce(){
   nonce.face = player.x > nonce.x ? 1 : -1;
   if (seen.size >= VISIT.length) return chat([['Nonce', 'Tu as fait le tour de toutes les vitrines ! Si tu veux travailler avec Pierre, il est juste là. Demande-lui comment le contacter.']]);
-  return chat([['Nonce', 'D’habitude, j’accueille ici les nouveaux venus sur Ethereum. Aujourd’hui, je fais visiter le hall de Pierre.'], ['Nonce', met ? `Il te reste ${VISIT.length - seen.size} vitrine${VISIT.length - seen.size > 1 ? 's' : ''} à voir. Le carnet, en haut à droite, les liste toutes.` : 'Commence par parler à Pierre. Il est près du cristal.']]);
+  return chat([['Nonce', 'D’habitude, j’accueille ici les nouveaux venus sur Ethereum. Aujourd’hui, je fais visiter le hall de Pierre.'], ['Nonce', met ? `Il te reste ${VISIT.length - seen.size} vitrine${VISIT.length - seen.size > 1 ? 's' : ''} à voir. Le bouton Vitrines, en haut à droite, les liste toutes.` : 'Commence par parler à Pierre. Il est près du cristal.']]);
 }
 const AFTER = {
   atrium:[['Nonce', 'Ce cristal, c’est tout l’Atrium : dix chapitres pour comprendre Ethereum, sans rien installer. Le lien est sur la fiche.']],
@@ -838,7 +838,7 @@ const AFTER = {
 
 
   secib:[['Pierre', 'Celui-là, je l’ai construit pour une avocate. Le plus délicat : garantir qu’aucun nom de client ne parte en clair. Tout est pseudonymisé sur l’ordinateur avant l’envoi.']],
-  mines:[['Pierre', 'Mines d’Éther, je l’ai construit avec l’IA. La suite : inscrire les parcelles et les objets uniques en smart contracts. Le serveur en est déjà la source de vérité.']],
+  mines:[['Pierre', 'L’interface de Mines d’Éther, je l’ai développée avec l’IA. Je suis en train d’écrire les smart contracts pour les parcelles et les objets uniques. Le serveur en est déjà la source de vérité.']],
 };
 async function interact(it){
   if (!it || busy) return;

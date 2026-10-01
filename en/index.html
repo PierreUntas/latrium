@@ -14,7 +14,7 @@
 <meta property="og:image" content="https://www.pierreuntas.com/og-portfolio-en.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="en_GB">
 <link rel="alternate" hreflang="fr" href="https://www.pierreuntas.com/">
 <link rel="alternate" hreflang="en" href="https://www.pierreuntas.com/en/">
 <link rel="alternate" hreflang="x-default" href="https://www.pierreuntas.com/">
@@ -596,10 +596,10 @@ const GH = 'https://github.com/PierreUntas/';
 const P = {
   pierre:{ kind:'Who I am', title:'Pierre Untas', short:'Blockchain and full-stack developer · Bordeaux, France · remote worldwide.',
     body:'After seven years running a fashion brand and three years as a full-stack developer in industry, I now build blockchain applications. Mona Editions, my artwork certification platform live on Base, was born where design meets smart contracts.',
-    facts:['Full-stack developer at Human Immobilier (2023 – 2026)', 'Certified blockchain developer, Alyra (2026)', 'Web3 freelancer since June 2026'], tags:['Solidity', 'TypeScript', 'Rust', '.NET'], links:[['My background', '#parcours'], ['Contact me', '#contact']] },
+    facts:['Full-stack developer at Human Immobilier (2023 – 2026)', 'Certified blockchain developer, Alyra (2026)', 'Web3 freelancer since June 2026'], tags:['Solidity', 'TypeScript', 'C#', '.NET'], links:[['My background', '#parcours'], ['Contact me', '#contact']] },
   mona:{ kind:'Product · smart contracts', col:C.peach, title:'Mona Editions', short:'Certify a physical artwork with a token, and give the collector a certificate that follows it forever.',
     body:'Artists certify and showcase their work, and hand over the certificate when a piece is resold, with no crypto wallet needed. Scan an artwork’s QR code to see its story: artist, edition, provenance. Started during my Alyra training, now live on Base.',
-    facts:['Gas-optimised Solidity smart contracts (ERC-1155), tested with Hardhat', 'Contract verified on Basescan; certificates claimed by QR code, secured with a Merkle tree', 'Privy: email sign-in, sponsored gas, private key export', 'Next.js and TypeScript front end, IPFS storage, deployed on Vercel', 'GitHub Actions CI: contracts compiled and tested, front end built on every push and pull request'],
+    facts:['Gas-optimised, audited Solidity smart contracts (ERC-1155), Hardhat tests with 100% coverage', 'Contract verified on Basescan; certificates claimed by QR code, secured with a Merkle tree', 'Privy: email sign-in, sponsored gas, private key export', 'Next.js and TypeScript front end, IPFS storage, deployed on Vercel', 'GitHub Actions CI: contracts compiled and tested, front end built on every push and pull request'],
     tags:['Solidity', 'Hardhat', 'Next.js', 'TypeScript', 'IPFS', 'Privy', 'Base'], links:[['Visit the site', 'https://monaeditions.com'], ['The contract on Basescan', 'https://basescan.org/address/0x4f093952cF2377eFa05BC15E32ffFF63Cd4Fc208'], ['Code', GH + 'MonaEditions']], lead:true },
   storage:{ kind:'Full-stack app', col:C.cyan, title:'Decentralized Cloud Storage', short:'A decentralised personal cloud: files on IPFS, folders, notes and a local LLM.',
     body:'Files are stored on IPFS and metadata in MongoDB. An ASP.NET Core REST API handles storage, and a Nuxt.js interface lets you create folders, upload files, write notes and chat with a language model running locally.',
@@ -609,10 +609,10 @@ const P = {
     facts:['Custom Canvas 2D engine, music generated with Web Audio', 'Local save, player notebook, full English version', 'End-to-end tests with Playwright'],
     tags:['JavaScript', 'Canvas 2D', 'Web Audio', 'i18n'], links:[['Play L’Atrium', 'https://www.pierreuntas.com/game/?lang=en'], ['Code', GH + 'latrium']] },
   secib:{ kind:'Desktop app · privacy', col:C.peach, title:'Secret Pro', short:'Ask Claude about the documents in a law firm’s case file, without ever sending confidential data in the clear.',
-    body:'A desktop app for a law firm: pick a client case in Secib, the firm’s practice management software, tick some documents, then ask Claude for a summary, a timeline or specific details. As the French bar’s ethics guidance requires, names, addresses and IBANs are pseudonymised on the computer before anything is sent, with a review screen.',
-    facts:['Rust back end (Tauri), React and TypeScript interface', 'Isolated pseudonymisation module: 11 categories, IBAN and SIREN checked by checksum, a mapping table that can never be sent or written to disk (enforced by a compile-time test)', 'HTTP client for the Secib API: authentication, concurrency limit, retries with backoff, tested against a mock server', 'API key encrypted in the system keychain, local log of everything sent'],
-    tags:['Rust', 'Tauri', 'React', 'TypeScript', 'API Claude'], links:[], status:'Private code · demo on request' },
-  mines:{ kind:'Multiplayer game · built with AI', col:C.teal, title:'Mines d’Éther', short:'A block world in Ethereum colours, to build with friends in the browser.',
+    body:'A desktop app for a law firm: pick a client case in Secib, the firm’s practice management software, tick some documents, then ask Claude for a summary, a timeline or specific details. As the French bar’s ethics guidance recommends, names, addresses and IBANs are pseudonymised on the computer before anything is sent, with a review screen.',
+    facts:['Rust back end (Tauri), React and TypeScript interface', 'Isolated pseudonymisation module: 11 categories, IBAN and SIREN checked by checksum, a mapping table that can never be sent or written to disk (checked by a compile-time test)', 'HTTP client for the Secib API: authentication, concurrency limit, retries with backoff, tested against a mock server', 'API key encrypted in the system keychain, local log of everything sent'],
+    tags:['Rust', 'Tauri', 'React', 'TypeScript', 'Claude API'], links:[], status:'Private code · demo on request' },
+  mines:{ kind:'Multiplayer game · interface built with AI · smart contracts in progress', col:C.teal, title:'Mines d’Éther', short:'A block world in Ethereum colours, to build with friends in the browser.',
     body:'Mine, craft and build in an endless world generated as you walk. Every block behaves like a token: mining mints, placing burns, and every placed block carries its builder’s name. Next step: putting unique items and land plots into smart contracts.',
     facts:['Three.js rendering, pixel-art textures generated in code, chunk meshing in a Web Worker', 'Real-time multiplayer with Supabase (Auth, Realtime, Postgres), land plots, moderated chat', 'Server-authoritative: every action goes through a SQL function that checks rules, reach, rate and movement', 'Simulated tokens: ERC-1155 for resources, ERC-721 for unique items, a ledger of mints and burns', 'Around forty scenarios, cheating attempts included, tested against a real Postgres on every push'],
     tags:['Three.js', 'Supabase', 'Postgres', 'Web Workers', 'ERC-1155 · ERC-721'], links:[], status:'Demo link coming soon' },
@@ -622,7 +622,7 @@ const PATH = [
   ['January 2026 – present', 'Founder and blockchain developer', 'Mona Editions · freelance since June 2026', ['Certification platform for physical artworks, live on Base', 'Solidity smart contracts (ERC-1155), Hardhat tests, contract verified on Basescan', 'Next.js, IPFS, Privy (email sign-in, sponsored gas), GitHub Actions CI'], true],
   ['June 2023 – May 2026', 'Full-stack developer', 'Human Immobilier · real estate group', ['Several of the group’s products: an ERP, a CRM, websites and scheduled jobs', '.NET Core and SQL Server back end, DDD / CQRS architecture; Blazor and Vue.js front ends', 'Unit, integration and acceptance tests; Prometheus and Grafana monitoring; Kanban on Azure DevOps']],
   ['January 2022 – January 2023', 'Founder', 'Minimal Miner', ['Designed, assembled and sold crypto mining servers: my first contact with blockchain, and what led me to switch careers']],
-  ['July 2016 – December 2022', 'Founder and CEO', 'Anders Arens · luxury fashion brand', ['Designed and produced the collections, sourced suppliers and workshops', 'Sold through luxury multi-brand stores in the US, Europe and Japan, and online', 'Recruited sales agents and investors; trade shows and fashion weeks']],
+  ['July 2016 – December 2022', 'Founder and President', 'Anders Arens · luxury fashion brand', ['Designed and produced the collections, sourced suppliers and workshops', 'Sold through luxury multi-brand stores in the US, Europe and Japan, and online', 'Recruited sales agents and investors; trade shows and fashion weeks']],
 ];
 const SCHOOL = [
   ['July 2025 – April 2026', 'Blockchain Developer certification (RS6515)', 'Alyra, the blockchain school · state-recognised by France Compétences'],
@@ -632,7 +632,7 @@ const SCHOOL = [
 const SKILLS = [
   ['Blockchain and Web3', ['Solidity', 'ERC-1155 · 721 · 20', 'Hardhat', 'Wagmi', 'Viem', 'Base · Optimism', 'IPFS', 'Privy', 'Account abstraction']],
   ['Languages', ['C# · .NET', 'TypeScript', 'JavaScript', 'Solidity', 'SQL']],
-  ['Front-end', ['React', 'Next.js', 'Vue.js', 'Nuxt', 'Blazor']],
+  ['Front end', ['React', 'Next.js', 'Vue.js', 'Nuxt', 'Blazor']],
   ['Back end and data', ['ASP.NET Core', 'Node.js', 'SQL Server', 'DDD', 'CQRS']],
   ['Tools', ['Git', 'GitHub Actions', 'Azure DevOps', 'Vercel', 'Prometheus', 'Grafana']],
 ];
@@ -803,7 +803,7 @@ function showContact(){
 }
 function showBook(){
   open = 'book';
-  sheet(`<p class="eyebrow">Visitor’s guide</p><h3>The display cases</h3><p>Tap a project to walk over to it.</p>
+  sheet(`<p class="eyebrow">Visitor’s guide</p><h3>The projects</h3><p>Tap a project to walk over to it.</p>
     <ul class="list">${VISIT.map(id => `<li class="${seen.has(id) ? 'seen' : ''}"><button type="button" data-go="${id}"><i>${seen.has(id) ? '✓' : ''}</i><span><b>${esc(P[id].title)}</b>${esc(P[id].short)}</span></button></li>`).join('')}</ul>
     <div class="links"><button class="btn small" id="bPath" type="button">Pierre’s background</button><button class="btn small" id="bContact" type="button">Contact</button></div>`, 'right');
   $('sheet').querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => interact(OBJ.find(o => o.id === b.dataset.go))));
@@ -830,15 +830,15 @@ async function talkPierre(){
 async function talkNonce(){
   nonce.face = player.x > nonce.x ? 1 : -1;
   if (seen.size >= VISIT.length) return chat([['Nonce', 'You’ve seen every display case! If you’d like to work with Pierre, he’s right there. Ask him how to get in touch.']]);
-  return chat([['Nonce', 'I usually welcome newcomers to Ethereum here. Today, I’m showing visitors around Pierre’s hall.'], ['Nonce', met ? `${VISIT.length - seen.size} display case${VISIT.length - seen.size > 1 ? 's' : ''} left to see. The list, top right, shows them all.` : 'Start by talking to Pierre. He’s by the crystal.']]);
+  return chat([['Nonce', 'I usually welcome newcomers to Ethereum here. Today, I’m showing visitors around Pierre’s hall.'], ['Nonce', met ? `${VISIT.length - seen.size} display case${VISIT.length - seen.size > 1 ? 's' : ''} left to see. The Projects button, top right, lists them all.` : 'Start by talking to Pierre. He’s by the crystal.']]);
 }
 const AFTER = {
   atrium:[['Nonce', 'This crystal is the whole Atrium: ten chapters to understand Ethereum, with nothing to install. The link is on the card.']],
-  mona:[['Pierre', 'Mona Editions was my final project at Alyra. It’s live on Base, audited, with 100% test coverage.']],
+  mona:[['Pierre', 'Mona Editions started as my final project at Alyra. It’s live on Base, audited, with 100% test coverage.']],
 
 
   secib:[['Pierre', 'I built this one for a lawyer. The tricky part: making sure no client name ever leaves in the clear. Everything is pseudonymised on the computer before it’s sent.']],
-  mines:[['Pierre', 'I built Mines d’Éther with AI. Next: putting land plots and unique items into smart contracts. The server is already the source of truth.']],
+  mines:[['Pierre', 'I built the Mines d’Éther interface with AI. I’m now writing the smart contracts for land plots and unique items. The server is already the source of truth.']],
 };
 async function interact(it){
   if (!it || busy) return;
