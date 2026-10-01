@@ -165,6 +165,9 @@ Une deuxième version du jeu, dans la vraie histoire d'Ethereum : chaque chapitr
 
 Fichiers : `histoire/index.html`, `histoire/histoire.js`, `histoire/histoire.css` (réutilise `src/style.css` et `src/audio.js`). Sauvegarde locale : `atrium.histoire.v1`. Test : ouvrir `histoire/index.html#debug` (expose `window.histoire`).
 
-## Portfolio (`/portfolio/`)
+## Organisation du site
 
-Le portfolio de Pierre Untas, à visiter dans le hall de L'Atrium : Pierre se présente dès l'entrée, et chaque vitrine présente un projet (Mona Editions, Secib & Claude, Mines d'Éther, Decentralized Cloud Storage, L'Atrium). Une seule page autonome (`portfolio/index.html`) qui reprend le moteur de dessin et la musique du jeu.
+- `/` : le portfolio de Pierre Untas, à visiter dans le hall de L'Atrium (`index.html`, page autonome qui reprend le moteur de dessin et la musique du jeu). Pierre se présente dès l'entrée, et chaque vitrine présente un projet (Mona Editions, Secib & Claude, Mines d'Éther, Decentralized Cloud Storage, L'Atrium).
+- `/game/` : le jeu L'Atrium (`game/index.html`, qui charge `src/`).
+- `/histoire/` : L'Atrium · histoire vraie.
+- `/portfolio/` redirige vers `/` (`vercel.json`).

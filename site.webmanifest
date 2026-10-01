@@ -3,7 +3,7 @@
   "short_name": "L'Atrium",
   "description": "Un jeu pour comprendre Ethereum, un chapitre à la fois.",
   "lang": "fr",
-  "start_url": "/",
+  "start_url": "/game/",
   "display": "standalone",
   "background_color": "#e7e5fa",
   "theme_color": "#e7e5fa",

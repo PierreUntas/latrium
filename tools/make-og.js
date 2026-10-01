@@ -7,7 +7,7 @@ const ROOT = path.resolve(__dirname, '..');
 const F = 'file://' + path.resolve(process.env.FONTS || path.join(ROOT, 'tools/fonts')) + '/';
 (async()=>{const b=await chromium.launch();
  const p=await b.newPage({viewport:{width:1200,height:702},deviceScaleFactor:1});
- await p.goto('file://' + ROOT + '/index.html#debug');
+ await p.goto('file://' + ROOT + '/game/index.html#debug');
  await p.addStyleTag({content:`
   @font-face{font-family:'Gloock';src:url(${F}Gloock-Regular.ttf)}
   @font-face{font-family:'Atkinson Hyperlegible';src:url(${F}AtkinsonHyperlegible-Regular.ttf)}

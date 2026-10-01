@@ -1513,7 +1513,7 @@ function journeyLines(){
 }
 function endButtons(n){
   const next = n < 7 ? [[`Chapitre ${n + 1} : ${ERAS[n][1]}`, () => CHAPTERS[n + 1](readSave()), true]] : [];
-  return next.concat([['Rester au hackerspace', () => { lock = false; }, !next.length], ...(n >= 7 ? [["Retour à L'Atrium", () => { location.href = '/'; }]] : [])]);
+  return next.concat([['Rester au hackerspace', () => { lock = false; }, !next.length], ...(n >= 7 ? [["Retour à L'Atrium", () => { location.href = '/game/'; }]] : [])]);
 }
 function mountButtons(n){
   const row = $('endCard').querySelector('.row');
