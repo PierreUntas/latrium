@@ -164,3 +164,7 @@ Une deuxième version du jeu, dans la vraie histoire d'Ethereum : chaque chapitr
 **Version anglaise** : même choix de langue que L'Atrium (`?lang=en`, bouton sur l'écran titre, ou langue du navigateur). Le code anglais `histoire/histoire.en.js` est généré à partir du français : les traductions sont dans `histoire/i18n/en.json`. Après avoir modifié un texte du jeu, lance `python3 tools/histoire-en.py --check` pour voir ce qui manque, complète `en.json`, puis `python3 tools/histoire-en.py` pour régénérer.
 
 Fichiers : `histoire/index.html`, `histoire/histoire.js`, `histoire/histoire.css` (réutilise `src/style.css` et `src/audio.js`). Sauvegarde locale : `atrium.histoire.v1`. Test : ouvrir `histoire/index.html#debug` (expose `window.histoire`).
+
+## Portfolio (`/portfolio/`)
+
+Le portfolio de Pierre Untas, à visiter dans le hall de L'Atrium : Pierre se présente dès l'entrée, et chaque vitrine présente un projet (Mona Editions, Secib & Claude, Mines d'Éther, Decentralized Cloud Storage, L'Atrium). Une seule page autonome (`portfolio/index.html`) qui reprend le moteur de dessin et la musique du jeu.

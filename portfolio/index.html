@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pierre Untas · L'Atrium</title>
+<meta name="description" content="Pierre Untas, développeur blockchain et full-stack. Un portfolio à visiter dans le hall de L'Atrium : chaque vitrine présente un projet.">
+<link rel="canonical" href="https://latrium.vercel.app/portfolio/">
+<meta name="theme-color" content="#e7e5fa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pierre Untas · développeur blockchain et full-stack">
+<meta property="og:description" content="Un portfolio à visiter dans le hall de L'Atrium : chaque vitrine présente un projet.">
+<meta property="og:url" content="https://latrium.vercel.app/portfolio/">
+<meta property="og:image" content="https://latrium.vercel.app/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Mise en page : une seule scène, le hall de L'Atrium, qui occupe l'écran. Dialogues, fiches et carnet s'ouvrent par-dessus, comme dans le jeu. Un seul monde clair. */
+:root{
+  --ink:#3a3cb2; --ink-2:#6f73d8; --paper:#f8f7ff; --ground:#e7e5fa; --mist:#e2e8fb; --floor:#edfaf8;
+  --lav:#cbc3f5; --violet:#a596ea; --peri:#8d9ef2; --cyan:#aeefe7; --teal:#78d5cd; --peach:#f7c8a6; --skin:#fdf0e8; --parch:#fdf1e7;
+  --f-display:'Gloock', Georgia, 'Times New Roman', serif;
+  --f-body:'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.5 var(--f-body);padding-inline:16px;padding-block:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+a{color:var(--ink)}
+button,a{font:inherit}
+:focus-visible{outline:3px solid var(--peri);outline-offset:3px}
+.eyebrow{margin:0;font:600 12px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance}
+.stage{position:relative;width:100%;max-width:1440px;height:560px;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--paper);box-shadow:6px 6px 0 var(--lav)}
+.stage canvas{display:block;width:100%;height:100%;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.caption{margin:0;font-size:13px;color:var(--ink-2);text-align:center;max-width:74ch}
+.caption b{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:700 15px/1 var(--f-body);color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:11px 16px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);text-decoration:none;transition:transform .12s, box-shadow .12s;white-space:nowrap}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn.primary{background:var(--cyan)}
+.btn.small{font-size:13px;padding:7px 11px;box-shadow:2px 2px 0 var(--ink)}
+
+/* HUD */
+.objective{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:2px;background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:8px 12px;box-shadow:3px 3px 0 var(--lav);max-width:calc(100% - 190px)}
+.objective strong{font-size:15px}
+.hud-right{position:absolute;top:12px;right:12px;display:flex;gap:8px}
+.hud-btn{display:flex;align-items:center;gap:8px;background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:7px 12px;box-shadow:3px 3px 0 var(--lav);cursor:pointer;font:700 14px var(--f-body);color:var(--ink)}
+.hud-btn b{font:600 12px var(--f-mono);background:var(--cyan);border:1.5px solid var(--ink);border-radius:999px;padding:0 7px}
+.sound-btn{display:grid;place-items:center;width:40px;height:40px;background:var(--paper);border:2px solid var(--ink);border-radius:8px;box-shadow:3px 3px 0 var(--lav);cursor:pointer;padding:0}
+.sound-btn svg{width:22px;height:22px}
+.sound-btn .cross{display:none}
+.sound-btn.off .wave{display:none}
+.sound-btn.off .cross{display:inline}
+.sound-btn.off path:first-child{fill:var(--paper)}
+.hud-btn.pulse{animation:pulse 1.2s ease-in-out 3}
+@keyframes pulse{50%{background:var(--cyan);transform:scale(1.06)}}
+
+/* dialogue */
+.dialog{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:min(760px,calc(100% - 24px));background:var(--paper);border:2px solid var(--ink);border-radius:10px;box-shadow:5px 5px 0 var(--lav);padding:22px 20px 16px;cursor:pointer;z-index:6}
+.speaker{position:absolute;top:-15px;left:16px;background:var(--cyan);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font:700 14px var(--f-body)}
+.speaker[data-who="Pierre"]{background:var(--peach)}
+.line{margin:0;font-size:17px;line-height:1.55;min-height:3.1em;max-width:68ch}
+.more{position:absolute;right:14px;bottom:8px;font-size:14px;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:12px}
+.choice{text-align:left;font:700 15px/1.3 var(--f-body);color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:10px 12px;cursor:pointer}
+.choice:hover{background:var(--cyan)}
+
+/* fiches et carnet, par-dessus la scène */
+.sheet{position:absolute;right:12px;top:62px;bottom:12px;width:min(400px,calc(100% - 24px));background:var(--paper);border:2px solid var(--ink);border-radius:12px;box-shadow:5px 5px 0 var(--lav);padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px;overflow:auto;z-index:4}
+.sheet.left{right:auto;left:12px}
+.sheet h3{font-size:30px;line-height:1.05;padding-right:36px}
+.sheet p{margin:0}
+.sheet .x{position:absolute;top:12px;right:12px;width:32px;height:32px;border:2px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink);font-weight:700;cursor:pointer}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.tags li{font:600 12px var(--f-mono);background:var(--mist);border-radius:6px;padding:3px 8px}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:6px}
+.facts{margin:0;padding-left:1.1em;display:grid;gap:4px;font-size:15px}
+.status{font:600 12px var(--f-mono);color:var(--ink-2)}
+.list{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.list button{width:100%;display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;text-align:left;background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:8px 10px;cursor:pointer;color:var(--ink)}
+.list button:hover{background:var(--mist)}
+.list i{width:20px;height:20px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font:700 11px var(--f-mono);font-style:normal;background:var(--paper)}
+.list .seen i{background:var(--cyan)}
+.list b{display:block;font-size:15px}
+.list span{font-size:13px;color:var(--ink-2)}
+.path{margin:0 0 0 8px;padding:0;list-style:none;border-left:2px solid var(--ink)}
+.path li{position:relative;padding:0 0 14px 20px}
+.path li::before{content:"";position:absolute;left:-8px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--paper);border:2px solid var(--ink)}
+.path li.now::before{background:var(--cyan)}
+.path b{display:block;font:600 12px var(--f-mono);color:var(--ink-2)}
+.path strong{display:block;font-size:16px}
+.path span{font-size:14px}
+.copied{font:600 12px var(--f-mono);color:var(--ink-2)}
+
+/* écran titre */
+.veil{position:absolute;inset:0;display:grid;place-items:center;padding:16px;background:linear-gradient(to bottom, rgba(248,247,255,.05), rgba(231,229,250,.8));z-index:7}
+.card{background:var(--paper);border:2px solid var(--ink);border-radius:12px;box-shadow:6px 6px 0 var(--lav);padding:24px;max-width:460px;width:100%;display:flex;flex-direction:column;gap:12px;max-height:100%;overflow:auto}
+.card h1{font-size:clamp(44px,7vw,68px);line-height:.95;letter-spacing:-.01em}
+.card p{margin:0}
+.lede{font-size:17px}
+.hint{font-size:13px;color:var(--ink-2)}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:var(--floor);border:2px solid var(--ink);border-radius:999px;padding:3px 11px;font-size:13px;font-weight:700}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--teal);border:1.5px solid var(--ink)}
+
+/* petits écrans et téléphone à l'horizontale */
+@media (max-width:700px){
+  .sheet{left:8px!important;right:8px!important;top:8px;bottom:8px;width:auto}
+  .line{font-size:15px}
+  .objective strong{font-size:13px}
+  .hud-btn{padding:5px 9px;font-size:13px}
+}
+.compact body{padding-block:8px}
+.compact .caption{display:none}
+.compact .dialog{bottom:8px;padding:14px 14px 10px}
+.compact .line{font-size:14px;min-height:0}
+.compact .choice{font-size:13px;padding:7px 10px}
+.compact .objective{top:8px;left:8px;padding:5px 9px}
+.compact .hud-right{top:8px;right:8px}
+.compact .sheet{top:8px;bottom:8px}
+@media (prefers-reduced-motion: reduce){ .more,.hud-btn.pulse{animation:none} }
+</style>
+</head>
+<body>
+
+
+<div class="stage" id="stage">
+  <canvas id="cv" aria-label="Le hall de L'Atrium : des colonnes, deux palmiers, un grand cristal, Pierre, Nonce, Gwei le chat et des vitrines qui présentent les projets de Pierre."></canvas>
+
+  <div class="objective" id="objective" hidden><span class="eyebrow" id="objHead">Objectif</span><strong id="objText"></strong></div>
+  <div class="hud-right" id="hud" hidden>
+    <button class="sound-btn" id="soundBtn" type="button" aria-pressed="true" aria-label="Couper le son">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#aeefe7" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><path class="wave" d="M16 9.5c1.2 1.3 1.2 3.7 0 5M18.5 7c2.6 2.8 2.6 7.2 0 10" fill="none" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/><path class="cross" d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <button class="hud-btn" id="bookBtn" type="button" aria-label="Ouvrir le carnet des vitrines">Vitrines <b id="bookCount">0/5</b></button>
+  </div>
+
+  <div class="dialog" id="dialog" hidden>
+    <span class="speaker" id="speaker"></span>
+    <p class="line" id="line"></p>
+    <div class="choices" id="choices"></div>
+    <span class="more" id="more" aria-hidden="true">▸</span>
+  </div>
+
+  <aside class="sheet" id="sheet" hidden aria-live="polite"></aside>
+
+  <div class="veil" id="title">
+    <div class="card">
+      <p class="eyebrow">Portfolio · un Atrium à visiter</p>
+      <h1>Pierre Untas</h1>
+      <p class="lede">Développeur blockchain et full-stack. Entre dans le hall : chaque vitrine garde un projet que j'ai codé.</p>
+      <span class="chip"><i></i>Ouvert aux missions Web3 et aux postes en remote</span>
+      <div class="row"><button class="btn primary" id="enterBtn" type="button">Entrer</button><button class="btn" id="fastBtn" type="button">Voir directement les projets</button></div>
+      <p class="hint">Touche le sol pour marcher. Touche quelqu'un ou une vitrine pour en savoir plus.</p>
+    </div>
+  </div>
+</div>
+<p class="caption"><b>Pierre Untas</b> · Bordeaux, côte basque · Souris ou doigt : touche le sol pour marcher · Clavier : flèches ou ZQSD, Espace pour parler, V pour les vitrines, M pour le son</p>
+<script>
+/* L'Atrium : ambiance sonore générée avec la Web Audio API (aucun fichier audio).
+   Une nappe douce en ré lydien, une boîte à musique aléatoire et quelques effets. */
+(() => {
+  'use strict';
+  let ctx = null, master, musicBus, sfxBus, verb, started = false, muted = false;
+  let musicTimer = 0, bellTimer = 0, chordIdx = 0;
+  try { muted = localStorage.getItem('atrium.muted') === '1'; } catch (e) { /* stockage indisponible */ }
+
+  const midi = n => 440 * Math.pow(2, (n - 69) / 12);
+  // ré lydien : D E F# G# A B C#
+  const CHORDS = [[50, 57, 62, 64, 69], [47, 54, 57, 62, 66], [43, 50, 57, 61, 66], [45, 52, 57, 59, 64]];
+  const BELL = [74, 76, 78, 81, 83, 85, 86, 88, 90, 93];
+
+  function impulse(sec, decay){
+    const len = ctx.sampleRate * sec, buf = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let c = 0; c < 2; c++){ const d = buf.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay); }
+    return buf;
+  }
+  function init(){
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+    ctx = new AC();
+    master = ctx.createGain(); master.gain.value = muted ? 0 : 1; master.connect(ctx.destination);
+    verb = ctx.createConvolver(); verb.buffer = impulse(3.2, 2.4);
+    const wet = ctx.createGain(); wet.gain.value = .45; verb.connect(wet); wet.connect(master);
+    musicBus = ctx.createGain(); musicBus.gain.value = .16; musicBus.connect(master); musicBus.connect(verb);
+    sfxBus = ctx.createGain(); sfxBus.gain.value = .5; sfxBus.connect(master); sfxBus.connect(verb);
+    return true;
+  }
+  function tone(freq, t, dur, { type = 'sine', gain = .2, attack = .01, bus = sfxBus, to = null, filter = null } = {}){
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    if (to) o.frequency.exponentialRampToValueAtTime(to, t + dur);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(gain, t + attack); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    let node = o;
+    if (filter){ const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = filter; o.connect(f); node = f; }
+    node.connect(g); g.connect(bus); o.start(t); o.stop(t + dur + .05);
+  }
+  function noise(t, dur, { gain = .1, freq = 1200, q = 1, type = 'bandpass' } = {}){
+    const len = Math.ceil(ctx.sampleRate * dur), buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = buf; f.type = type; f.frequency.value = freq; f.Q.value = q;
+    g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(sfxBus); s.start(t);
+  }
+  function bell(n, t, gain = .09, bus = musicBus){
+    tone(midi(n), t, 2.4, { gain, attack: .005, bus });
+    tone(midi(n) * 2.01, t, 1.2, { gain: gain * .35, attack: .005, bus });
+  }
+
+  // --- musique
+  function padChord(){
+    const t = ctx.currentTime, ch = CHORDS[chordIdx++ % CHORDS.length];
+    ch.forEach((n, i) => {
+      [-4, 4].forEach(det => {
+        const o = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
+        o.type = i === 0 ? 'sine' : 'triangle'; o.frequency.value = midi(n); o.detune.value = det;
+        f.type = 'lowpass'; f.frequency.value = 900;
+        g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.05, t + 3); g.gain.setValueAtTime(.05, t + 7); g.gain.linearRampToValueAtTime(0, t + 11.5);
+        o.connect(f); f.connect(g); g.connect(musicBus); o.start(t); o.stop(t + 12);
+      });
+    });
+  }
+  function scheduleBells(){
+    const t = ctx.currentTime;
+    if (Math.random() < .7) bell(BELL[Math.floor(Math.random() * BELL.length)], t + Math.random() * .2);
+    if (Math.random() < .25) bell(BELL[Math.floor(Math.random() * BELL.length)] - 12, t + .45, .07);
+    bellTimer = setTimeout(scheduleBells, 900 + Math.random() * 1800);
+  }
+  function startMusic(){ padChord(); musicTimer = setInterval(padChord, 8000); scheduleBells(); }
+
+  // --- effets
+  const FX = {
+    blip(t){ tone(880 + Math.random() * 180, t, .05, { gain: .025, type: 'triangle' }); },
+    select(t){ tone(660, t, .12, { gain: .07, type: 'triangle' }); tone(990, t + .05, .16, { gain: .05 }); },
+    step(t){ noise(t, .06, { gain: .035, freq: 700 + Math.random() * 300, q: 2 }); },
+    bubble(t){ tone(260, t, .5, { gain: .12, to: 900 }); },
+    pop(t){ noise(t, .08, { gain: .18, freq: 2400, q: .8 }); tone(1200, t, .12, { gain: .06, to: 600 }); },
+    gift(t){ [0, 4, 7, 12, 16].forEach((k, i) => bell(74 + k, t + i * .09, .08, sfxBus)); },
+    ledger(t){ bell(81, t, .1, sfxBus); bell(88, t + .14, .09, sfxBus); bell(93, t + .28, .08, sfxBus); },
+    grow(t){ [62, 66, 69, 73, 76, 78].forEach((n, i) => bell(n, t + i * .22, .07, sfxBus)); },
+    theft(t){ [76, 72, 69, 64].forEach((n, i) => tone(midi(n), t + i * .16, .5, { gain: .09, type: 'triangle', filter: 1800 })); },
+    fail(t){ tone(midi(57), t, .35, { gain: .08, type: 'triangle' }); tone(midi(56), t + .18, .5, { gain: .08, type: 'triangle' }); },
+    end(t){ [62, 69, 74, 78, 81].forEach((n, i) => bell(n, t + i * .16, .09, sfxBus)); },
+    meow(t){
+      const o = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
+      o.type = 'sawtooth'; f.type = 'bandpass'; f.frequency.value = 1400; f.Q.value = 3;
+      o.frequency.setValueAtTime(520, t); o.frequency.linearRampToValueAtTime(820, t + .18); o.frequency.linearRampToValueAtTime(480, t + .55);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.12, t + .06); g.gain.exponentialRampToValueAtTime(.0001, t + .6);
+      o.connect(f); f.connect(g); g.connect(sfxBus); o.start(t); o.stop(t + .65);
+    },
+  };
+
+  const listeners = [];
+  window.Sound = {
+    start(){
+      if (started) { if (ctx && ctx.state === 'suspended') ctx.resume(); return; }
+      if (!init()) return; started = true; startMusic();
+    },
+    sfx(name){ if (!started || muted || !FX[name]) return; try { FX[name](ctx.currentTime + .01); } catch (e) { /* ignore */ } },
+    get muted(){ return muted; },
+    toggle(){
+      muted = !muted;
+      try { localStorage.setItem('atrium.muted', muted ? '1' : '0'); } catch (e) { /* ignore */ }
+      if (ctx) master.gain.setTargetAtTime(muted ? 0 : 1, ctx.currentTime, .15);
+      listeners.forEach(fn => fn(muted));
+      return muted;
+    },
+    onChange(fn){ listeners.push(fn); },
+  };
+  document.addEventListener('visibilitychange', () => { if (!ctx) return; if (document.hidden) ctx.suspend(); else ctx.resume(); });
+})();
+</script>
+<script>
+(() => {
+'use strict';
+const W = 1600, H = 900, HOR = 560, TAU = Math.PI * 2;
+const css = getComputedStyle(document.documentElement);
+const K = n => css.getPropertyValue('--' + n).trim();
+const C = { ink:K('ink'), ink2:K('ink-2'), paper:K('paper'), mist:K('mist'), floor:K('floor'), lav:K('lav'), violet:K('violet'),
+  peri:K('peri'), cyan:K('cyan'), teal:K('teal'), peach:K('peach'), skin:K('skin') };
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+const sfx = name => window.Sound && window.Sound.sfx(name);
+// événements Vercel Web Analytics (ignorés en local et hors Vercel)
+const track = (name, data) => { try { if (window.va && location.hash !== '#debug') window.va('event', data ? { name, data } : { name }); } catch (e) { /* ignore */ } };
+const stage = $('stage'), cv = $('cv'), ctx = cv.getContext('2d');
+
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const ease = u => u < .5 ? 2*u*u : 1 - Math.pow(-2*u + 2, 2) / 2;
+const dist = (a,b) => Math.hypot(a.x - b.x, a.y - b.y);
+function hexA(h, a){ h = h.replace('#',''); const n = parseInt(h, 16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
+function quad(p0,p1,p2,u){ const v = 1-u; return [v*v*p0[0]+2*v*u*p1[0]+u*u*p2[0], v*v*p0[1]+2*v*u*p1[1]+u*u*p2[1]]; }
+function persp(y){ return 0.5 + (y - HOR) / (H - HOR) * 0.62; }
+function poly(g, pts, close = true){ g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (let i=1;i<pts.length;i++) g.lineTo(pts[i][0], pts[i][1]); if (close) g.closePath(); }
+function fs(g, fill, stroke = C.ink, lw = 2){ if (fill){ g.fillStyle = fill; g.fill(); } if (stroke){ g.strokeStyle = stroke; g.lineWidth = lw; g.stroke(); } }
+
+let dpr = 1, scale = 1, cache = null;
+function buildCache(){
+  cache = document.createElement('canvas');
+  const k = scale * dpr;
+  cache.width = Math.ceil(W * k); cache.height = Math.ceil(H * k);
+  const g = cache.getContext('2d');
+  g.scale(k, k); g.lineJoin = 'round'; g.lineCap = 'round';
+  drawStatic(g);
+}
+function drawStatic(g){
+  g.fillStyle = C.mist; g.fillRect(0, 0, W, HOR);
+  g.strokeStyle = hexA(C.peri, .35); g.lineWidth = 1;
+  for (let x = 0; x <= W; x += 46){ g.beginPath(); g.moveTo(x, 0); g.lineTo(x, HOR); g.stroke(); }
+  for (let y = 0; y <= HOR; y += 46){ g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  balconies(g, false); balconies(g, true);
+
+  // back wall + arch
+  g.fillStyle = C.paper; g.fillRect(520, 0, 560, HOR);
+  const ring = (r, fill) => { g.beginPath(); g.moveTo(800 - r, HOR); g.lineTo(800 - r, 400); g.arc(800, 400, r, Math.PI, 0); g.lineTo(800 + r, HOR); g.closePath(); fs(g, fill); };
+  ring(305, C.paper); ring(286, C.lav); ring(268, C.paper);
+  g.save(); ring(246, C.paper); g.clip();
+  const sky = g.createLinearGradient(0, 150, 0, HOR); sky.addColorStop(0, C.mist); sky.addColorStop(1, C.paper);
+  g.fillStyle = sky; g.fillRect(540, 140, 520, 420);
+  hills(g, 468, 26, C.lav, .55, 1.3); hills(g, 500, 18, C.peach, .6, 2.1);
+  [[610,478,.8],[655,488,.65],[905,474,.75],[960,486,.9],[1005,492,.6]].forEach(([x,y,s]) => tinyPalm(g, x, y, s));
+  g.beginPath(); g.moveTo(540, HOR);
+  for (let x = 540; x <= 1060; x += 26) g.quadraticCurveTo(x + 13, 522 + Math.sin(x*.07)*8, x + 26, 532 + Math.cos(x*.05)*6);
+  g.lineTo(1060, HOR); g.closePath(); fs(g, C.paper, C.ink2, 1.4);
+  g.restore();
+  ring(246, null);
+
+  // floor
+  g.fillStyle = C.floor; g.fillRect(0, HOR, W, H - HOR);
+  g.strokeStyle = C.teal; g.lineWidth = 1.4;
+  const vy = 230;
+  for (let i = -16; i <= 16; i++){ const xb = 800 + i * 118, xh = 800 + (xb - 800) * (HOR - vy) / (H - vy); g.beginPath(); g.moveTo(xh, HOR); g.lineTo(xb, H); g.stroke(); }
+  for (let k = 1; k <= 11; k++){ const y = HOR + (H - HOR) * Math.pow(k / 11, 1.7); g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  g.beginPath(); g.moveTo(0, HOR); g.lineTo(W, HOR); fs(g, null, C.ink, 2);
+
+  // columns
+  column(g, 600, 54, 590); column(g, 1000, 54, 590);
+  column(g, 255, 70, 650); column(g, 1345, 70, 650);
+}
+function balconies(g, mirror){
+  g.save(); if (mirror){ g.translate(W, 0); g.scale(-1, 1); }
+  for (let i = 0; i < 3; i++){
+    const y0 = 34 + i * 168, x1 = 520, dy = 116;
+    // rail + posts
+    g.strokeStyle = C.ink2; g.lineWidth = 1.2;
+    g.beginPath(); g.moveTo(0, y0 - 24); g.lineTo(x1, y0 + dy - 24); g.stroke();
+    for (let x = 20; x < x1; x += 38){ g.beginPath(); g.moveTo(x, y0 - 24 + x/x1*dy); g.lineTo(x, y0 + x/x1*dy); g.stroke(); }
+    if (i < 2){ // people on balcony
+      [[70,C.lav],[150,C.peach],[330,C.cyan]].forEach(([x, col], j) => { if ((i + j) % 2) return;
+        const yy = y0 + x / x1 * dy;
+        g.beginPath(); g.moveTo(x - 11, yy); g.quadraticCurveTo(x - 11, yy - 20, x, yy - 21); g.quadraticCurveTo(x + 11, yy - 20, x + 11, yy); fs(g, col, C.ink, 1.3);
+        g.beginPath(); g.arc(x, yy - 29, 7, 0, TAU); fs(g, C.skin, C.ink, 1.3);
+      });
+    }
+    poly(g, [[0, y0], [x1, y0 + dy], [x1, y0 + dy + 30], [0, y0 + 30]]); fs(g, C.paper);
+    poly(g, [[0, y0 + 30], [x1, y0 + dy + 30], [x1, y0 + dy + 38], [0, y0 + 38]]); fs(g, C.peach, C.ink, 1.5);
+  }
+  g.restore();
+}
+function hills(g, base, amp, col, alpha, f){
+  g.beginPath(); g.moveTo(540, HOR);
+  for (let x = 540; x <= 1060; x += 10) g.lineTo(x, base - Math.abs(Math.sin(x * .012 * f)) * amp - Math.sin(x * .031) * 6);
+  g.lineTo(1060, HOR); g.closePath();
+  g.globalAlpha = alpha; fs(g, col, null); g.globalAlpha = 1; g.strokeStyle = C.ink2; g.lineWidth = 1.2; g.stroke();
+}
+function tinyPalm(g, x, y, s){
+  g.strokeStyle = C.ink2; g.lineWidth = 1.3;
+  g.beginPath(); g.moveTo(x, y + 40*s); g.quadraticCurveTo(x - 6*s, y + 15*s, x + 3*s, y - 20*s); g.stroke();
+  for (let a = -2.8; a <= -0.2; a += 0.52){ g.beginPath(); g.moveTo(x + 3*s, y - 20*s); g.quadraticCurveTo(x + 3*s + Math.cos(a)*14*s, y - 20*s + Math.sin(a)*14*s, x + 3*s + Math.cos(a)*24*s, y - 20*s + Math.sin(a)*14*s + 10*s); g.stroke(); }
+}
+function column(g, x, w, base){
+  g.beginPath(); g.rect(x - w/2, -4, w, base - 18 + 4); fs(g, C.paper);
+  g.strokeStyle = C.ink2; g.lineWidth = 1;
+  for (let i = 1; i < 4; i++){ const fx = x - w/2 + i * w / 4; g.beginPath(); g.moveTo(fx, 0); g.lineTo(fx, base - 18); g.stroke(); }
+  g.beginPath(); g.rect(x - w/2 - 6, base - 18, w + 12, 10); fs(g, C.paper);
+  g.beginPath(); g.rect(x - w/2 - 11, base - 8, w + 22, 10); fs(g, C.lav);
+}
+
+/* ---------- dynamic drawings ---------- */
+function drawDiamond(g, t){
+  const b = reduce ? 0 : Math.sin(t * .8) * 8;
+  const glow = g.createRadialGradient(800, 330 + b, 20, 800, 330 + b, 240);
+  glow.addColorStop(0, hexA(C.cyan, .55)); glow.addColorStop(1, hexA(C.cyan, 0));
+  g.fillStyle = glow; g.beginPath(); g.arc(800, 330 + b, 240, 0, TAU); g.fill();
+  const A=[800,172+b], L=[704,346+b], R=[896,346+b], M=[800,300+b], B=[800,394+b];
+  const L2=[704,368+b], R2=[896,368+b], B2=[800,418+b], TP=[800,508+b];
+  [[A,L,M,C.violet],[A,M,R,C.cyan],[L,M,B,C.peri],[M,R,B,C.lav],[L2,B2,TP,C.peri],[B2,R2,TP,C.violet]].forEach(f => { poly(g, f.slice(0,3)); fs(g, f[3], C.ink, 2.4); });
+  g.strokeStyle = hexA(C.paper, .9); g.lineWidth = 2.5;
+  g.beginPath(); g.moveTo(785, 205 + b); g.lineTo(748, 272 + b); g.stroke();
+}
+function drawPedestal(g){
+  const cx = 800, ty = 588, rx = 132, ry = 20, d = 26;
+  g.beginPath(); g.moveTo(cx - rx, ty); g.lineTo(cx - rx, ty + d); g.ellipse(cx, ty + d, rx, ry, 0, Math.PI, 0, true); g.lineTo(cx + rx, ty); g.ellipse(cx, ty, rx, ry, 0, 0, Math.PI, false); g.closePath(); fs(g, C.lav);
+  for (let x = cx - rx + 16; x < cx + rx - 8; x += 26){ const yb = ty + d + ry * Math.sqrt(Math.max(0, 1 - ((x - cx)/rx)**2)); poly(g, [[x - 8, yb - 4], [x + 8, yb - 4], [x, yb - 17]]); fs(g, C.cyan, C.ink, 1.2); }
+  g.beginPath(); g.ellipse(cx, ty, rx, ry, 0, 0, TAU); fs(g, C.paper);
+  g.beginPath(); g.ellipse(cx, ty, 70, 9, 0, 0, TAU); g.fillStyle = hexA(C.ink, .12); g.fill();
+}
+function drawBubbles(g, t){
+  [[282,352,24,C.lav,0],[322,334,17,C.peach,1.3],[356,372,33,C.cyan,2.2]].forEach(([x,y,r,col,ph]) => {
+    const b = reduce ? 0 : Math.sin(t * .7 + ph) * 6;
+    g.globalAlpha = .75; g.beginPath(); g.arc(x, y + b, r, 0, TAU); fs(g, col, C.ink, 1.6); g.globalAlpha = 1;
+    g.strokeStyle = C.paper; g.lineWidth = 2; g.beginPath(); g.arc(x, y + b, r * .65, -2.6, -1.8); g.stroke();
+  });
+}
+const PALMS = [
+  { base:[330,700], ctrl:[292,390], top:[468,118], ph:0, fr:[[-2.95,210],[-2.5,230],[-2.1,220],[-1.72,200],[-1.35,215],[-0.95,235],[-0.55,225],[-0.18,215],[0.35,185],[2.75,190]] },
+  { base:[1500,805], ctrl:[1540,420], top:[1292,122], ph:1.7, fr:[[-2.95,220],[-2.55,235],[-2.15,215],[-1.78,205],[-1.4,220],[-1.0,230],[-0.6,215],[-0.2,205],[0.4,180],[2.8,195]] },
+];
+function drawPalm(g, P, t){
+  const sw = reduce ? 0 : Math.sin(t * .5 + P.ph);
+  const tp = [P.top[0] + sw * 6, P.top[1] + Math.abs(sw) * 1.5], cp = [P.ctrl[0] + sw * 2, P.ctrl[1]];
+  const N = 30, Lp = [], Rp = [], mids = [], nor = [];
+  for (let i = 0; i <= N; i++){
+    const u = i / N, p = quad(P.base, cp, tp, u);
+    const d = [2*(1-u)*(cp[0]-P.base[0]) + 2*u*(tp[0]-cp[0]), 2*(1-u)*(cp[1]-P.base[1]) + 2*u*(tp[1]-cp[1])];
+    const dl = Math.hypot(d[0], d[1]), n = [-d[1]/dl, d[0]/dl], w = (1 - u) * 8 + 6;
+    Lp.push([p[0] + n[0]*w, p[1] + n[1]*w]); Rp.push([p[0] - n[0]*w, p[1] - n[1]*w]); mids.push(p); nor.push([d[0]/dl, d[1]/dl]);
+  }
+  poly(g, Lp.concat(Rp.slice().reverse())); fs(g, C.paper);
+  g.strokeStyle = C.ink; g.lineWidth = 1.2;
+  for (let i = 1; i < N; i++){ const tg = nor[i]; g.beginPath(); g.moveTo(Lp[i][0], Lp[i][1]); g.quadraticCurveTo(mids[i][0] - tg[0]*5, mids[i][1] - tg[1]*5, Rp[i][0], Rp[i][1]); g.stroke(); }
+  P.fr.forEach(([a0, len], idx) => {
+    const a = a0 + sw * .04 + (reduce ? 0 : Math.sin(t * .9 + idx * 1.7 + P.ph) * .025);
+    const dir = [Math.cos(a), Math.sin(a)];
+    const end = [tp[0] + dir[0]*len, tp[1] + dir[1]*len + len*.42], c = [tp[0] + dir[0]*len*.6, tp[1] + dir[1]*len*.6 - len*.08];
+    g.strokeStyle = C.ink; g.lineWidth = 2; g.beginPath(); g.moveTo(tp[0], tp[1]); g.quadraticCurveTo(c[0], c[1], end[0], end[1]); g.stroke();
+    g.lineWidth = 1.5; g.beginPath();
+    for (let j = 2; j <= 18; j++){
+      const u = j / 19, p = quad(tp, c, end, u), p2 = quad(tp, c, end, u + .01);
+      let tg = [p2[0]-p[0], p2[1]-p[1]]; const tl = Math.hypot(tg[0], tg[1]) || 1; tg = [tg[0]/tl, tg[1]/tl];
+      const nm = [-tg[1], tg[0]], ll = Math.sin(Math.PI * u) * 34 + 6;
+      [[nm[0] + tg[0]*.6, nm[1] + tg[1]*.6 + .45], [-nm[0] + tg[0]*.6, -nm[1] + tg[1]*.6 + .45]].forEach(v => {
+        const vl = Math.hypot(v[0], v[1]); g.moveTo(p[0], p[1]); g.lineTo(p[0] + v[0]/vl*ll, p[1] + v[1]/vl*ll);
+      });
+    }
+    g.stroke();
+  });
+  g.beginPath(); g.arc(tp[0], tp[1] + 4, 9, 0, TAU); fs(g, C.violet, C.ink, 1.6);
+}
+function drawLeaf(g, x, y, a, len, wid, col, t, ph){
+  const sway = reduce ? 0 : Math.sin(t * .9 + ph) * .03;
+  g.save(); g.translate(x, y); g.rotate(a + sway);
+  const N = 16, mid = u => [u * len, -Math.sin(u * Math.PI * .8) * len * .1 + u*u*len*.12];
+  const up = [], lo = [];
+  for (let i = 0; i <= N; i++){ const u = i / N, m = mid(u), w = wid * Math.sin(Math.PI * Math.pow(u, .75)) * (1 - .1*u); up.push([m[0], m[1] - w]); lo.push([m[0], m[1] + w * .9]); }
+  poly(g, up.concat(lo.reverse())); fs(g, col);
+  g.strokeStyle = C.ink; g.lineWidth = 1.1; g.beginPath();
+  for (let i = 1; i < N; i++){ const u = i / N, m = mid(u), m2 = mid(Math.min(1, u + .07)), w = wid * Math.sin(Math.PI * Math.pow(u, .75)) * (1 - .1*u);
+    g.moveTo(m[0], m[1]); g.lineTo(m2[0], m2[1] - w * .92); g.moveTo(m[0], m[1]); g.lineTo(m2[0], m2[1] + w * .83); }
+  g.stroke();
+  g.lineWidth = 2; g.beginPath(); for (let i = 0; i <= N; i++){ const m = mid(i / N); i ? g.lineTo(m[0], m[1]) : g.moveTo(m[0], m[1]); } g.stroke();
+  g.restore();
+}
+const LEAVES_L = [[-1.62,250,48,'violet',0],[-1.2,305,62,'peri',1],[-0.78,285,56,'lav',2],[-0.36,240,46,'peri',3]];
+function drawForeground(g, t){
+  LEAVES_L.forEach(([a,l,w,c,ph]) => drawLeaf(g, 30, 935, a, l, w, C[c], t, ph));
+  g.save(); g.translate(W, 0); g.scale(-1, 1);
+  LEAVES_L.forEach(([a,l,w,c,ph]) => drawLeaf(g, 30, 935, a + .08, l * .95, w, C[c], t, ph + 2));
+  g.restore();
+}
+function drawPot(g, x, y, t, mirror){
+  g.save(); g.translate(x, y); if (mirror) g.scale(-1, 1);
+  [[-1.95,120,26,'peri'],[-1.45,135,30,'lav'],[-1.0,118,26,'violet'],[-2.4,100,22,'lav']].forEach(([a,l,w,c], i) => drawLeaf(g, 0, -52, a, l, w, C[c], t, i + x));
+  g.beginPath(); g.moveTo(-30, -56); g.quadraticCurveTo(-34, -20, -18, 0); g.lineTo(18, 0); g.quadraticCurveTo(34, -20, 30, -56); g.closePath(); fs(g, C.paper);
+  g.beginPath(); g.moveTo(-31, -38); g.lineTo(31, -38); g.strokeStyle = C.peach; g.lineWidth = 6; g.stroke();
+  g.beginPath(); g.ellipse(0, -56, 31, 7, 0, 0, TAU); fs(g, C.paper);
+  g.restore();
+}
+
+/* ---------- characters ---------- */
+function limb(g, pts, w, col){
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]);
+  g.strokeStyle = C.ink; g.lineWidth = w + 4.4; g.stroke(); g.strokeStyle = col; g.lineWidth = w; g.stroke();
+}
+function hand(g, x, y, skin){ g.beginPath(); g.arc(x, y, 4.2, 0, TAU); fs(g, skin, C.ink, 1.8); }
+function head(g, hy, p){
+  if (p.style === 'long'){ g.beginPath(); g.moveTo(-17, hy - 4); g.quadraticCurveTo(-20, hy + 22, -12, hy + 26); g.lineTo(6, hy + 22); g.lineTo(8, hy); g.closePath(); fs(g, p.hair); }
+  limb(g, [[0, hy + 12], [0, hy + 20]], 6, p.skin);
+  g.beginPath(); g.arc(0, hy, 15, 0, TAU); fs(g, p.skin);
+  if (p.hat){
+    g.beginPath(); g.moveTo(-15, hy - 6); g.quadraticCurveTo(-20, hy - 40, -1, hy - 44); g.quadraticCurveTo(18, hy - 42, 15, hy - 6); g.quadraticCurveTo(0, hy - 12, -15, hy - 6); fs(g, p.hatColor || C.cyan);
+    g.strokeStyle = C.ink; g.lineWidth = 1.3; g.beginPath(); g.moveTo(-17, hy - 18); g.quadraticCurveTo(0, hy - 24, 16, hy - 17); g.moveTo(-17, hy - 29); g.quadraticCurveTo(0, hy - 35, 15, hy - 29); g.stroke();
+    poly(g, [[0, hy - 26], [-4, hy - 19], [0, hy - 12], [4, hy - 19]]); fs(g, C.violet, C.ink, 1.3);
+  } else {
+    g.beginPath(); g.arc(-1, hy - 2, 16, Math.PI * .95, Math.PI * 2.02); g.quadraticCurveTo(4, hy - 8, -3, hy - 5); g.quadraticCurveTo(-10, hy - 2, -16, hy + 2); g.closePath(); fs(g, p.hair);
+    if (p.style === 'bun'){ g.beginPath(); g.arc(-9, hy - 19, 7, 0, TAU); fs(g, p.hair); }
+  }
+  g.fillStyle = C.ink; g.beginPath(); g.arc(8, hy + 1, 1.9, 0, TAU); g.fill();
+  g.fillStyle = hexA(C.peach, .8); g.beginPath(); g.arc(6, hy + 7, 3, 0, TAU); g.fill();
+  if (p.smile){ g.strokeStyle = C.ink; g.lineWidth = 1.6; g.beginPath(); g.arc(7, hy + 4, 5, .35, 1.9); g.stroke(); }
+}
+function drawPerson(g, p, t){
+  const s = persp(p.y) * (p.tall || 1);
+  g.save(); g.translate(p.x, p.y);
+  g.fillStyle = hexA(C.ink, .13); g.beginPath(); g.ellipse(0, 0, 24 * s, 6 * s, 0, 0, TAU); g.fill();
+  g.scale(s * p.face, s);
+  const sw = p.moving ? Math.sin(p.walk) : 0;
+  const bob = p.moving ? -Math.abs(Math.cos(p.walk)) * 2.5 : (reduce ? 0 : Math.sin(t * 1.6 + p.x) * .6);
+  g.translate(0, bob);
+  if (p.robe){ g.beginPath(); g.moveTo(-14, -112); g.quadraticCurveTo(-36, -60, -30, -4); g.lineTo(6, -4); g.closePath(); fs(g, p.cape || C.lav); }
+  // bras éloigné (côté du regard) : derrière le corps, comme en vue de trois quarts
+  if (!p.gesture){ limb(g, [[11, -106], [13 - sw*7, -86], [12 - sw*10, -68]], 8, p.shirt); hand(g, 12 - sw*10, -68, p.skin); }
+  // jambes : vue de profil, les deux hanches presque au même point, genou qui plie quand la jambe revient
+  const spread = p.moving ? 1.5 : 5;
+  const leg = (hx, ph) => {
+    const a = p.moving ? Math.sin(p.walk + ph) * .42 : 0;
+    const lift = p.moving ? Math.max(0, Math.cos(p.walk + ph)) : 0;
+    const knee = [hx + Math.sin(a) * 30, -60 + Math.cos(a) * 30];
+    const b = a - lift * .75;
+    const foot = [knee[0] + Math.sin(b) * 29, Math.min(-3, knee[1] + Math.cos(b) * 29 - lift * 3)];
+    if (!p.robe) limb(g, [[hx, -60], knee, foot], 10, p.pants);
+    g.fillStyle = C.ink; g.beginPath(); g.ellipse(foot[0] + 3, foot[1] + 2, 7, 3.6, 0, 0, TAU); g.fill();
+  };
+  leg(spread, Math.PI);   // jambe éloignée, dessinée d'abord
+  leg(-spread, 0);        // jambe proche, par-dessus
+  if (p.robe){ g.beginPath(); g.moveTo(-22, -4); g.lineTo(-17, -104); g.quadraticCurveTo(-16, -117, -3, -118); g.lineTo(4, -118); g.quadraticCurveTo(17, -117, 17, -104); g.lineTo(22, -4); g.quadraticCurveTo(0, 0, -22, -4); fs(g, p.shirt);
+    g.strokeStyle = C.ink; g.lineWidth = 1.2; g.beginPath(); g.moveTo(-18, -40); g.quadraticCurveTo(0, -36, 19, -40); g.stroke();
+    poly(g, [[3, -100], [-5, -87], [3, -74], [11, -87]]); fs(g, C.violet, C.ink, 1.6);
+    if (p.badge){ g.beginPath(); g.arc(-8, -100, 6, 0, TAU); fs(g, C.cyan, C.ink, 1.5); drawSparkle(g, -8, -100, .32); }
+  } else {
+    g.beginPath(); g.moveTo(-15, -60); g.lineTo(-17, -104); g.quadraticCurveTo(-16, -117, -3, -118); g.lineTo(4, -118); g.quadraticCurveTo(17, -117, 17, -104); g.lineTo(15, -60); g.closePath(); fs(g, p.shirt);
+    g.beginPath(); g.moveTo(-15, -64); g.lineTo(15, -64); g.strokeStyle = C.ink; g.lineWidth = 1.2; g.stroke();
+  }
+  head(g, -136, p);
+  // bras proche : devant le corps ; le bras qui fait un geste passe devant aussi
+  limb(g, [[-11, -106], [-13 + sw*7, -86], [-11 + sw*10, -68]], 8, p.shirt); hand(g, -11 + sw*10, -68, p.skin);
+  if (p.gesture){ limb(g, [[11, -106], [25, -108], [31, -130]], 8, p.shirt); hand(g, 31, -131, p.skin); }
+  g.restore();
+}
+function drawCat(g, c, t){
+  const s = persp(c.y) * .95;
+  g.save(); g.translate(c.x, c.y);
+  g.fillStyle = hexA(C.ink, .12); g.beginPath(); g.ellipse(0, 0, 22 * s, 5 * s, 0, 0, TAU); g.fill();
+  g.scale(s * c.face, s); g.lineJoin = 'round';
+  const ear = (hx, hy) => { poly(g, [[hx - 10, hy - 5], [hx - 9, hy - 19], [hx - 1, hy - 10]]); fs(g, C.paper); poly(g, [[hx + 2, hy - 10], [hx + 10, hy - 19], [hx + 11, hy - 4]]); fs(g, C.paper); };
+  const face = (hx, hy) => { g.strokeStyle = C.ink; g.lineWidth = 1.6; const bl = (t % 4) < .15;
+    g.beginPath(); if (bl){ g.moveTo(hx - 1, hy); g.lineTo(hx + 3, hy); g.moveTo(hx + 7, hy); g.lineTo(hx + 11, hy); } else { g.arc(hx + 1, hy, 1.7, 0, TAU); g.moveTo(hx + 10.7, hy); g.arc(hx + 9, hy, 1.7, 0, TAU); } g.stroke();
+    g.fillStyle = C.peach; g.beginPath(); g.arc(hx + 5, hy + 5, 1.8, 0, TAU); g.fill(); };
+  if (c.moving){
+    const sw = Math.sin(c.walk * 1.2);
+    limb(g, [[-24, -22], [-38, -34 + sw*3], [-34, -46]], 5, C.paper);
+    limb(g, [[-14, -14], [-14 - sw*6, -1]], 5, C.paper); limb(g, [[14, -14], [14 + sw*6, -1]], 5, C.paper);
+    g.beginPath(); g.ellipse(0, -22, 24, 12, 0, 0, TAU); fs(g, C.paper);
+    limb(g, [[-8, -14], [-8 + sw*6, -1]], 5, C.paper); limb(g, [[20, -14], [20 - sw*6, -1]], 5, C.paper);
+    ear(24, -34); g.beginPath(); g.arc(24, -34, 11, 0, TAU); fs(g, C.paper); face(20, -35);
+  } else {
+    const tw = reduce ? 0 : Math.sin(t * 2) * 4;
+    limb(g, [[-10, -4], [-28, -2], [-30, -18 + tw]], 5, C.paper);
+    g.beginPath(); g.ellipse(0, -22, 15, 21, 0, 0, TAU); fs(g, C.paper);
+    limb(g, [[5, -10], [6, -1]], 5, C.paper);
+    ear(4, -46); g.beginPath(); g.arc(4, -46, 12, 0, TAU); fs(g, C.paper); face(0, -47);
+  }
+  g.restore();
+}
+function drawMarker(g, x, y, t){
+  const b = reduce ? 0 : Math.sin(t * 3) * 6;
+  poly(g, [[x, y - 22 + b], [x - 10, y - 6 + b], [x, y + 2 + b], [x + 10, y - 6 + b]]); fs(g, C.cyan, C.ink, 2);
+  g.beginPath(); g.moveTo(x - 10, y - 6 + b); g.lineTo(x + 10, y - 6 + b); g.strokeStyle = C.ink; g.lineWidth = 1.2; g.stroke();
+}
+function drawSparkle(g, x, y, k){
+  g.save(); g.translate(x, y); g.scale(k, k);
+  g.beginPath(); g.moveTo(0, -12); g.quadraticCurveTo(2, -2, 12, 0); g.quadraticCurveTo(2, 2, 0, 12); g.quadraticCurveTo(-2, 2, -12, 0); g.quadraticCurveTo(-2, -2, 0, -12); fs(g, C.cyan, C.ink, 1.6);
+  g.restore();
+}
+/* =================== le portfolio =================== */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+const GH = 'https://github.com/PierreUntas/';
+const P = {
+  pierre:{ kind:'Qui je suis', title:'Pierre Untas', short:'Développeur blockchain et full-stack, entre Bordeaux et la côte basque.',
+    body:'Cadreur et monteur, puis environ sept ans à diriger une marque de mode, Anders Arens. Je suis passé au code il y a trois ans, et à la blockchain avec Alyra. J’aime construire des choses qui rendent la technique lisible pour tout le monde.',
+    facts:['Développeur full-stack chez Human Immobilier (2023 – 2026)', 'Certifié développeur blockchain par Alyra (2026)', 'Freelance Web3 depuis juin 2026'], tags:['Solidity', 'TypeScript', 'Rust', '.NET'], links:[['Mon parcours', '#parcours'], ['Me contacter', '#contact']] },
+  mona:{ kind:'Produit · smart contracts', col:C.peach, title:'Mona Editions', short:'Certifier une œuvre d’art physique avec un jeton, et donner au collectionneur un certificat qui le suit pour toujours.',
+    body:'En scannant le QR code d’une œuvre, on voit son histoire : artiste, édition, provenance. L’acheteur réclame son certificat de propriété avec une clé secrète, sans connaître la crypto. Projet de fin de formation Alyra, en production.',
+    facts:['Deux contrats sur Base mainnet : ArtworkRegistry et ArtworkTokenization (ERC-1155)', 'Distribution des certificats par arbre de Merkle, métadonnées sur IPFS', 'Rôles à trois niveaux (propriétaire, admin, artiste), signatures EIP-712', 'Connexion par e-mail avec Privy, gaz sponsorisé, audit professionnel, 100 % de couverture de tests'],
+    tags:['Solidity', 'Hardhat · Ignition', 'Next.js 15', 'TypeScript', 'Tailwind', 'IPFS'], links:[['Voir le site', 'https://monaeditions.com'], ['La galerie', 'https://monaeditions.com/explore/editions'], ['Code', GH + 'MonaEditions']], lead:true },
+  spacevote:{ kind:'Smart contract', col:C.lav, title:'SpaceVote', short:'Un contrat de vote onchain qui départage lui-même les égalités.',
+    body:'En cas d’égalité, le contrat relance automatiquement une nouvelle session de vote entre les ex æquo, jusqu’à ce qu’un gagnant se dégage.',
+    facts:['Solidity 0.8.30', 'Bibliothèques OpenZeppelin', 'Sessions de vote successives gérées onchain'], tags:['Solidity', 'OpenZeppelin', 'Gouvernance'], links:[['Code', GH + 'SpaceVote']] },
+  storage:{ kind:'Application complète', col:C.cyan, title:'Decentralized Cloud Storage', short:'Un cloud personnel décentralisé : fichiers sur IPFS, dossiers, notes et un LLM local.',
+    body:'Les fichiers sont stockés sur IPFS, les métadonnées dans MongoDB. Une API REST en ASP.NET Core gère le stockage, et une interface Nuxt.js permet de créer des dossiers, d’envoyer des fichiers, d’écrire des notes et de discuter avec un modèle de langage qui tourne en local.',
+    facts:['API REST en ASP.NET Core, métadonnées dans MongoDB', 'Stockage distribué sur IPFS', 'Interface Nuxt.js, LLM local intégré', 'Docker Compose et Prometheus'], tags:['IPFS', 'ASP.NET Core', 'MongoDB', 'Nuxt.js', 'Docker'], links:[['Code', GH + 'decentralized-cloud-storage']] },
+  danny:{ kind:'App iOS', col:C.violet, title:'Danny', short:'Une app iOS qui transforme ta santé en jeu de rôle.',
+    body:'Construite en SwiftUI avec HealthKit : la marche, l’activité, la méditation et le repos deviennent les statistiques d’un personnage. On les fait progresser par de vraies actions, avec l’Apple Watch.',
+    facts:['SwiftUI et HealthKit', 'Objectifs quotidiens : marche, activité, méditation, repos', 'Fonctionnalités Apple Watch'], tags:['Swift', 'SwiftUI', 'HealthKit', 'watchOS'], links:[['Code', GH + 'Danny']] },
+  wallets:{ kind:'Application web', col:C.teal, title:'Wallets', short:'Une vue d’ensemble de toutes tes cryptos.',
+    body:'Suis le marché en temps réel, crée plusieurs portefeuilles, ajoute-y tes cryptos, et retrouve-les toutes réunies dans un seul portefeuille global.',
+    facts:['Ruby on Rails', 'Cours du marché en temps réel', 'Portefeuilles multiples et vue globale'], tags:['Ruby', 'Rails', 'API de marché'], links:[['Code', GH + 'Wallets']] },
+  atrium:{ kind:'Jeu · pédagogie · développé avec l’IA', col:C.cyan, title:'L’Atrium', short:'Le jeu dans lequel tu te trouves. Pour découvrir Ethereum sans rien installer.',
+    body:'Dix chapitres dans ce hall : son premier coffre, les arnaques, les contrats, les validateurs, les frais, les ponts. En français et en anglais.',
+    facts:['Moteur maison en Canvas 2D, musique générée en Web Audio', 'Sauvegarde locale, carnet du joueur, version anglaise complète', 'Tests de bout en bout avec Playwright'],
+    tags:['JavaScript', 'Canvas 2D', 'Web Audio', 'i18n'], links:[['Jouer à L’Atrium', 'https://latrium.vercel.app/'], ['Code', GH + 'latrium']] },
+  secib:{ kind:'Application de bureau · développée avec l’IA', col:C.peach, title:'Secib & Claude', short:'Interroger Claude sur les pièces d’un dossier d’avocat, sans jamais envoyer de données confidentielles en clair.',
+    body:'Une application de bureau pour un cabinet d’avocats : on choisit un dossier client dans le logiciel métier Secib, on coche des pièces, puis on demande à Claude un résumé, une chronologie ou des informations précises. Comme le demande le guide déontologique du CNB, les noms, adresses ou IBAN sont pseudonymisés sur l’ordinateur avant tout envoi, avec un écran de revue.',
+    facts:['Back-end en Rust (Tauri), interface en React et TypeScript', 'Module de pseudonymisation isolé : 11 catégories, IBAN et SIREN validés par clé, table de correspondance impossible à envoyer ou à écrire sur disque (garanti par un test de compilation)', 'Client HTTP pour l’API Secib : authentification, limite de concurrence, reprises avec backoff, testé contre un serveur simulé', 'Clé API chiffrée dans le trousseau système, journal local des envois'],
+    tags:['Rust', 'Tauri', 'React', 'TypeScript', 'API Claude'], links:[], status:'Code privé · démo sur demande' },
+  mines:{ kind:'Jeu multijoueur · développé avec l’IA', col:C.teal, title:'Mines d’Éther', short:'Un monde en blocs aux couleurs d’Ethereum, à construire entre amis dans le navigateur.',
+    body:'On mine, on fabrique, on bâtit dans un monde infini généré au fil des pas. Chaque bloc se comporte comme un jeton : miner frappe, poser brûle, et chaque bloc posé porte le nom de son auteur. Prochaine étape : inscrire les objets uniques et les parcelles en smart contracts.',
+    facts:['Rendu Three.js, textures pixel art générées en code, maillage des tronçons dans un Web Worker', 'Multijoueur en temps réel avec Supabase (Auth, Realtime, Postgres), parcelles, chat modéré', 'Le serveur fait autorité : chaque action passe par une fonction SQL qui vérifie les règles, la portée, le rythme et les déplacements', 'Jetons simulés : ERC-1155 pour les ressources, ERC-721 pour les objets uniques, registre des frappes et des brûlages', 'Une quarantaine de scénarios, dont les tentatives de triche, testés contre un vrai Postgres à chaque push'],
+    tags:['Three.js', 'Supabase', 'Postgres', 'Web Workers', 'ERC-1155 · ERC-721'], links:[], status:'Lien de démo à venir' },
+  oss:{ kind:'Open source', col:C.lav, title:'Contributions', short:'Des traces publiques, vérifiables, dans l’écosystème Ethereum.',
+    body:'Je contribue à l’open source de l’écosystème, en commençant par Kleros : un correctif d’accessibilité sur les menus déroulants de leur bibliothèque de composants, et des commentaires de revue sur leur protocole.',
+    facts:['kleros/ui-components-library · PR #101 (accessibilité)', 'Commentaires de revue sur kleros-v2'], tags:['React', 'Accessibilité', 'Revue de code'],
+    links:[['La PR #101', 'https://github.com/kleros/ui-components-library/pull/101'], ['Mon GitHub', 'https://github.com/PierreUntas']] },
+};
+const ORDER = ['mona', 'secib', 'mines', 'storage', 'atrium'];
+const PATH = [
+  ['Avant', 'Cadreur et monteur', 'Tournage et montage vidéo.'],
+  ['~ 7 ans', 'Anders Arens', 'Marque de mode de luxe, que j’ai dirigée : produit, fabrication, image, vente.'],
+  ['2022 – 2023', 'Minimal Miner', 'Conception et vente de serveurs de minage crypto.'],
+  ['2023 – 2026', 'Développeur full-stack · Human Immobilier', 'ERP, CRM, sites web et tâches planifiées, en .NET Core, Blazor et Nuxt / Vue.'],
+  ['2026', 'Certification développeur blockchain · Alyra', 'Projet de fin de formation : Mona Editions, aujourd’hui en production sur Base.'],
+  ['Depuis juin 2026', 'Freelance Web3', 'Smart contracts, applications onchain, et L’Atrium pour faire découvrir Ethereum.', true],
+];
+const SKILLS = [
+  ['Smart contracts', ['Solidity', 'OpenZeppelin', 'Hardhat · Ignition', 'ERC-1155', 'EIP-712', 'Arbres de Merkle', 'Tests et audit']],
+  ['Applications onchain', ['Privy · account abstraction', 'Gaz sponsorisé', 'IPFS · Pinata', 'Alchemy · JSON-RPC', 'Base']],
+  ['Front-end', ['Next.js', 'React', 'TypeScript', 'Nuxt · Vue', 'Canvas 2D']],
+  ['Back-end et outillage', ['Rust · Tauri', '.NET Core · ASP.NET', 'MongoDB', 'Docker', 'CI/CD', 'Playwright']],
+];
+/* ---------- personnages et vitrines ---------- */
+const player = { x:800, y:990, face:1, walk:0, moving:false, target:null, shirt:C.peach, pants:C.lav, hair:C.violet, style:'short', skin:C.skin };
+const pierre = { x:690, y:650, face:1, walk:0, moving:false, shirt:C.peri, pants:C.ink2, hair:C.ink, style:'short', skin:C.skin, smile:true, gesture:false, tall:1.04 };
+const nonce = { x:975, y:650, face:-1, walk:0, moving:false, tall:1.12, robe:true, hat:true, shirt:C.cyan, pants:C.peri, hair:C.ink2, style:'short', skin:C.skin, gesture:false };
+const cat = { x:720, y:855, face:1, walk:0, moving:false };
+// vitrines : position au sol, taille, et l'objet qu'elles contiennent
+const CASES = [
+  { id:'mines', x:455, y:640, s:1 },
+  { id:'storage', x:1150, y:640, s:1 },
+  { id:'mona', x:575, y:760, s:1.2 },
+  { id:'secib', x:1060, y:770, s:1.1 },
+];
+function drawCase(g, c, t){
+  const k = persp(c.y) * c.s, hl = hover === c.id || open === c.id;
+  g.save(); g.translate(c.x, c.y); g.scale(k, k);
+  g.fillStyle = hexA(C.ink, .12); g.beginPath(); g.ellipse(0, 4, 78, 12, 0, 0, TAU); g.fill();
+  // socle
+  g.beginPath(); g.rect(-62, -70, 124, 70); fs(g, C.paper);
+  g.beginPath(); g.rect(-68, -80, 136, 12); fs(g, C.lav);
+  g.fillStyle = C.ink; g.font = '700 15px "Atkinson Hyperlegible", system-ui, sans-serif'; g.textAlign = 'center';
+  g.fillText(P[c.id].title.length > 16 ? P[c.id].title.split(' ')[0] : P[c.id].title, 0, -32); g.textAlign = 'left';
+  // lueur si survolée
+  if (hl){ const gl = g.createRadialGradient(0, -140, 10, 0, -140, 120); gl.addColorStop(0, hexA(C.cyan, .7)); gl.addColorStop(1, hexA(C.cyan, 0)); g.fillStyle = gl; g.beginPath(); g.arc(0, -140, 120, 0, TAU); g.fill(); }
+  // l'objet
+  const b = reduce ? 0 : Math.sin(t * 1.4 + c.x) * 3;
+  g.save(); g.translate(0, -140 + b); ICON[c.id](g, t); g.restore();
+  // la cloche de verre
+  g.beginPath(); g.moveTo(-56, -80); g.lineTo(-56, -190); g.quadraticCurveTo(-56, -214, -32, -214); g.lineTo(32, -214); g.quadraticCurveTo(56, -214, 56, -190); g.lineTo(56, -80);
+  g.fillStyle = hexA(C.cyan, .18); g.fill(); g.strokeStyle = C.ink; g.lineWidth = 2.4; g.stroke();
+  g.strokeStyle = hexA(C.paper, .95); g.lineWidth = 4; g.beginPath(); g.moveTo(-42, -186); g.lineTo(-42, -120); g.stroke();
+  g.restore();
+}
+const ICON = {
+  mona(g){ g.beginPath(); g.rect(-34, -28, 68, 52); fs(g, C.paper, C.ink, 2.4); g.save(); g.beginPath(); g.rect(-28, -22, 56, 40); g.clip();
+    g.fillStyle = C.mist; g.fillRect(-28, -22, 56, 40); g.fillStyle = C.peach; g.beginPath(); g.arc(10, -8, 9, 0, TAU); g.fill();
+    g.fillStyle = C.teal; poly(g, [[-28, 10], [-10, -6], [2, 6], [18, -4], [28, 6], [28, 18], [-28, 18]]); g.fill(); g.restore();
+    g.beginPath(); g.arc(28, 22, 11, 0, TAU); fs(g, C.cyan, C.ink, 2); g.fillStyle = C.ink; g.fillRect(23, 17, 4, 4); g.fillRect(29, 17, 4, 4); g.fillRect(23, 23, 4, 4); },
+  spacevote(g){ g.beginPath(); g.rect(-30, -12, 60, 44); fs(g, C.lav, C.ink, 2.4); g.beginPath(); g.rect(-14, -14, 28, 5); fs(g, C.ink, null);
+    poly(g, [[-12, -40], [14, -44], [16, -12], [-10, -8]]); fs(g, C.paper, C.ink, 2); line2(g, [[-4, -28], [1, -22], [9, -34]], 2.6, C.teal);
+    g.fillStyle = C.ink; g.font = '600 11px "JetBrains Mono", monospace'; g.textAlign = 'center'; g.fillText('VOTE', 0, 16); g.textAlign = 'left'; },
+  storage(g){ g.beginPath(); g.arc(-14, -14, 16, Math.PI * .9, Math.PI * 1.9); g.arc(8, -18, 20, Math.PI * 1.1, Math.PI * 2); g.arc(26, -6, 12, Math.PI * 1.5, Math.PI * .5); g.lineTo(-26, 6); g.arc(-26, -4, 10, Math.PI * .5, Math.PI * 1.5); g.closePath(); fs(g, C.paper, C.ink, 2.2);
+    [[-18, 22, C.cyan], [2, 22, C.peach], [22, 22, C.lav]].forEach(([x, y, c]) => { poly(g, [[x, y - 10], [x + 9, y - 5], [x, y], [x - 9, y - 5]]); fs(g, c, C.ink, 1.6); poly(g, [[x - 9, y - 5], [x, y], [x, y + 10], [x - 9, y + 5]]); fs(g, c, C.ink, 1.6); poly(g, [[x, y], [x + 9, y - 5], [x + 9, y + 5], [x, y + 10]]); fs(g, c, C.ink, 1.6); });
+    line2(g, [[-18, 6], [-18, 12]], 1.6); line2(g, [[2, 6], [2, 12]], 1.6); line2(g, [[22, 6], [22, 12]], 1.6); },
+  danny(g, t){ g.beginPath(); g.rect(-10, -46, 20, 16); fs(g, C.ink2, C.ink, 1.6); g.beginPath(); g.rect(-10, 22, 20, 16); fs(g, C.ink2, C.ink, 1.6);
+    rr(g, -24, -32, 48, 56, 12); fs(g, C.paper, C.ink, 2.6); rr(g, -18, -26, 36, 44, 8); fs(g, C.ink, null);
+    const p = reduce ? 1 : 1 + Math.max(0, Math.sin(t * 5)) * .15;
+    g.save(); g.translate(0, -8); g.scale(p, p); g.beginPath(); g.moveTo(0, 8); g.bezierCurveTo(-14, -2, -8, -14, 0, -6); g.bezierCurveTo(8, -14, 14, -2, 0, 8); g.fillStyle = C.peach; g.fill(); g.restore();
+    g.fillStyle = C.cyan; g.font = '600 9px "JetBrains Mono", monospace'; g.textAlign = 'center'; g.fillText('LV 12', 0, 14); g.textAlign = 'left'; },
+  secib(g){ // un dossier, une pièce et l'étiquette qui remplace un nom
+    poly(g, [[-34, -18], [-12, -18], [-6, -26], [34, -26], [34, 24], [-34, 24]]); fs(g, C.peach, C.ink, 2.2);
+    poly(g, [[-22, -34], [16, -38], [20, 6], [-18, 10]]); fs(g, C.paper, C.ink, 2);
+    line2(g, [[-14, -26], [10, -28]], 2, C.ink2); line2(g, [[-13, -18], [12, -20]], 2, C.ink2);
+    rr(g, -12, -12, 26, 9, 2); fs(g, C.ink, null); g.fillStyle = C.cyan; g.font = '600 6px "JetBrains Mono", monospace'; g.fillText('PERS_1', -10, -5);
+    g.beginPath(); g.arc(24, 14, 13, 0, TAU); fs(g, C.cyan, C.ink, 2); rr(g, 18, 12, 12, 9, 2); fs(g, C.ink, null); g.beginPath(); g.arc(24, 12, 4, Math.PI, 0); g.strokeStyle = C.ink; g.lineWidth = 2; g.stroke(); },
+  mines(g){ // une pioche plantée dans trois blocs pastel
+    const cube = (x, y, top, side, front) => { poly(g, [[x, y - 9], [x + 15, y - 1], [x, y + 7], [x - 15, y - 1]]); fs(g, top, C.ink, 1.8);
+      poly(g, [[x - 15, y - 1], [x, y + 7], [x, y + 25], [x - 15, y + 17]]); fs(g, side, C.ink, 1.8); poly(g, [[x, y + 7], [x + 15, y - 1], [x + 15, y + 17], [x, y + 25]]); fs(g, front, C.ink, 1.8); };
+    cube(-16, 4, C.cyan, C.teal, C.mist); cube(14, 4, C.lav, C.violet, C.paper); cube(-1, -14, C.peach, '#f2b48c', C.parch);
+    line2(g, [[18, -14], [-6, -44]], 5, C.ink); line2(g, [[18, -14], [-6, -44]], 2.5, C.peach);
+    g.beginPath(); g.moveTo(-26, -40); g.quadraticCurveTo(-6, -58, 14, -48); g.quadraticCurveTo(-4, -46, -20, -32); g.closePath(); fs(g, C.cyan, C.ink, 2); },
+  oss(g){ // trois commits et une branche qui fusionne
+    line2(g, [[-24, 26], [-24, -26]], 4, C.ink); line2(g, [[-24, 12], [-4, -4], [18, -4]], 4, C.ink); line2(g, [[18, -4], [18, -24]], 4, C.ink);
+    [[-24, 26, C.lav], [-24, -26, C.cyan], [18, -4, C.peach], [18, -26, C.teal]].forEach(([x, y, c]) => { g.beginPath(); g.arc(x, y, 9, 0, TAU); fs(g, c, C.ink, 2.2); });
+    g.fillStyle = C.ink; g.font = '600 11px "JetBrains Mono", monospace'; g.fillText('#101', 0, 26); },
+  wallets(g){ [[-20, 10, C.teal], [0, 2, C.peach], [20, 10, C.violet]].forEach(([x, y, c]) => { rr(g, x - 16, y - 12, 32, 26, 6); fs(g, c, C.ink, 2); rr(g, x + 4, y - 2, 12, 8, 3); fs(g, C.paper, C.ink, 1.4); });
+    [[-8, -26], [6, -32], [16, -22]].forEach(([x, y]) => { g.beginPath(); g.ellipse(x, y, 9, 9, 0, 0, TAU); fs(g, C.cyan, C.ink, 1.8); }); },
+};
+function rr(g, x, y, w, h, r){ g.beginPath(); if (g.roundRect) g.roundRect(x, y, w, h, r); else g.rect(x, y, w, h); }
+function line2(g, pts, w = 2, col = C.ink){ g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]); g.strokeStyle = col; g.lineWidth = w; g.lineCap = 'round'; g.stroke(); }
+
+const linkBtns = links => links.map(([t, u]) => `<a class="btn small" href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join('');
+const VISIT = ['mona', 'secib', 'mines', 'storage', 'atrium'];
+const seen = new Set();
+let met = false;
+
+/* ---------- objets interactifs ---------- */
+const OBJ = [
+  { id:'pierre', label:'Pierre', hit:() => [pierre.x, pierre.y - 80 * persp(pierre.y), 58], appr:() => [pierre.x - 90, pierre.y + 20] },
+  { id:'nonce', label:'Nonce, le guide', hit:() => [nonce.x, nonce.y - 85 * persp(nonce.y), 58], appr:() => [nonce.x + 90, nonce.y + 20] },
+  { id:'atrium', label:'L’Atrium', hit:() => [800, 360, 150], appr:() => [800, 700] },
+  ...CASES.map(c => ({ id:c.id, label:P[c.id].title, hit:() => [c.x, c.y - 150 * persp(c.y) * c.s, 80 * persp(c.y) * c.s], appr:() => [c.x + (c.x < 800 ? 95 : -95), c.y + 30] })),
+
+
+  { id:'cat', label:'Gwei', hit:() => [cat.x, cat.y - 30, 40], appr:() => [cat.x - 70, cat.y + 10] },
+];
+let hover = null, open = null, lock = true, busy = false, time = 0, phase = 'title';
+const OBST = () => [[800, 600, 150, 34], [330, 700, 40, 16], [1500, 805, 40, 16], [180, 702, 46, 18], [1420, 717, 46, 18], [pierre.x, pierre.y, 32, 12], [nonce.x, nonce.y, 32, 12]]
+  .concat(CASES.map(c => [c.x, c.y - 4, 78 * persp(c.y) * c.s, 18]));
+function collide(e){
+  for (const [cx, cy, rx, ry] of OBST()){ let dx = (e.x - cx) / rx, dy = (e.y - cy) / ry, d = dx*dx + dy*dy;
+    if (d < 1){ if (d < 1e-4){ dx = 0; dy = 1; d = 1; } const k = 1 / Math.sqrt(d); e.x = cx + dx * k * rx; e.y = cy + dy * k * ry; } }
+  e.x = clamp(e.x, 150, 1450); e.y = clamp(e.y, 622, 885);
+}
+function walkTo(e, x, y, sp = 300){ return new Promise(res => { e.target = { x, y, sp, res, stuck:0 }; }); }
+function moveEntity(e, dt){
+  const TG = e.target; if (!TG){ e.moving = false; return; }
+  const dx = TG.x - e.x, dy = TG.y - e.y, d = Math.hypot(dx, dy), step = TG.sp * persp(e.y) * dt;
+  if (Math.abs(dx) > 1.5) e.face = dx > 0 ? 1 : -1;
+  if (d <= step){ e.x = TG.x; e.y = TG.y; e.target = null; e.moving = false; TG.res(); return; }
+  e.x += dx / d * step; e.y += dy / d * step; e.moving = true; e.walk += dt * 10;
+  if (e.y < H - 20) collide(e);
+  if (Math.hypot(TG.x - e.x, TG.y - e.y) >= d - .05){ TG.stuck += dt; if (TG.stuck > .3){ e.target = null; e.moving = false; TG.res(); } } else TG.stuck = 0;
+}
+
+/* ---------- HUD ---------- */
+function setObjective(t){ $('objective').hidden = !t; if (t) $('objText').textContent = t; }
+function nextGoal(){ return met ? VISIT.find(v => !seen.has(v)) : 'pierre'; }
+function refreshHud(){
+  $('bookCount').textContent = `${seen.size}/${VISIT.length}`;
+  if (!met) setObjective('Parle à Pierre, près du cristal');
+  else if (seen.size < VISIT.length) setObjective(`Visite les vitrines · prochaine : ${P[nextGoal()].title}`);
+  else setObjective('Tu as tout vu. Pierre aimerait avoir de tes nouvelles.');
+}
+function markSeen(id){ if (!VISIT.includes(id) || seen.has(id)) return; seen.add(id); sfx('ledger'); refreshHud(); const b = $('bookBtn'); b.classList.remove('pulse'); void b.offsetWidth; if (!reduce) b.classList.add('pulse'); }
+
+/* ---------- dialogue ---------- */
+let advance = null;
+function say(who, text, choices){
+  return new Promise(res => {
+    const d = $('dialog'); d.hidden = false; $('speaker').textContent = who; $('speaker').dataset.who = who;
+    pierre.gesture = who === 'Pierre'; nonce.gesture = who === 'Nonce';
+    let i = 0, done = false; const el = $('line'), ch = $('choices'); el.textContent = ''; ch.innerHTML = ''; $('more').hidden = true;
+    const finish = () => { clearInterval(tm); el.textContent = text; done = true;
+      if (choices){ advance = null; choices.forEach((c, idx) => { const b = document.createElement('button'); b.className = 'choice'; b.textContent = c;
+        b.addEventListener('click', ev => { ev.stopPropagation(); sfx('select'); ch.innerHTML = ''; res(idx); }); ch.appendChild(b); }); ch.firstChild.focus({ preventScroll:true }); }
+      else $('more').hidden = false; };
+    const tm = reduce ? 0 : setInterval(() => { i++; el.textContent = text.slice(0, i); if (i % 5 === 0 && text[i] !== ' ') sfx('blip'); if (i >= text.length) finish(); }, 9);
+    advance = () => { if (!done) finish(); else if (!choices){ advance = null; res(0); } };
+    if (reduce) finish();
+  });
+}
+function hush(){ $('dialog').hidden = true; advance = null; pierre.gesture = false; nonce.gesture = false; }
+$('dialog').addEventListener('click', () => advance && advance());
+async function chat(lines){ if (busy) return; busy = true; for (const [w, t] of lines) await say(w, t); hush(); busy = false; }
+
+/* ---------- fiches ---------- */
+function sheet(html, side){
+  const s = $('sheet'); s.innerHTML = `<button class="x" id="sx" type="button" aria-label="Fermer">×</button>` + html;
+  s.classList.toggle('left', side === 'left'); s.hidden = false; s.scrollTop = 0; $('sx').addEventListener('click', close);
+}
+function show(id){
+  const p = P[id]; if (!p) return; open = id;
+  const o = OBJ.find(x => x.id === id);
+  sheet(`<p class="eyebrow">${esc(p.kind)}</p><h3>${esc(p.title)}</h3><p><b>${esc(p.short)}</b></p><p>${esc(p.body)}</p>
+    ${p.facts.length ? `<ul class="facts">${p.facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}
+    ${p.tags.length ? `<ul class="tags">${p.tags.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+    ${p.status ? `<span class="status">${esc(p.status)}</span>` : ''}
+    <div class="links">${linkBtns(p.links)}</div>`, o && o.hit()[0] > 800 ? 'left' : 'right');
+  markSeen(id);
+}
+function showPath(){
+  open = 'pierre';
+  sheet(`<p class="eyebrow">Parcours</p><h3>Pierre Untas</h3><p>${esc(P.pierre.body)}</p>
+    <ol class="path">${PATH.map(([d, t, s, now]) => `<li${now ? ' class="now"' : ''}><b>${esc(d)}</b><strong>${esc(t)}</strong><span>${esc(s)}</span></li>`).join('')}</ol>
+    <p class="eyebrow">Ce que je sais faire</p>${SKILLS.map(([t, l]) => `<p><b>${esc(t)}</b></p><ul class="tags">${l.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`).join('')}`, 'right');
+}
+function showContact(){
+  open = 'pierre';
+  sheet(`<p class="eyebrow">Contact</p><h3>Écris-moi</h3><p>Pour une mission, un poste en remote, ou simplement parler d’Ethereum.</p>
+    <div class="links" style="margin-top:0"><a class="btn primary small" href="https://github.com/PierreUntas" target="_blank" rel="noopener">GitHub · PierreUntas ↗</a>
+    <button class="btn small" id="copyDiscord" type="button">Discord · pierreuntas</button></div><span class="copied" id="copied" aria-live="polite"></span>`, 'right');
+  $('copyDiscord').addEventListener('click', async () => { try { await navigator.clipboard.writeText('pierreuntas'); $('copied').textContent = 'Pseudo copié'; } catch (e) { $('copied').textContent = 'Pseudo : pierreuntas'; } });
+}
+function showBook(){
+  open = 'book';
+  sheet(`<p class="eyebrow">Carnet de visite</p><h3>Les vitrines</h3><p>Touche un projet pour t’en approcher.</p>
+    <ul class="list">${VISIT.map(id => `<li class="${seen.has(id) ? 'seen' : ''}"><button type="button" data-go="${id}"><i>${seen.has(id) ? '✓' : ''}</i><span><b>${esc(P[id].title)}</b>${esc(P[id].short)}</span></button></li>`).join('')}</ul>
+    <div class="links"><button class="btn small" id="bPath" type="button">Le parcours de Pierre</button><button class="btn small" id="bContact" type="button">Contact</button></div>`, 'right');
+  $('sheet').querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => interact(OBJ.find(o => o.id === b.dataset.go))));
+  $('bPath').addEventListener('click', showPath); $('bContact').addEventListener('click', showContact);
+}
+function close(){ open = null; $('sheet').hidden = true; }
+$('bookBtn').addEventListener('click', () => { if (open === 'book') close(); else showBook(); });
+
+/* ---------- ce que disent les personnages ---------- */
+async function talkPierre(){
+  if (busy) return; busy = true; pierre.face = player.x > pierre.x ? 1 : -1;
+  let intro = !met;
+  met = true; refreshHud();
+  for (;;){
+    const c = await say('Pierre', intro ? 'Salut, moi c’est Pierre, développeur blockchain et full-stack. Chaque vitrine garde un de mes projets, et le grand cristal, c’est L’Atrium : mon jeu pour découvrir Ethereum.' : 'Qu’est-ce qui t’intéresse ?', ['Ton parcours', 'Tes projets', 'Te contacter', 'Je visite']);
+    intro = false;
+    if (c === 0){ showPath(); await say('Pierre', 'Image, mode, puis code. J’ai toujours fabriqué des choses que d’autres utilisent.'); }
+    else if (c === 1){ showBook(); await say('Pierre', 'Commence par Mona Editions, juste là : c’est celui dont je suis le plus fier. Il tourne en production sur Base. Et va voir Secib & Claude, à droite.'); break; }
+    else if (c === 2){ showContact(); await say('Pierre', 'GitHub pour le code, Discord pour discuter. Je réponds vite.'); }
+    else break;
+  }
+  hush(); busy = false;
+}
+async function talkNonce(){
+  nonce.face = player.x > nonce.x ? 1 : -1;
+  if (seen.size >= VISIT.length) return chat([['Nonce', 'Tu as fait le tour de toutes les vitrines ! Si tu veux travailler avec Pierre, il est juste là. Demande-lui comment le contacter.']]);
+  return chat([['Nonce', 'D’habitude, j’accueille ici les nouveaux venus sur Ethereum. Aujourd’hui, je fais visiter le hall de Pierre.'], ['Nonce', met ? `Il te reste ${VISIT.length - seen.size} vitrine${VISIT.length - seen.size > 1 ? 's' : ''} à voir. Le carnet, en haut à droite, les liste toutes.` : 'Commence par parler à Pierre. Il est près du cristal.']]);
+}
+const AFTER = {
+  atrium:[['Nonce', 'Ce cristal, c’est tout l’Atrium : dix chapitres pour comprendre Ethereum, sans rien installer. Le lien est sur la fiche.']],
+  mona:[['Pierre', 'Mona Editions, c’est mon projet de fin de formation chez Alyra. Il est en production sur Base, avec un audit et 100 % de couverture de tests.']],
+
+
+  secib:[['Pierre', 'Celui-là, je l’ai développé entièrement avec l’IA, pour une avocate. Mon travail, c’était de savoir quoi construire, et de garantir qu’aucun nom de client ne parte en clair.']],
+  mines:[['Pierre', 'Mines d’Éther, je l’ai construit avec l’IA. La suite : inscrire les parcelles et les objets uniques en smart contracts. Le serveur en est déjà la source de vérité.']],
+};
+async function interact(it){
+  if (!it || busy) return;
+  if (open === 'book' || open) close();
+  lock = true;
+  const [ax, ay] = it.appr(); const pt = { x:ax, y:ay }; collide(pt);
+  await walkTo(player, pt.x, pt.y);
+  lock = false;
+  const [hx] = it.hit(); player.face = hx > player.x ? 1 : -1;
+  if (it.id === 'pierre') return talkPierre();
+  if (it.id === 'nonce') return talkNonce();
+  if (it.id === 'cat') return chat([['Pierre', 'Lui, c’est Gwei, le chat de L’Atrium. Il ne fait rien, et il le fait très bien.']]);
+  show(it.id);
+  if (AFTER[it.id]) chat(AFTER[it.id]);
+  if (seen.size === VISIT.length && !done){ done = true; }
+}
+let done = false;
+
+/* ---------- entrées ---------- */
+let cam = { x:0, y:0 }, viewW = W, viewH = H;
+function toWorld(ev){ const r = cv.getBoundingClientRect(); return [cam.x + (ev.clientX - r.left) / scale, cam.y + (ev.clientY - r.top) / scale]; }
+function hitTest(x, y){ for (const it of OBJ){ const [hx, hy, r] = it.hit(); if (Math.hypot(x - hx, y - hy) < r) return it; } return null; }
+cv.addEventListener('pointermove', ev => { if (phase === 'title') return; const [x, y] = toWorld(ev), it = hitTest(x, y); hover = it ? it.id : null; cv.style.cursor = it ? 'pointer' : (y > HOR ? 'crosshair' : 'default'); });
+cv.addEventListener('pointerleave', () => { hover = null; });
+cv.addEventListener('pointerdown', ev => {
+  if (phase === 'title') return;
+  if (advance){ advance(); return; }
+  if (busy || lock) return;
+  const [x, y] = toWorld(ev), it = hitTest(x, y);
+  if (it) return interact(it);
+  if (open) close();
+  if (y > HOR + 10){ const pt = { x, y }; collide(pt); walkTo(player, pt.x, pt.y); }
+});
+const keys = new Set();
+const MOVE = { arrowup:[0,-1], z:[0,-1], w:[0,-1], arrowdown:[0,1], s:[0,1], arrowleft:[-1,0], q:[-1,0], a:[-1,0], arrowright:[1,0], d:[1,0] };
+window.addEventListener('keydown', ev => {
+  if (phase === 'title') return;
+  const k = ev.key.toLowerCase();
+  if (k === 'escape'){ if (open) close(); return; }
+  if (k === 'v' && !advance){ ev.preventDefault(); if (open === 'book') close(); else showBook(); return; }
+  if (ev.target.tagName === 'BUTTON' && (k === 'enter' || k === ' ')) return;
+  if (k === ' ' || k === 'enter' || k === 'e'){
+    if (advance){ ev.preventDefault(); advance(); return; }
+    if (!busy && !lock){ let best = null, bd = 190; for (const it of OBJ){ const [hx, hy] = it.hit(); const d = Math.hypot(hx - player.x, (hy - player.y) * .5); if (d < bd){ bd = d; best = it; } } if (best){ ev.preventDefault(); interact(best); } }
+    return;
+  }
+  if (MOVE[k] && !busy && !lock){ keys.add(k); ev.preventDefault(); }
+});
+window.addEventListener('keyup', ev => keys.delete(ev.key.toLowerCase()));
+window.addEventListener('blur', () => keys.clear());
+
+/* ---------- boucle et caméra (comme dans L'Atrium) ---------- */
+function resize(){
+  const w = stage.clientWidth, vh = window.innerHeight, compact = vh < 520 && window.innerWidth > vh;
+  document.documentElement.classList.toggle('compact', compact);
+  let h; if (compact) h = Math.max(220, vh - 16); else { const avail = vh - 32 - 40; h = w * 9 / 16; if (w < 900) h = Math.max(h, Math.min(avail * .92, 660)); h = clamp(h, 340, Math.max(340, avail)); }
+  stage.style.height = Math.round(h) + 'px';
+  dpr = Math.min(window.devicePixelRatio || 1, 2); cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+  scale = Math.max(w / W, h / H); viewW = w / scale; viewH = h / scale;
+  buildCache(); const f = focus(); cam.x = f[0]; cam.y = f[1];
+}
+function focus(){ const fx = phase === 'title' ? 800 : player.x, fy = phase === 'title' ? 640 : Math.min(player.y, 860); return [clamp(fx - viewW / 2, 0, Math.max(0, W - viewW)), clamp(fy - viewH * .62, 0, Math.max(0, H - viewH))]; }
+function drawLabel(g, it){
+  const [hx, hy, r] = it.hit(); g.font = '700 24px "Atkinson Hyperlegible", system-ui, sans-serif';
+  const w = g.measureText(it.label).width + 30, x = clamp(hx - w / 2, cam.x + 10, cam.x + viewW - w - 10), y = Math.max(cam.y + 70, hy - r - 58);
+  g.beginPath(); g.rect(x + 4, y + 4, w, 42); g.fillStyle = C.lav; g.fill();
+  g.beginPath(); g.rect(x, y, w, 42); fs(g, C.paper, C.ink, 2.4);
+  g.fillStyle = C.ink; g.fillText(it.label, x + 15, y + 29);
+}
+function render(){
+  const g = ctx, k = scale * dpr;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height); g.setTransform(k, 0, 0, k, -cam.x * k, -cam.y * k);
+  g.lineJoin = 'round'; g.lineCap = 'round';
+  g.drawImage(cache, 0, 0, W, H);
+  drawDiamond(g, time); drawBubbles(g, time);
+  const list = [
+    { y:614, d:() => drawPedestal(g) },
+    { y:702, d:() => drawPot(g, 180, 702, time, false) },
+    { y:717, d:() => drawPot(g, 1420, 717, time, true) },
+    { y:pierre.y, d:() => drawPerson(g, pierre, time) },
+    { y:nonce.y, d:() => drawPerson(g, nonce, time) },
+    { y:cat.y, d:() => drawCat(g, cat, time) },
+  ];
+  CASES.forEach(c => list.push({ y:c.y, d:() => drawCase(g, c, time) }));
+  PALMS.forEach(P => list.push({ y:P.base[1], d:() => drawPalm(g, P, time) }));
+  if (player.y < H + 60 && phase !== 'title') list.push({ y:player.y, d:() => drawPerson(g, player, time) });
+  list.sort((a, b) => a.y - b.y).forEach(o => o.d());
+  if (hover === 'atrium' || open === 'atrium'){ g.strokeStyle = hexA(C.ink2, .9); g.lineWidth = 3; g.setLineDash([12, 10]); g.lineDashOffset = reduce ? 0 : -time * 30; g.beginPath(); g.arc(800, 350, 190, 0, TAU); g.stroke(); g.setLineDash([]); }
+  if (phase !== 'title' && !busy && !lock && !open){ const gid = nextGoal(), o = gid && OBJ.find(x => x.id === gid); if (o){ const [hx, hy, r] = o.hit(); drawMarker(g, hx, hy - r - 18, time); } }
+  const f = OBJ.find(o => o.id === hover); if (f && phase !== 'title') drawLabel(g, f);
+  drawForeground(g, time);
+}
+function update(dt){
+  time += dt;
+  if (keys.size && !busy && !lock){ let vx = 0, vy = 0; keys.forEach(k => { vx += MOVE[k][0]; vy += MOVE[k][1]; }); const l = Math.hypot(vx, vy);
+    if (l){ player.target = null; const sp = 280 * persp(player.y) * dt; player.x += vx / l * sp; player.y += vy / l * sp * .8; collide(player); player.moving = true; player.walk += dt * 10; if (vx) player.face = vx > 0 ? 1 : -1; } }
+  else if (!player.target) player.moving = false;
+  moveEntity(player, dt);
+  if (player.moving){ stepT -= dt; if (stepT <= 0){ sfx('step'); stepT = .34; } } else stepT = 0;
+  const [tx, ty] = focus(), kk = Math.min(1, dt * 3); cam.x += (tx - cam.x) * kk; cam.y += (ty - cam.y) * kk;
+}
+let last = performance.now(), stepT = 0;
+function frame(now){ const dt = Math.min(.05, (now - last) / 1000); last = now; update(dt); render(); requestAnimationFrame(frame); }
+resize();
+window.addEventListener('resize', resize);
+if (window.visualViewport) window.visualViewport.addEventListener('resize', resize);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(buildCache);
+requestAnimationFrame(frame);
+
+/* ---------- entrée ---------- */
+async function enter(fast){
+  $('title').hidden = true; phase = 'play'; $('hud').hidden = false; refreshHud();
+  player.y = 900; lock = true; walkTo(player, 790, 790, 520).then(() => { player.face = -1; lock = false; });
+  if (fast){ met = true; refreshHud(); showBook(); return; }
+  pierre.face = 1;
+  await talkPierre();
+}
+const startSound = () => { if (window.Sound){ window.Sound.start(); } };
+$('enterBtn').addEventListener('click', () => { startSound(); enter(false); });
+$('fastBtn').addEventListener('click', () => { startSound(); enter(true); });
+const soundBtn = $('soundBtn');
+function renderSound(m){ soundBtn.setAttribute('aria-pressed', String(!m)); soundBtn.setAttribute('aria-label', m ? 'Activer le son' : 'Couper le son'); soundBtn.classList.toggle('off', m); }
+if (window.Sound){ renderSound(window.Sound.muted); window.Sound.onChange(renderSound); soundBtn.addEventListener('click', () => { window.Sound.start(); window.Sound.toggle(); soundBtn.blur(); }); } else soundBtn.hidden = true;
+window.addEventListener('keydown', ev => { if (ev.key.toLowerCase() === 'm' && phase !== 'title' && !ev.target.closest('input,textarea')){ window.Sound && (window.Sound.start(), window.Sound.toggle()); } });
+})();
+</script>
+
+</body>
+</html>
