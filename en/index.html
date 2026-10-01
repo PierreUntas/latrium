@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pierre Untas · L'Atrium</title>
 <meta name="description" content="Pierre Untas, blockchain and full-stack developer. A portfolio you walk through, in the hall of L'Atrium: each display case holds a project.">
-<link rel="canonical" href="https://pierreuntas.com/en/">
+<link rel="canonical" href="https://www.pierreuntas.com/en/">
 <meta name="theme-color" content="#e7e5fa">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Pierre Untas · blockchain and full-stack developer">
 <meta property="og:description" content="A portfolio you walk through, in the hall of L'Atrium: each display case holds a project.">
-<meta property="og:url" content="https://pierreuntas.com/en/">
-<meta property="og:image" content="https://pierreuntas.com/og-portfolio-en.jpg">
+<meta property="og:url" content="https://www.pierreuntas.com/en/">
+<meta property="og:image" content="https://www.pierreuntas.com/og-portfolio-en.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="en_US">
-<link rel="alternate" hreflang="fr" href="https://pierreuntas.com/">
-<link rel="alternate" hreflang="en" href="https://pierreuntas.com/en/">
-<link rel="alternate" hreflang="x-default" href="https://pierreuntas.com/">
+<link rel="alternate" hreflang="fr" href="https://www.pierreuntas.com/">
+<link rel="alternate" hreflang="en" href="https://www.pierreuntas.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://www.pierreuntas.com/">
 <meta name="twitter:card" content="summary_large_image">
 <script id="langPick" data-off>/* langue : ?lang=fr|en > choix mémorisé (partagé avec L'Atrium) > langue du navigateur */
 (function(){var me=document.currentScript;try{var q=new URLSearchParams(location.search).get('lang');if(q==='fr'||q==='en'){localStorage.setItem('atrium.lang',q);return;}if(me.hasAttribute('data-off')||!/^https?:$/.test(location.protocol))return;var l=localStorage.getItem('atrium.lang');if(!l){var n=(navigator.languages&&navigator.languages[0])||navigator.language||'fr';l=/^fr\b/i.test(n)?'fr':'en';}if(l==='en')location.replace('/en/');}catch(e){}})();</script>
@@ -607,7 +607,7 @@ const P = {
   atrium:{ kind:'Game · learning · built with AI', col:C.cyan, title:'L’Atrium', short:'The game you are standing in. A way to discover Ethereum without installing anything.',
     body:'Ten chapters in this hall: your first vault, scams, contracts, validators, fees, bridges. In French and English.',
     facts:['Custom Canvas 2D engine, music generated with Web Audio', 'Local save, player notebook, full English version', 'End-to-end tests with Playwright'],
-    tags:['JavaScript', 'Canvas 2D', 'Web Audio', 'i18n'], links:[['Play L’Atrium', 'https://pierreuntas.com/game/?lang=en'], ['Code', GH + 'latrium']] },
+    tags:['JavaScript', 'Canvas 2D', 'Web Audio', 'i18n'], links:[['Play L’Atrium', 'https://www.pierreuntas.com/game/?lang=en'], ['Code', GH + 'latrium']] },
   secib:{ kind:'Desktop app · built with AI', col:C.peach, title:'Secib & Claude', short:'Ask Claude about the documents in a law firm’s case file, without ever sending confidential data in the clear.',
     body:'A desktop app for a law firm: pick a client case in Secib, the firm’s practice management software, tick some documents, then ask Claude for a summary, a timeline or specific details. As the French bar’s ethics guidance requires, names, addresses and IBANs are pseudonymised on the computer before anything is sent, with a review screen.',
     facts:['Rust back end (Tauri), React and TypeScript interface', 'Isolated pseudonymisation module: 11 categories, IBAN and SIREN checked by checksum, a mapping table that can never be sent or written to disk (enforced by a compile-time test)', 'HTTP client for the Secib API: authentication, concurrency limit, retries with backoff, tested against a mock server', 'API key encrypted in the system keychain, local log of everything sent'],

@@ -92,7 +92,7 @@ src/game.js     rendu du décor, personnages, déplacements, dialogues, histoire
 
 Le jeu existe en français et en anglais. La langue se choisit dans cet ordre :
 
-1. le paramètre d'URL `?lang=fr` ou `?lang=en` (ex. https://pierreuntas.com/?lang=en) ;
+1. le paramètre d'URL `?lang=fr` ou `?lang=en` (ex. https://www.pierreuntas.com/?lang=en) ;
 2. le dernier choix, gardé dans `localStorage` (`atrium.lang`) ;
 3. la langue du navigateur : français si elle commence par `fr`, anglais sinon.
 
