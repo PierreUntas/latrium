@@ -25,6 +25,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Mise en page : une seule scène, le hall de L'Atrium, qui occupe l'écran. Dialogues, fiches et carnet s'ouvrent par-dessus, comme dans le jeu. Un seul monde clair. */
 :root{
@@ -82,6 +86,8 @@ h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance
 /* fiches et carnet, par-dessus la scène */
 .sheet{position:absolute;right:12px;top:62px;bottom:12px;width:min(400px,calc(100% - 24px));background:var(--paper);border:2px solid var(--ink);border-radius:12px;box-shadow:5px 5px 0 var(--lav);padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px;overflow:auto;z-index:4}
 .sheet.left{right:auto;left:12px}
+.stage.talking .sheet{bottom:var(--dlg, 150px)}
+.sheet > .eyebrow:first-of-type{padding-right:40px}
 .sheet h3{font-size:30px;line-height:1.05;padding-right:36px}
 .sheet p{margin:0}
 .sheet .x{position:absolute;top:12px;right:12px;width:32px;height:32px;border:2px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink);font-weight:700;cursor:pointer}
@@ -120,6 +126,7 @@ h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance
 /* petits écrans et téléphone à l'horizontale */
 @media (max-width:700px){
   .sheet{left:8px!important;right:8px!important;top:8px;bottom:8px;width:auto}
+  .stage.talking .sheet{bottom:var(--dlg, 150px)}
   .line{font-size:15px}
   .objective strong{font-size:13px}
   .hud-btn{padding:5px 9px;font-size:13px}
@@ -754,16 +761,21 @@ function say(who, text, choices){
     const d = $('dialog'); d.hidden = false; $('speaker').textContent = who; $('speaker').dataset.who = who;
     pierre.gesture = who === 'Pierre'; nonce.gesture = who === 'Nonce';
     let i = 0, done = false; const el = $('line'), ch = $('choices'); el.textContent = ''; ch.innerHTML = ''; $('more').hidden = true;
+    fitSheet();
     const finish = () => { clearInterval(tm); el.textContent = text; done = true;
       if (choices){ advance = null; choices.forEach((c, idx) => { const b = document.createElement('button'); b.className = 'choice'; b.textContent = c;
         b.addEventListener('click', ev => { ev.stopPropagation(); sfx('select'); ch.innerHTML = ''; res(idx); }); ch.appendChild(b); }); ch.firstChild.focus({ preventScroll:true }); }
-      else $('more').hidden = false; };
+      else $('more').hidden = false; fitSheet(); };
     const tm = reduce ? 0 : setInterval(() => { i++; el.textContent = text.slice(0, i); if (i % 5 === 0 && text[i] !== ' ') sfx('blip'); if (i >= text.length) finish(); }, 9);
     advance = () => { if (!done) finish(); else if (!choices){ advance = null; res(0); } };
     if (reduce) finish();
   });
 }
-function hush(){ $('dialog').hidden = true; advance = null; pierre.gesture = false; nonce.gesture = false; }
+function fitSheet(){ const d = $('dialog'), st = $('stage');
+  if (d.hidden){ st.classList.remove('talking'); return; }
+  st.style.setProperty('--dlg', (d.offsetHeight + 26) + 'px'); st.classList.add('talking'); }
+window.addEventListener('resize', fitSheet);
+function hush(){ $('stage').classList.remove('talking'); $('dialog').hidden = true; advance = null; pierre.gesture = false; nonce.gesture = false; }
 $('dialog').addEventListener('click', () => advance && advance());
 async function chat(lines){ if (busy) return; busy = true; for (const [w, t] of lines) await say(w, t); hush(); busy = false; }
 
