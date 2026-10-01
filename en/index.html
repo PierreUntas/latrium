@@ -1,25 +1,25 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pierre Untas · L'Atrium</title>
-<meta name="description" content="Pierre Untas, développeur blockchain et full-stack. Un portfolio à visiter dans le hall de L'Atrium : chaque vitrine présente un projet.">
-<link rel="canonical" href="https://latrium.vercel.app/">
+<meta name="description" content="Pierre Untas, blockchain and full-stack developer. A portfolio you walk through, in the hall of L'Atrium: each display case holds a project.">
+<link rel="canonical" href="https://latrium.vercel.app/en/">
 <meta name="theme-color" content="#e7e5fa">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Pierre Untas · développeur blockchain et full-stack">
-<meta property="og:description" content="Un portfolio à visiter dans le hall de L'Atrium : chaque vitrine présente un projet.">
-<meta property="og:url" content="https://latrium.vercel.app/">
-<meta property="og:image" content="https://latrium.vercel.app/og-portfolio.jpg">
+<meta property="og:title" content="Pierre Untas · blockchain and full-stack developer">
+<meta property="og:description" content="A portfolio you walk through, in the hall of L'Atrium: each display case holds a project.">
+<meta property="og:url" content="https://latrium.vercel.app/en/">
+<meta property="og:image" content="https://latrium.vercel.app/og-portfolio-en.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:locale" content="fr_FR">
+<meta property="og:locale" content="en_US">
 <link rel="alternate" hreflang="fr" href="https://latrium.vercel.app/">
 <link rel="alternate" hreflang="en" href="https://latrium.vercel.app/en/">
 <link rel="alternate" hreflang="x-default" href="https://latrium.vercel.app/">
 <meta name="twitter:card" content="summary_large_image">
-<script id="langPick">/* langue : ?lang=fr|en > choix mémorisé (partagé avec L'Atrium) > langue du navigateur */
+<script id="langPick" data-off>/* langue : ?lang=fr|en > choix mémorisé (partagé avec L'Atrium) > langue du navigateur */
 (function(){var me=document.currentScript;try{var q=new URLSearchParams(location.search).get('lang');if(q==='fr'||q==='en'){localStorage.setItem('atrium.lang',q);return;}if(me.hasAttribute('data-off')||!/^https?:$/.test(location.protocol))return;var l=localStorage.getItem('atrium.lang');if(!l){var n=(navigator.languages&&navigator.languages[0])||navigator.language||'fr';l=/^fr\b/i.test(n)?'fr':'en';}if(l==='en')location.replace('/en/');}catch(e){}})();</script>
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -151,14 +151,14 @@ h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance
 
 
 <div class="stage" id="stage">
-  <canvas id="cv" aria-label="Le hall de L'Atrium : des colonnes, deux palmiers, un grand cristal, Pierre, Nonce, Gwei le chat et des vitrines qui présentent les projets de Pierre."></canvas>
+  <canvas id="cv" aria-label="The hall of L'Atrium: columns, two palm trees, a large crystal, Pierre, Nonce, Gwei the cat, and display cases presenting Pierre's projects."></canvas>
 
-  <div class="objective" id="objective" hidden><span class="eyebrow" id="objHead">Objectif</span><strong id="objText"></strong></div>
+  <div class="objective" id="objective" hidden><span class="eyebrow" id="objHead">Goal</span><strong id="objText"></strong></div>
   <div class="hud-right" id="hud" hidden>
-    <button class="sound-btn" id="soundBtn" type="button" aria-pressed="true" aria-label="Couper le son">
+    <button class="sound-btn" id="soundBtn" type="button" aria-pressed="true" aria-label="Mute">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#aeefe7" stroke="#3a3cb2" stroke-width="1.6" stroke-linejoin="round"/><path class="wave" d="M16 9.5c1.2 1.3 1.2 3.7 0 5M18.5 7c2.6 2.8 2.6 7.2 0 10" fill="none" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/><path class="cross" d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="#3a3cb2" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
-    <button class="hud-btn" id="bookBtn" type="button" aria-label="Ouvrir le carnet des vitrines">Vitrines <b id="bookCount">0/5</b></button>
+    <button class="hud-btn" id="bookBtn" type="button" aria-label="Open the list of display cases">Projects <b id="bookCount">0/5</b></button>
   </div>
 
   <div class="dialog" id="dialog" hidden>
@@ -172,17 +172,17 @@ h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance
 
   <div class="veil" id="title">
     <div class="card">
-      <p class="eyebrow">Portfolio · un Atrium à visiter</p>
+      <p class="eyebrow">Portfolio · an Atrium to walk through</p>
       <h1>Pierre Untas</h1>
-      <p class="lede">Développeur blockchain et full-stack. Entre dans le hall : chaque vitrine garde un projet que j'ai codé.</p>
-      <span class="chip"><i></i>Ouvert aux missions Web3 et aux postes en remote</span>
-      <div class="row"><button class="btn primary" id="enterBtn" type="button">Entrer</button><button class="btn" id="fastBtn" type="button">Voir directement les projets</button></div>
-      <p class="hint">Touche le sol pour marcher. Touche quelqu'un ou une vitrine pour en savoir plus.</p>
-      <a class="lang" href="/en/?lang=en" hreflang="en" lang="en">English version</a>
+      <p class="lede">Blockchain and full-stack developer. Step into the hall: each display case holds a project I built.</p>
+      <span class="chip"><i></i>Open to Web3 freelance work and remote roles</span>
+      <div class="row"><button class="btn primary" id="enterBtn" type="button">Enter</button><button class="btn" id="fastBtn" type="button">Skip to the projects</button></div>
+      <p class="hint">Tap the floor to walk. Tap someone or a display case to learn more.</p>
+      <a class="lang" href="/?lang=fr" hreflang="fr" lang="fr">Version française</a>
     </div>
   </div>
 </div>
-<p class="caption"><b>Pierre Untas</b> · Bordeaux · remote international · Souris ou doigt : touche le sol pour marcher · Clavier : flèches ou ZQSD, Espace pour parler, V pour les vitrines, M pour le son</p>
+<p class="caption"><b>Pierre Untas</b> · Bordeaux, France · remote worldwide · Mouse or finger: tap the floor to walk · Keyboard: arrows or WASD, Space to talk, V for the projects, M for sound</p>
 <script>
 /* L'Atrium : ambiance sonore générée avec la Web Audio API (aucun fichier audio).
    Une nappe douce en ré lydien, une boîte à musique aléatoire et quelques effets. */
@@ -594,50 +594,50 @@ function drawSparkle(g, x, y, k){
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
 const GH = 'https://github.com/PierreUntas/';
 const P = {
-  pierre:{ kind:'Qui je suis', title:'Pierre Untas', short:'Développeur blockchain et full-stack · Bordeaux · remote international.',
-    body:'Après sept ans à la tête d’une marque de mode et trois ans de développement full-stack en entreprise, je conçois aujourd’hui des applications blockchain. Mona Editions, ma plateforme de certification d’œuvres d’art en production sur Base, est née de ce croisement entre l’univers du design et les smart contracts.',
-    facts:['Développeur full-stack chez Human Immobilier (2023 – 2026)', 'Certifié développeur blockchain par Alyra (2026)', 'Freelance Web3 depuis juin 2026'], tags:['Solidity', 'TypeScript', 'Rust', '.NET'], links:[['Mon parcours', '#parcours'], ['Me contacter', '#contact']] },
-  mona:{ kind:'Produit · smart contracts', col:C.peach, title:'Mona Editions', short:'Certifier une œuvre d’art physique avec un jeton, et donner au collectionneur un certificat qui le suit pour toujours.',
-    body:'Les artistes certifient et exposent leurs œuvres, et transfèrent le certificat lors d’une revente, sans portefeuille crypto. En scannant le QR code d’une œuvre, on voit son histoire : artiste, édition, provenance. Projet né pendant ma formation Alyra, aujourd’hui en production sur Base.',
-    facts:['Smart contracts Solidity (ERC-1155) avec optimisation du gaz, tests sous Hardhat', 'Contrat vérifié sur Basescan, réclamation du certificat par QR code sécurisée par arbre de Merkle', 'Privy : connexion par e-mail, gaz sponsorisé, export de la clé privée', 'Front Next.js et TypeScript, stockage IPFS, déploiement sur Vercel', 'CI GitHub Actions : compilation et tests des contrats, build du front à chaque push et pull request'],
-    tags:['Solidity', 'Hardhat', 'Next.js', 'TypeScript', 'IPFS', 'Privy', 'Base'], links:[['Voir le site', 'https://monaeditions.com'], ['Le contrat sur Basescan', 'https://basescan.org/address/0x4f093952cF2377eFa05BC15E32ffFF63Cd4Fc208'], ['Code', GH + 'MonaEditions']], lead:true },
-  storage:{ kind:'Application complète', col:C.cyan, title:'Decentralized Cloud Storage', short:'Un cloud personnel décentralisé : fichiers sur IPFS, dossiers, notes et un LLM local.',
-    body:'Les fichiers sont stockés sur IPFS, les métadonnées dans MongoDB. Une API REST en ASP.NET Core gère le stockage, et une interface Nuxt.js permet de créer des dossiers, d’envoyer des fichiers, d’écrire des notes et de discuter avec un modèle de langage qui tourne en local.',
-    facts:['API REST en ASP.NET Core, métadonnées dans MongoDB', 'Stockage distribué sur IPFS', 'Interface Nuxt.js, LLM local intégré', 'Docker Compose et Prometheus'], tags:['IPFS', 'ASP.NET Core', 'MongoDB', 'Nuxt.js', 'Docker'], links:[['Code', GH + 'decentralized-cloud-storage']] },
-  atrium:{ kind:'Jeu · pédagogie · développé avec l’IA', col:C.cyan, title:'L’Atrium', short:'Le jeu dans lequel tu te trouves. Pour découvrir Ethereum sans rien installer.',
-    body:'Dix chapitres dans ce hall : son premier coffre, les arnaques, les contrats, les validateurs, les frais, les ponts. En français et en anglais.',
-    facts:['Moteur maison en Canvas 2D, musique générée en Web Audio', 'Sauvegarde locale, carnet du joueur, version anglaise complète', 'Tests de bout en bout avec Playwright'],
-    tags:['JavaScript', 'Canvas 2D', 'Web Audio', 'i18n'], links:[['Jouer à L’Atrium', 'https://latrium.vercel.app/game/'], ['Code', GH + 'latrium']] },
-  secib:{ kind:'Application de bureau · développée avec l’IA', col:C.peach, title:'Secib & Claude', short:'Interroger Claude sur les pièces d’un dossier d’avocat, sans jamais envoyer de données confidentielles en clair.',
-    body:'Une application de bureau pour un cabinet d’avocats : on choisit un dossier client dans le logiciel métier Secib, on coche des pièces, puis on demande à Claude un résumé, une chronologie ou des informations précises. Comme le demande le guide déontologique du CNB, les noms, adresses ou IBAN sont pseudonymisés sur l’ordinateur avant tout envoi, avec un écran de revue.',
-    facts:['Back-end en Rust (Tauri), interface en React et TypeScript', 'Module de pseudonymisation isolé : 11 catégories, IBAN et SIREN validés par clé, table de correspondance impossible à envoyer ou à écrire sur disque (garanti par un test de compilation)', 'Client HTTP pour l’API Secib : authentification, limite de concurrence, reprises avec backoff, testé contre un serveur simulé', 'Clé API chiffrée dans le trousseau système, journal local des envois'],
-    tags:['Rust', 'Tauri', 'React', 'TypeScript', 'API Claude'], links:[], status:'Code privé · démo sur demande' },
-  mines:{ kind:'Jeu multijoueur · développé avec l’IA', col:C.teal, title:'Mines d’Éther', short:'Un monde en blocs aux couleurs d’Ethereum, à construire entre amis dans le navigateur.',
-    body:'On mine, on fabrique, on bâtit dans un monde infini généré au fil des pas. Chaque bloc se comporte comme un jeton : miner frappe, poser brûle, et chaque bloc posé porte le nom de son auteur. Prochaine étape : inscrire les objets uniques et les parcelles en smart contracts.',
-    facts:['Rendu Three.js, textures pixel art générées en code, maillage des tronçons dans un Web Worker', 'Multijoueur en temps réel avec Supabase (Auth, Realtime, Postgres), parcelles, chat modéré', 'Le serveur fait autorité : chaque action passe par une fonction SQL qui vérifie les règles, la portée, le rythme et les déplacements', 'Jetons simulés : ERC-1155 pour les ressources, ERC-721 pour les objets uniques, registre des frappes et des brûlages', 'Une quarantaine de scénarios, dont les tentatives de triche, testés contre un vrai Postgres à chaque push'],
-    tags:['Three.js', 'Supabase', 'Postgres', 'Web Workers', 'ERC-1155 · ERC-721'], links:[], status:'Lien de démo à venir' },
+  pierre:{ kind:'Who I am', title:'Pierre Untas', short:'Blockchain and full-stack developer · Bordeaux, France · remote worldwide.',
+    body:'After seven years running a fashion brand and three years as a full-stack developer in industry, I now build blockchain applications. Mona Editions, my artwork certification platform live on Base, was born where design meets smart contracts.',
+    facts:['Full-stack developer at Human Immobilier (2023 – 2026)', 'Certified blockchain developer, Alyra (2026)', 'Web3 freelancer since June 2026'], tags:['Solidity', 'TypeScript', 'Rust', '.NET'], links:[['My background', '#parcours'], ['Contact me', '#contact']] },
+  mona:{ kind:'Product · smart contracts', col:C.peach, title:'Mona Editions', short:'Certify a physical artwork with a token, and give the collector a certificate that follows it forever.',
+    body:'Artists certify and showcase their work, and hand over the certificate when a piece is resold, with no crypto wallet needed. Scan an artwork’s QR code to see its story: artist, edition, provenance. Started during my Alyra training, now live on Base.',
+    facts:['Gas-optimised Solidity smart contracts (ERC-1155), tested with Hardhat', 'Contract verified on Basescan; certificates claimed by QR code, secured with a Merkle tree', 'Privy: email sign-in, sponsored gas, private key export', 'Next.js and TypeScript front end, IPFS storage, deployed on Vercel', 'GitHub Actions CI: contracts compiled and tested, front end built on every push and pull request'],
+    tags:['Solidity', 'Hardhat', 'Next.js', 'TypeScript', 'IPFS', 'Privy', 'Base'], links:[['Visit the site', 'https://monaeditions.com'], ['The contract on Basescan', 'https://basescan.org/address/0x4f093952cF2377eFa05BC15E32ffFF63Cd4Fc208'], ['Code', GH + 'MonaEditions']], lead:true },
+  storage:{ kind:'Full-stack app', col:C.cyan, title:'Decentralized Cloud Storage', short:'A decentralised personal cloud: files on IPFS, folders, notes and a local LLM.',
+    body:'Files are stored on IPFS and metadata in MongoDB. An ASP.NET Core REST API handles storage, and a Nuxt.js interface lets you create folders, upload files, write notes and chat with a language model running locally.',
+    facts:['ASP.NET Core REST API, metadata in MongoDB', 'Distributed storage on IPFS', 'Nuxt.js interface with a built-in local LLM', 'Docker Compose and Prometheus'], tags:['IPFS', 'ASP.NET Core', 'MongoDB', 'Nuxt.js', 'Docker'], links:[['Code', GH + 'decentralized-cloud-storage']] },
+  atrium:{ kind:'Game · learning · built with AI', col:C.cyan, title:'L’Atrium', short:'The game you are standing in. A way to discover Ethereum without installing anything.',
+    body:'Ten chapters in this hall: your first vault, scams, contracts, validators, fees, bridges. In French and English.',
+    facts:['Custom Canvas 2D engine, music generated with Web Audio', 'Local save, player notebook, full English version', 'End-to-end tests with Playwright'],
+    tags:['JavaScript', 'Canvas 2D', 'Web Audio', 'i18n'], links:[['Play L’Atrium', 'https://latrium.vercel.app/game/?lang=en'], ['Code', GH + 'latrium']] },
+  secib:{ kind:'Desktop app · built with AI', col:C.peach, title:'Secib & Claude', short:'Ask Claude about the documents in a law firm’s case file, without ever sending confidential data in the clear.',
+    body:'A desktop app for a law firm: pick a client case in Secib, the firm’s practice management software, tick some documents, then ask Claude for a summary, a timeline or specific details. As the French bar’s ethics guidance requires, names, addresses and IBANs are pseudonymised on the computer before anything is sent, with a review screen.',
+    facts:['Rust back end (Tauri), React and TypeScript interface', 'Isolated pseudonymisation module: 11 categories, IBAN and SIREN checked by checksum, a mapping table that can never be sent or written to disk (enforced by a compile-time test)', 'HTTP client for the Secib API: authentication, concurrency limit, retries with backoff, tested against a mock server', 'API key encrypted in the system keychain, local log of everything sent'],
+    tags:['Rust', 'Tauri', 'React', 'TypeScript', 'API Claude'], links:[], status:'Private code · demo on request' },
+  mines:{ kind:'Multiplayer game · built with AI', col:C.teal, title:'Mines d’Éther', short:'A block world in Ethereum colours, to build with friends in the browser.',
+    body:'Mine, craft and build in an endless world generated as you walk. Every block behaves like a token: mining mints, placing burns, and every placed block carries its builder’s name. Next step: putting unique items and land plots into smart contracts.',
+    facts:['Three.js rendering, pixel-art textures generated in code, chunk meshing in a Web Worker', 'Real-time multiplayer with Supabase (Auth, Realtime, Postgres), land plots, moderated chat', 'Server-authoritative: every action goes through a SQL function that checks rules, reach, rate and movement', 'Simulated tokens: ERC-1155 for resources, ERC-721 for unique items, a ledger of mints and burns', 'Around forty scenarios, cheating attempts included, tested against a real Postgres on every push'],
+    tags:['Three.js', 'Supabase', 'Postgres', 'Web Workers', 'ERC-1155 · ERC-721'], links:[], status:'Demo link coming soon' },
 };
 const ORDER = ['mona', 'secib', 'mines', 'storage', 'atrium'];
 const PATH = [
-  ['Janvier 2026 – aujourd’hui', 'Fondateur et développeur blockchain', 'Mona Editions · freelance depuis juin 2026', ['Plateforme de certification d’œuvres d’art physiques en production sur Base', 'Smart contracts Solidity (ERC-1155), tests Hardhat, contrat vérifié sur Basescan', 'Next.js, IPFS, Privy (e-mail, gaz sponsorisé), CI GitHub Actions'], true],
-  ['Juin 2023 – mai 2026', 'Développeur full-stack', 'Human Immobilier', ['Plusieurs produits du groupe : un ERP, un CRM, des sites web et des tâches planifiées', 'Back-end .NET Core et SQL Server, architecture DDD / CQRS ; front en Blazor et Vue.js', 'Tests unitaires, d’intégration et de validation ; monitoring Prometheus et Grafana ; Kanban sur Azure DevOps']],
-  ['Janvier 2022 – janvier 2023', 'Fondateur', 'Minimal Miner', ['Conception, assemblage et vente de serveurs de minage crypto : mon premier contact avec la blockchain, à l’origine de ma reconversion']],
-  ['Juillet 2016 – décembre 2022', 'Fondateur et président', 'Anders Arens · marque de mode de luxe', ['Conception et fabrication des collections, sourcing des fournisseurs et des ateliers', 'Vente en boutiques multimarques de luxe aux États-Unis, en Europe et au Japon, et en ligne', 'Recrutement d’agents commerciaux et d’investisseurs, salons professionnels et fashion weeks']],
+  ['January 2026 – present', 'Founder and blockchain developer', 'Mona Editions · freelance since June 2026', ['Certification platform for physical artworks, live on Base', 'Solidity smart contracts (ERC-1155), Hardhat tests, contract verified on Basescan', 'Next.js, IPFS, Privy (email sign-in, sponsored gas), GitHub Actions CI'], true],
+  ['June 2023 – May 2026', 'Full-stack developer', 'Human Immobilier · real estate group', ['Several of the group’s products: an ERP, a CRM, websites and scheduled jobs', '.NET Core and SQL Server back end, DDD / CQRS architecture; Blazor and Vue.js front ends', 'Unit, integration and acceptance tests; Prometheus and Grafana monitoring; Kanban on Azure DevOps']],
+  ['January 2022 – January 2023', 'Founder', 'Minimal Miner', ['Designed, assembled and sold crypto mining servers: my first contact with blockchain, and what led me to switch careers']],
+  ['July 2016 – December 2022', 'Founder and CEO', 'Anders Arens · luxury fashion brand', ['Designed and produced the collections, sourced suppliers and workshops', 'Sold through luxury multi-brand stores in the US, Europe and Japan, and online', 'Recruited sales agents and investors; trade shows and fashion weeks']],
 ];
 const SCHOOL = [
-  ['Juillet 2025 – avril 2026', 'Certification Développeur Blockchain (RS6515)', 'Alyra, l’école blockchain · certifiée par France Compétences'],
-  ['Mars 2023 – mars 2024', 'Concepteur Développeur d’Applications', 'EPSI, école d’ingénierie informatique'],
-  ['Octobre – décembre 2022', 'Concepteur Développeur d’Applications', 'Le Wagon'],
+  ['July 2025 – April 2026', 'Blockchain Developer certification (RS6515)', 'Alyra, the blockchain school · state-recognised by France Compétences'],
+  ['March 2023 – March 2024', 'Application Designer and Developer', 'EPSI, school of computer engineering'],
+  ['October – December 2022', 'Application Designer and Developer', 'Le Wagon, coding bootcamp'],
 ];
 const SKILLS = [
-  ['Blockchain et Web3', ['Solidity', 'ERC-1155 · 721 · 20', 'Hardhat', 'Wagmi', 'Viem', 'Base · Optimism', 'IPFS', 'Privy', 'Account abstraction']],
-  ['Langages', ['C# · .NET', 'TypeScript', 'JavaScript', 'Solidity', 'SQL']],
+  ['Blockchain and Web3', ['Solidity', 'ERC-1155 · 721 · 20', 'Hardhat', 'Wagmi', 'Viem', 'Base · Optimism', 'IPFS', 'Privy', 'Account abstraction']],
+  ['Languages', ['C# · .NET', 'TypeScript', 'JavaScript', 'Solidity', 'SQL']],
   ['Front-end', ['React', 'Next.js', 'Vue.js', 'Nuxt', 'Blazor']],
-  ['Back-end et données', ['ASP.NET Core', 'Node.js', 'SQL Server', 'DDD', 'CQRS']],
-  ['Outils', ['Git', 'GitHub Actions', 'Azure DevOps', 'Vercel', 'Prometheus', 'Grafana']],
+  ['Back end and data', ['ASP.NET Core', 'Node.js', 'SQL Server', 'DDD', 'CQRS']],
+  ['Tools', ['Git', 'GitHub Actions', 'Azure DevOps', 'Vercel', 'Prometheus', 'Grafana']],
 ];
-const LANGS = 'Français natif · anglais professionnel';
-const LIKES = ['Blockchain', 'IA', 'Surf', 'Bricolage', 'Couture'];
+const LANGS = 'French (native) · English (professional)';
+const LIKES = ['Blockchain', 'AI', 'Surfing', 'DIY', 'Sewing'];
 /* ---------- personnages et vitrines ---------- */
 const player = { x:800, y:990, face:1, walk:0, moving:false, target:null, shirt:C.peach, pants:C.lav, hair:C.violet, style:'short', skin:C.skin };
 const pierre = { x:690, y:650, face:1, walk:0, moving:false, shirt:C.peri, pants:C.ink2, hair:C.ink, style:'short', skin:C.skin, smile:true, gesture:false, tall:1.04 };
@@ -702,7 +702,7 @@ let met = false;
 /* ---------- objets interactifs ---------- */
 const OBJ = [
   { id:'pierre', label:'Pierre', hit:() => [pierre.x, pierre.y - 80 * persp(pierre.y), 58], appr:() => [pierre.x - 90, pierre.y + 20] },
-  { id:'nonce', label:'Nonce, le guide', hit:() => [nonce.x, nonce.y - 85 * persp(nonce.y), 58], appr:() => [nonce.x + 90, nonce.y + 20] },
+  { id:'nonce', label:'Nonce, the guide', hit:() => [nonce.x, nonce.y - 85 * persp(nonce.y), 58], appr:() => [nonce.x + 90, nonce.y + 20] },
   { id:'atrium', label:'L’Atrium', hit:() => [800, 360, 150], appr:() => [800, 700] },
   ...CASES.map(c => ({ id:c.id, label:P[c.id].title, hit:() => [c.x, c.y - 150 * persp(c.y) * c.s, 80 * persp(c.y) * c.s], appr:() => [c.x + (c.x < 800 ? 95 : -95), c.y + 30] })),
 
@@ -733,9 +733,9 @@ function setObjective(t){ $('objective').hidden = !t; if (t) $('objText').textCo
 function nextGoal(){ return met ? VISIT.find(v => !seen.has(v)) : 'pierre'; }
 function refreshHud(){
   $('bookCount').textContent = `${seen.size}/${VISIT.length}`;
-  if (!met) setObjective('Parle à Pierre, près du cristal');
-  else if (seen.size < VISIT.length) setObjective(`Visite les vitrines · prochaine : ${P[nextGoal()].title}`);
-  else setObjective('Tu as tout vu. Pierre aimerait avoir de tes nouvelles.');
+  if (!met) setObjective('Talk to Pierre, by the crystal');
+  else if (seen.size < VISIT.length) setObjective(`Visit the display cases · next: ${P[nextGoal()].title}`);
+  else setObjective('You have seen everything. Pierre would love to hear from you.');
 }
 function markSeen(id){ if (!VISIT.includes(id) || seen.has(id)) return; seen.add(id); sfx('ledger'); refreshHud(); const b = $('bookBtn'); b.classList.remove('pulse'); void b.offsetWidth; if (!reduce) b.classList.add('pulse'); }
 
@@ -766,7 +766,7 @@ async function chat(lines){ if (busy) return; busy = true; for (const [w, t] of 
 
 /* ---------- fiches ---------- */
 function sheet(html, side){
-  const s = $('sheet'); s.innerHTML = `<button class="x" id="sx" type="button" aria-label="Fermer">×</button>` + html;
+  const s = $('sheet'); s.innerHTML = `<button class="x" id="sx" type="button" aria-label="Close">×</button>` + html;
   s.classList.toggle('left', side === 'left');
   // à gauche, la fiche commence sous l'encadré « Objectif »
   const ob = $('objective'); s.style.top = side === 'left' && !ob.hidden && $('stage').clientWidth > 700 ? (ob.offsetTop + ob.offsetHeight + 10) + 'px' : '';
@@ -785,27 +785,27 @@ function show(id){
 function showPath(){
   open = 'pierre';
   const job = ([d, t, org, items, now]) => `<li${now ? ' class="now"' : ''}><b>${esc(d)}</b><strong>${esc(t)}</strong><span>${esc(org)}</span>${items ? `<ul class="facts">${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</li>`;
-  sheet(`<p class="eyebrow">Parcours</p><h3>Pierre Untas</h3><p><b>Développeur blockchain et full-stack</b></p><p>${esc(P.pierre.body)}</p>
-    <p class="eyebrow">Expérience</p><ol class="path">${PATH.map(job).join('')}</ol>
-    <p class="eyebrow">Formation</p><ol class="path">${SCHOOL.map(([d, t, o]) => job([d, t, o])).join('')}</ol>
-    <p class="eyebrow">Compétences</p>${SKILLS.map(([t, l]) => `<p><b>${esc(t)}</b></p><ul class="tags">${l.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`).join('')}
-    <p class="eyebrow">Langues</p><p>${esc(LANGS)}</p>
-    <p class="eyebrow">Centres d’intérêt</p><ul class="tags">${LIKES.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+  sheet(`<p class="eyebrow">Background</p><h3>Pierre Untas</h3><p><b>Blockchain and full-stack developer</b></p><p>${esc(P.pierre.body)}</p>
+    <p class="eyebrow">Experience</p><ol class="path">${PATH.map(job).join('')}</ol>
+    <p class="eyebrow">Education</p><ol class="path">${SCHOOL.map(([d, t, o]) => job([d, t, o])).join('')}</ol>
+    <p class="eyebrow">Skills</p>${SKILLS.map(([t, l]) => `<p><b>${esc(t)}</b></p><ul class="tags">${l.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`).join('')}
+    <p class="eyebrow">Languages</p><p>${esc(LANGS)}</p>
+    <p class="eyebrow">Interests</p><ul class="tags">${LIKES.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
     <div class="links"><a class="btn small" href="https://www.linkedin.com/in/pierre-untas" target="_blank" rel="noopener">LinkedIn ↗</a><a class="btn small" href="https://github.com/PierreUntas" target="_blank" rel="noopener">GitHub ↗</a></div>`, 'right');
 }
 function showContact(){
   open = 'pierre';
-  sheet(`<p class="eyebrow">Contact</p><h3>Écris-moi</h3><p>Pour une mission, un poste en remote, ou simplement parler d’Ethereum.</p>
-    <ul class="facts" style="list-style:none;padding:0"><li><b>E-mail</b> · <a href="mailto:pierre.untas@gmail.com">pierre.untas@gmail.com</a></li><li><b>Téléphone</b> · <a href="tel:+33642480357">+33 6 42 48 03 57</a></li></ul>
-    <div class="links" style="margin-top:12px"><a class="btn primary small" href="mailto:pierre.untas@gmail.com">M’écrire</a><a class="btn small" href="https://www.linkedin.com/in/pierre-untas" target="_blank" rel="noopener">LinkedIn ↗</a><a class="btn small" href="https://github.com/PierreUntas" target="_blank" rel="noopener">GitHub ↗</a>
+  sheet(`<p class="eyebrow">Contact</p><h3>Get in touch</h3><p>For freelance work, a remote role, or just to talk about Ethereum.</p>
+    <ul class="facts" style="list-style:none;padding:0"><li><b>Email</b> · <a href="mailto:pierre.untas@gmail.com">pierre.untas@gmail.com</a></li><li><b>Phone</b> · <a href="tel:+33642480357">+33 6 42 48 03 57</a></li></ul>
+    <div class="links" style="margin-top:12px"><a class="btn primary small" href="mailto:pierre.untas@gmail.com">Email me</a><a class="btn small" href="https://www.linkedin.com/in/pierre-untas" target="_blank" rel="noopener">LinkedIn ↗</a><a class="btn small" href="https://github.com/PierreUntas" target="_blank" rel="noopener">GitHub ↗</a>
     <button class="btn small" id="copyDiscord" type="button">Discord · pierreuntas</button></div><span class="copied" id="copied" aria-live="polite"></span>`, 'right');
-  $('copyDiscord').addEventListener('click', async () => { try { await navigator.clipboard.writeText('pierreuntas'); $('copied').textContent = 'Pseudo copié'; } catch (e) { $('copied').textContent = 'Pseudo : pierreuntas'; } });
+  $('copyDiscord').addEventListener('click', async () => { try { await navigator.clipboard.writeText('pierreuntas'); $('copied').textContent = 'Username copied'; } catch (e) { $('copied').textContent = 'Username: pierreuntas'; } });
 }
 function showBook(){
   open = 'book';
-  sheet(`<p class="eyebrow">Carnet de visite</p><h3>Les vitrines</h3><p>Touche un projet pour t’en approcher.</p>
+  sheet(`<p class="eyebrow">Visitor’s guide</p><h3>The display cases</h3><p>Tap a project to walk over to it.</p>
     <ul class="list">${VISIT.map(id => `<li class="${seen.has(id) ? 'seen' : ''}"><button type="button" data-go="${id}"><i>${seen.has(id) ? '✓' : ''}</i><span><b>${esc(P[id].title)}</b>${esc(P[id].short)}</span></button></li>`).join('')}</ul>
-    <div class="links"><button class="btn small" id="bPath" type="button">Le parcours de Pierre</button><button class="btn small" id="bContact" type="button">Contact</button></div>`, 'right');
+    <div class="links"><button class="btn small" id="bPath" type="button">Pierre’s background</button><button class="btn small" id="bContact" type="button">Contact</button></div>`, 'right');
   $('sheet').querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => interact(OBJ.find(o => o.id === b.dataset.go))));
   $('bPath').addEventListener('click', showPath); $('bContact').addEventListener('click', showContact);
 }
@@ -818,27 +818,27 @@ async function talkPierre(){
   let intro = !met;
   met = true; refreshHud();
   for (;;){
-    const c = await say('Pierre', intro ? 'Salut, moi c’est Pierre, développeur blockchain et full-stack. Chaque vitrine garde un de mes projets, et le grand cristal, c’est L’Atrium : mon jeu pour découvrir Ethereum.' : 'Qu’est-ce qui t’intéresse ?', ['Ton parcours', 'Tes projets', 'Te contacter', 'Je visite']);
+    const c = await say('Pierre', intro ? 'Hi, I’m Pierre, a blockchain and full-stack developer. Each display case holds one of my projects, and the big crystal is L’Atrium: my game for discovering Ethereum.' : 'What would you like to know?', ['Your background', 'Your projects', 'Contact you', 'I’ll look around']);
     intro = false;
-    if (c === 0){ showPath(); await say('Pierre', 'Sept ans à la tête d’une marque de mode, trois ans de full-stack en entreprise, et aujourd’hui la blockchain. Tout est dans la fiche.'); }
-    else if (c === 1){ showBook(); await say('Pierre', 'Commence par Mona Editions, juste là : c’est celui dont je suis le plus fier. Il tourne en production sur Base. Et va voir Secib & Claude, à droite.'); break; }
-    else if (c === 2){ showContact(); await say('Pierre', 'Un e-mail, un appel ou un message sur LinkedIn : je réponds vite. GitHub pour le code.'); }
+    if (c === 0){ showPath(); await say('Pierre', 'Seven years running a fashion brand, three years of full-stack in industry, and now blockchain. It’s all on the card.'); }
+    else if (c === 1){ showBook(); await say('Pierre', 'Start with Mona Editions, right there: it’s the one I’m proudest of. It’s live on Base. And take a look at Secib & Claude, on the right.'); break; }
+    else if (c === 2){ showContact(); await say('Pierre', 'Email, call or message me on LinkedIn: I reply quickly. GitHub for the code.'); }
     else break;
   }
   hush(); busy = false;
 }
 async function talkNonce(){
   nonce.face = player.x > nonce.x ? 1 : -1;
-  if (seen.size >= VISIT.length) return chat([['Nonce', 'Tu as fait le tour de toutes les vitrines ! Si tu veux travailler avec Pierre, il est juste là. Demande-lui comment le contacter.']]);
-  return chat([['Nonce', 'D’habitude, j’accueille ici les nouveaux venus sur Ethereum. Aujourd’hui, je fais visiter le hall de Pierre.'], ['Nonce', met ? `Il te reste ${VISIT.length - seen.size} vitrine${VISIT.length - seen.size > 1 ? 's' : ''} à voir. Le carnet, en haut à droite, les liste toutes.` : 'Commence par parler à Pierre. Il est près du cristal.']]);
+  if (seen.size >= VISIT.length) return chat([['Nonce', 'You’ve seen every display case! If you’d like to work with Pierre, he’s right there. Ask him how to get in touch.']]);
+  return chat([['Nonce', 'I usually welcome newcomers to Ethereum here. Today, I’m showing visitors around Pierre’s hall.'], ['Nonce', met ? `${VISIT.length - seen.size} display case${VISIT.length - seen.size > 1 ? 's' : ''} left to see. The list, top right, shows them all.` : 'Start by talking to Pierre. He’s by the crystal.']]);
 }
 const AFTER = {
-  atrium:[['Nonce', 'Ce cristal, c’est tout l’Atrium : dix chapitres pour comprendre Ethereum, sans rien installer. Le lien est sur la fiche.']],
-  mona:[['Pierre', 'Mona Editions, c’est mon projet de fin de formation chez Alyra. Il est en production sur Base, avec un audit et 100 % de couverture de tests.']],
+  atrium:[['Nonce', 'This crystal is the whole Atrium: ten chapters to understand Ethereum, with nothing to install. The link is on the card.']],
+  mona:[['Pierre', 'Mona Editions was my final project at Alyra. It’s live on Base, audited, with 100% test coverage.']],
 
 
-  secib:[['Pierre', 'Celui-là, je l’ai développé entièrement avec l’IA, pour une avocate. Mon travail, c’était de savoir quoi construire, et de garantir qu’aucun nom de client ne parte en clair.']],
-  mines:[['Pierre', 'Mines d’Éther, je l’ai construit avec l’IA. La suite : inscrire les parcelles et les objets uniques en smart contracts. Le serveur en est déjà la source de vérité.']],
+  secib:[['Pierre', 'I built this one entirely with AI, for a lawyer. My job was knowing what to build, and making sure no client name ever leaves in the clear.']],
+  mines:[['Pierre', 'I built Mines d’Éther with AI. Next: putting land plots and unique items into smart contracts. The server is already the source of truth.']],
 };
 async function interact(it){
   if (!it || busy) return;
@@ -850,7 +850,7 @@ async function interact(it){
   const [hx] = it.hit(); player.face = hx > player.x ? 1 : -1;
   if (it.id === 'pierre') return talkPierre();
   if (it.id === 'nonce') return talkNonce();
-  if (it.id === 'cat') return chat([['Pierre', 'Lui, c’est Gwei, le chat de L’Atrium. Il ne fait rien, et il le fait très bien.']]);
+  if (it.id === 'cat') return chat([['Pierre', 'That’s Gwei, L’Atrium’s cat. He does nothing, and he does it very well.']]);
   show(it.id);
   if (AFTER[it.id]) chat(AFTER[it.id]);
   if (seen.size === VISIT.length && !done){ done = true; }
@@ -960,7 +960,7 @@ const startSound = () => { if (window.Sound){ window.Sound.start(); } };
 $('enterBtn').addEventListener('click', () => { startSound(); enter(false); });
 $('fastBtn').addEventListener('click', () => { startSound(); enter(true); });
 const soundBtn = $('soundBtn');
-function renderSound(m){ soundBtn.setAttribute('aria-pressed', String(!m)); soundBtn.setAttribute('aria-label', m ? 'Activer le son' : 'Couper le son'); soundBtn.classList.toggle('off', m); }
+function renderSound(m){ soundBtn.setAttribute('aria-pressed', String(!m)); soundBtn.setAttribute('aria-label', m ? 'Unmute' : 'Mute'); soundBtn.classList.toggle('off', m); }
 if (window.Sound){ renderSound(window.Sound.muted); window.Sound.onChange(renderSound); soundBtn.addEventListener('click', () => { window.Sound.start(); window.Sound.toggle(); soundBtn.blur(); }); } else soundBtn.hidden = true;
 window.addEventListener('keydown', ev => { if (ev.key.toLowerCase() === 'm' && phase !== 'title' && !ev.target.closest('input,textarea')){ window.Sound && (window.Sound.start(), window.Sound.toggle()); } });
 })();
