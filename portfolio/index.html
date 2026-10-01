@@ -29,6 +29,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Mise en page : une seule scène, le hall de L'Atrium, qui occupe l'écran. Dialogues, fiches et carnet s'ouvrent par-dessus, comme dans le jeu. Un seul monde clair. */
 :root{
@@ -782,7 +786,10 @@ async function chat(lines){ if (busy) return; busy = true; for (const [w, t] of 
 /* ---------- fiches ---------- */
 function sheet(html, side){
   const s = $('sheet'); s.innerHTML = `<button class="x" id="sx" type="button" aria-label="Fermer">×</button>` + html;
-  s.classList.toggle('left', side === 'left'); s.hidden = false; s.scrollTop = 0; $('sx').addEventListener('click', close);
+  s.classList.toggle('left', side === 'left');
+  // à gauche, la fiche commence sous l'encadré « Objectif »
+  const ob = $('objective'); s.style.top = side === 'left' && !ob.hidden && $('stage').clientWidth > 700 ? (ob.offsetTop + ob.offsetHeight + 10) + 'px' : '';
+  s.hidden = false; s.scrollTop = 0; $('sx').addEventListener('click', close);
 }
 function show(id){
   const p = P[id]; if (!p) return; open = id;
